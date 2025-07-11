@@ -1,5 +1,4 @@
 import { Component } from 'react'
-import { Box, Input, Button, Flex } from '@chakra-ui/react'
 
 interface SearchBarProps {
   query: string
@@ -35,19 +34,16 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
 
   render() {
     return (
-      <Box mb={6}>
-        <Flex gap={4}>
-          <Input
-            placeholder="Enter a Pokémon name"
-            value={this.state.input}
-            onChange={this.handleChange}
-            size="md"
-          />
-          <Button colorScheme="teal" onClick={this.handleClick}>
-            Search
-          </Button>
-        </Flex>
-      </Box>
+      <div style={{ marginBottom: '20px' }}>
+        <input
+          type="text"
+          placeholder="Enter a Pokémon name"
+          value={this.state.input}
+          onChange={this.handleChange}
+          style={{ padding: '8px', marginRight: '10px' }}
+        />
+        <button onClick={this.handleClick}>Search</button>
+      </div>
     )
   }
 }

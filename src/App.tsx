@@ -1,35 +1,106 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Component } from 'react'
+import SearchBar from './components/SearchBar'
+import Results from './components/Results'
 
-function App() {
-  const [count, setCount] = useState(0)
+interface Pokemon {
+  name: string
+  description: string
+}
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+interface AppState {
+  query: string
+  results: Pokemon[]
+  loading: boolean
+  error: string | null
+}
+
+class App extends Component<{}, AppState> {
+  constructor(props: {}) {
+    super(props)
+    this.state = {
+      query: '',
+      results: [],
+      loading: false,
+      error: null,
+    }
+  }
+
+  componentDidMount() {
+    const savedQuery = localStorage.getItem('pokemonSearchQuery') || ''
+    this.setState({ query: savedQuery }, () => {
+      this.fetchData(savedQuery)
+    })
+  }
+
+  // типизация параметра запроса
+  fetchData = async (query: string) => {
+    this.setState({ loading: true, error: null })
+    try {
+      let response: Response
+
+      if (query) {
+        // Поиск одного покемона
+        response = await fetch(`https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`)
+        if (!response.ok) throw new Error('Pokémon not found')
+
+        // типизируем структуру ответа от API
+        const data: {
+          name: string
+          weight: number
+          height: number
+        } = await response.json()
+
+        this.setState({
+          results: [
+            {
+              name: data.name,
+              description: `Weight: ${data.weight}, Height: ${data.height}`,
+            },
+          ],
+          loading: false,
+        })
+      } else {
+        // Получить всех (limit=20)
+        response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=20')
+        const data: {
+          results: { name: string; url: string }[]
+        } = await response.json()
+
+        const results: Pokemon[] = data.results.map((p) => ({
+          name: p.name,
+          description: 'No description available in general list',
+        }))
+
+        this.setState({ results, loading: false })
+      }
+    } catch (error: unknown) {
+      // обрабатываем unknown-ошибку
+      if (error instanceof Error) {
+        this.setState({ error: error.message, loading: false })
+      } else {
+        this.setState({ error: 'Unknown error occurred', loading: false })
+      }
+    }
+  }
+
+  // типизация входного параметра
+  handleSearch = (newQuery: string) => {
+    localStorage.setItem('pokemonSearchQuery', newQuery)
+    this.setState({ query: newQuery }, () => {
+      this.fetchData(newQuery)
+    })
+  }
+
+  render() {
+    const { query, results, loading, error } = this.state
+
+    return (
+      <div style={{ padding: '20px' }}>
+        <SearchBar query={query} onSearch={this.handleSearch} />
+        <Results results={results} loading={loading} error={error} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    )
+  }
 }
 
 export default App
