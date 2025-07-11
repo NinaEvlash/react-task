@@ -24,6 +24,13 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
 
   handleClick = () => {
     this.props.onSearch(this.state.input)
+    this.setState({ input: '' })
+  }
+
+  handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      this.handleClick()
+    }
   }
 
   render() {
