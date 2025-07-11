@@ -98,6 +98,20 @@ class App extends Component<{}, AppState> {
       <div style={{ padding: '20px' }}>
         <SearchBar query={query} onSearch={this.handleSearch} />
         <Results results={results} loading={loading} error={error} />
+        <button
+          onClick={() => {
+            throw new Error('Test error from button')
+          }}
+          style={{
+            marginBottom: '20px',
+            padding: '8px 12px',
+            backgroundColor: '#ff4d4f',
+            color: 'white',
+            border: 'none',
+          }}
+        >
+          Trigger Error
+        </button>
       </div>
     )
   }
