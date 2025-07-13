@@ -5,7 +5,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import importPlugin from 'eslint-plugin-import'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
-import prettier from 'eslint-config-prettier';
+import prettier from 'eslint-config-prettier'
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -18,7 +18,7 @@ export default tseslint.config(
       globals: {
         ...globals.browser,
         ...globals.node,
-      }
+      },
     },
     plugins: {
       react,
@@ -35,17 +35,14 @@ export default tseslint.config(
       ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'react/jsx-no-target-blank': ['warn', { enforceDynamicLinks: 'always' }],
-      'import/order': ['warn', { groups: ['builtin', 'external', 'internal']}],
+      'import/order': ['warn', { groups: ['builtin', 'external', 'internal'] }],
       'react/react-in-jsx-scope': 'off',
     },
   },
   {
     name: 'prettier-config',
     rules: prettier.rules,
-  }
+  },
 )

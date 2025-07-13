@@ -14,8 +14,8 @@ interface AppState {
   error: string | null
 }
 
-class App extends Component<{}, AppState> {
-  constructor(props: {}) {
+class App extends Component<Record<string, never>, AppState> {
+  constructor(props: Record<string, never>) {
     super(props)
     this.state = {
       query: '',
@@ -32,18 +32,15 @@ class App extends Component<{}, AppState> {
     })
   }
 
-  // типизация параметра запроса
   fetchData = async (query: string) => {
     this.setState({ loading: true, error: null })
     try {
       let response: Response
 
       if (query) {
-        // Поиск одного покемона
         response = await fetch(`https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`)
         if (!response.ok) throw new Error('Pokémon not found')
 
-        // типизируем структуру ответа от API
         const data: {
           name: string
           weight: number
@@ -60,7 +57,6 @@ class App extends Component<{}, AppState> {
           loading: false,
         })
       } else {
-        // Получить всех (limit=20)
         response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=20')
         const data: {
           results: { name: string; url: string }[]
@@ -74,7 +70,6 @@ class App extends Component<{}, AppState> {
         this.setState({ results, loading: false })
       }
     } catch (error: unknown) {
-      // обрабатываем unknown-ошибку
       if (error instanceof Error) {
         this.setState({ error: error.message, loading: false })
       } else {
@@ -83,7 +78,6 @@ class App extends Component<{}, AppState> {
     }
   }
 
-  // типизация входного параметра
   handleSearch = (newQuery: string) => {
     localStorage.setItem('pokemonSearchQuery', newQuery)
     this.setState({ query: newQuery }, () => {
