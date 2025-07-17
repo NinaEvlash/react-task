@@ -1,9 +1,6 @@
 import { Component } from 'react';
 import SearchBar from './components/SearchBar';
 import Results from './components/Results';
-
-console.log('nnnnn'
-
 interface Pokemon {
   name: string;
   description: string;
