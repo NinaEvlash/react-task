@@ -1,30 +1,30 @@
-import React, { Component, ReactNode } from 'react'
+import React, { Component, ReactNode } from 'react';
 
 interface ErrorBoundaryProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 interface ErrorBoundaryState {
-  hasError: boolean
+  hasError: boolean;
 }
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
-    super(props)
-    this.state = { hasError: false }
+    super(props);
+    this.state = { hasError: false };
   }
 
   static getDerivedStateFromError(): ErrorBoundaryState {
-    return { hasError: true }
+    return { hasError: true };
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    console.error('Caught error in ErrorBoundary:', error, info)
+    console.error('Caught error in ErrorBoundary:', error, info);
   }
 
   handleReset = () => {
-    this.setState({ hasError: false })
-  }
+    this.setState({ hasError: false });
+  };
 
   render() {
     if (this.state.hasError) {
@@ -33,11 +33,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
           <h2>Something went wrong.</h2>
           <button onClick={this.handleReset}>Try Again</button>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
-export default ErrorBoundary
+export default ErrorBoundary;

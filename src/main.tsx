@@ -1,9 +1,15 @@
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
-import ErrorBoundary from './components/ErrorBoundary'
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import ErrorBoundary from './components/ErrorBoundary';
 
-createRoot(document.getElementById('root')!).render(
-  <ErrorBoundary>
-    <App />
-  </ErrorBoundary>,
-)
+const root = document.getElementById('root');
+
+if (root) {
+  createRoot(root).render(
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>,
+  );
+} else {
+  console.error("Element with ID 'root' not found");
+}

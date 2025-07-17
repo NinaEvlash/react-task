@@ -1,23 +1,23 @@
-import { Component } from 'react'
+import { Component } from 'react';
 
 interface ResultItem {
-  name: string
-  description: string
+  name: string;
+  description: string;
 }
 
 interface ResultsProps {
-  results: ResultItem[]
-  loading: boolean
-  error: string | null
+  results: ResultItem[];
+  loading: boolean;
+  error: string | null;
 }
 
 class Results extends Component<ResultsProps> {
   render() {
-    const { results, loading, error } = this.props
+    const { results, loading, error } = this.props;
 
-    if (loading) return <p>Loading...</p>
-    if (error) return <p style={{ color: 'red' }}>{error}</p>
-    if (!results.length) return <p>No results found.</p>
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p style={{ color: 'red' }}>{error}</p>;
+    if (!results.length) return <p>No results found.</p>;
 
     return (
       <div>
@@ -29,8 +29,8 @@ class Results extends Component<ResultsProps> {
           </div>
         ))}
       </div>
-    )
+    );
   }
 }
 
-export default Results
+export default Results;
