@@ -88,23 +88,23 @@ class App extends Component<Record<string, never>, AppState> {
     const { query, results, loading, error } = this.state;
 
     return (
-      <div style={{ padding: '20px' }}>
-        <SearchBar query={query} onSearch={this.handleSearch} />
-        <Results results={results} loading={loading} error={error} />
-        <button
-          onClick={() => {
-            throw new Error('Test error from button');
-          }}
-          style={{
-            marginBottom: '20px',
-            padding: '8px 12px',
-            backgroundColor: '#ff4d4f',
-            color: 'white',
-            border: 'none',
-          }}
-        >
-          Trigger Error
-        </button>
+      <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+        <div className="w-full max-w-2xl space-y-6">
+          <SearchBar query={query} onSearch={this.handleSearch} />
+
+          <Results results={results} loading={loading} error={error} />
+
+          <button
+            onClick={() => {
+              throw new Error('Test error from button');
+            }}
+            className="px-4 py-2 bg-red-500 text-white rounded-xl 
+                 hover:bg-red-600 active:scale-95 
+                 transition shadow-md"
+          >
+            Trigger Error
+          </button>
+        </div>
       </div>
     );
   }
