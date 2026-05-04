@@ -11,6 +11,7 @@ interface AppState {
   results: Pokemon[];
   loading: boolean;
   error: string | null;
+  fatalError: string | null;
 }
 
 class Home extends Component<Record<string, never>, AppState> {
@@ -21,6 +22,7 @@ class Home extends Component<Record<string, never>, AppState> {
       results: [],
       loading: false,
       error: null,
+      fatalError: null,
     };
   }
 
@@ -38,7 +40,14 @@ class Home extends Component<Record<string, never>, AppState> {
 
       if (query) {
         response = await fetch(`https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`);
-        if (!response.ok) throw new Error('Pokémon not found');
+        if (!response.ok) {
+          this.setState({
+            results: [],
+            error: 'Pokémon not found',
+            loading: false,
+          });
+          return;
+        }
 
         const data: {
           name: string;
@@ -85,10 +94,10 @@ class Home extends Component<Record<string, never>, AppState> {
   };
 
   render() {
-    const { query, results, loading, error } = this.state;
+    const { query, results, loading, error, fatalError } = this.state;
 
-    if (error) {
-      throw new Error(error);
+    if (fatalError) {
+      throw new Error(fatalError);
     }
 
     return (
@@ -100,7 +109,7 @@ class Home extends Component<Record<string, never>, AppState> {
 
           <button
             onClick={() => {
-              this.setState({ error: 'Manual test error' });
+              this.setState({ fatalError: 'Manual test error' });
             }}
             className="px-4 py-2 bg-red-500 text-white rounded-xl 
                  hover:bg-red-600 active:scale-95 
