@@ -34,16 +34,25 @@ class Home extends Component<Record<string, never>, AppState> {
   }
 
   fetchData = async (query: string) => {
+    const normalizedQuery = query.trim().toLowerCase();
     this.setState({ loading: true, error: null });
     try {
       let response: Response;
 
-      if (query) {
-        response = await fetch(`https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`);
+      if (normalizedQuery) {
+        response = await fetch(`https://pokeapi.co/api/v2/pokemon/${normalizedQuery}`);
         if (!response.ok) {
+          let message = 'Something went wrong';
+
+          if (response.status === 404) {
+            message = 'Pokémon not found';
+          } else if (response.status >= 500) {
+            message = 'Server error. Please try again later.';
+          }
+
           this.setState({
             results: [],
-            error: 'Pokémon not found',
+            error: message,
             loading: false,
           });
           return;
@@ -79,7 +88,7 @@ class Home extends Component<Record<string, never>, AppState> {
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        this.setState({ error: error.message, loading: false });
+        this.setState({ error: 'Network error. Please check your connection.', loading: false });
       } else {
         this.setState({ error: 'Unknown error occurred', loading: false });
       }
@@ -87,7 +96,8 @@ class Home extends Component<Record<string, never>, AppState> {
   };
 
   handleSearch = (newQuery: string) => {
-    localStorage.setItem('pokemonSearchQuery', newQuery);
+    const normalizedQuery = newQuery.trim();
+    localStorage.setItem('pokemonSearchQuery', normalizedQuery);
     this.setState({ query: newQuery }, () => {
       this.fetchData(newQuery);
     });

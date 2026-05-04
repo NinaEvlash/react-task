@@ -22,7 +22,13 @@ class Results extends Component<ResultsProps> {
           <Spinner />
         </div>
       );
-    if (error) return <p style={{ color: 'red' }}>{error}</p>;
+    if (error) {
+      return (
+        <div className="text-center text-red-500 bg-red-50 border border-red-200 rounded-xl p-4">
+          {error}
+        </div>
+      );
+    }
     if (!results.length) return <p>No results found.</p>;
 
     return (
