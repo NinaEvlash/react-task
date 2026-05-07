@@ -11,6 +11,7 @@ interface AppState {
   results: Pokemon[];
   loading: boolean;
   error: string | null;
+  fatalError: string | null;
 }
 
 class Home extends Component<Record<string, never>, AppState> {
@@ -21,6 +22,7 @@ class Home extends Component<Record<string, never>, AppState> {
       results: [],
       loading: false,
       error: null,
+      fatalError: null,
     };
   }
 
@@ -32,13 +34,30 @@ class Home extends Component<Record<string, never>, AppState> {
   }
 
   fetchData = async (query: string) => {
+    const normalizedQuery = query.trim().toLowerCase();
     this.setState({ loading: true, error: null });
     try {
       let response: Response;
 
-      if (query) {
-        response = await fetch(`https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`);
-        if (!response.ok) throw new Error('Pokémon not found');
+      if (normalizedQuery) {
+        response = await fetch(`https://pokeapi.co/api/v2/pokemon/${normalizedQuery}`);
+        if (!response.ok) {
+          let message = 'Something went wrong';
+
+          if (response.status === 404) {
+            message = 'Pokémon not found';
+            localStorage.removeItem('pokemonSearchQuery');
+          } else if (response.status >= 500) {
+            message = 'Server error. Please try again later.';
+          }
+
+          this.setState({
+            results: [],
+            error: message,
+            loading: false,
+          });
+          return;
+        }
 
         const data: {
           name: string;
@@ -70,7 +89,7 @@ class Home extends Component<Record<string, never>, AppState> {
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        this.setState({ error: error.message, loading: false });
+        this.setState({ error: 'Network error. Please check your connection.', loading: false });
       } else {
         this.setState({ error: 'Unknown error occurred', loading: false });
       }
@@ -78,17 +97,18 @@ class Home extends Component<Record<string, never>, AppState> {
   };
 
   handleSearch = (newQuery: string) => {
-    localStorage.setItem('pokemonSearchQuery', newQuery);
+    const normalizedQuery = newQuery.trim();
+    localStorage.setItem('pokemonSearchQuery', normalizedQuery);
     this.setState({ query: newQuery }, () => {
       this.fetchData(newQuery);
     });
   };
 
   render() {
-    const { query, results, loading, error } = this.state;
+    const { query, results, loading, error, fatalError } = this.state;
 
-    if (error) {
-      throw new Error(error);
+    if (fatalError) {
+      throw new Error(fatalError);
     }
 
     return (
@@ -100,7 +120,7 @@ class Home extends Component<Record<string, never>, AppState> {
 
           <button
             onClick={() => {
-              this.setState({ error: 'Manual test error' });
+              this.setState({ fatalError: 'Manual test error' });
             }}
             className="px-4 py-2 bg-red-500 text-white rounded-xl 
                  hover:bg-red-600 active:scale-95 
