@@ -3,7 +3,7 @@ import { PureComponent, type ReactNode } from 'react';
 export default class Spinner extends PureComponent {
   render(): ReactNode {
     return (
-      <div role="status">
+      <div data-testid="spinner" role="status">
         <svg
           aria-hidden="true"
           className="w-8 h-8 text-gray-200 animate-spin fill-blue-600"

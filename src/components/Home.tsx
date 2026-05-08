@@ -42,11 +42,11 @@ class Home extends Component<Record<string, never>, AppState> {
       if (normalizedQuery) {
         response = await fetch(`https://pokeapi.co/api/v2/pokemon/${normalizedQuery}`);
         if (!response.ok) {
+          localStorage.removeItem('pokemonSearchQuery');
           let message = 'Something went wrong';
 
-          if (response.status === 404) {
+          if (response.status >= 400 && response.status < 500) {
             message = 'Pokémon not found';
-            localStorage.removeItem('pokemonSearchQuery');
           } else if (response.status >= 500) {
             message = 'Server error. Please try again later.';
           }
@@ -72,6 +72,7 @@ class Home extends Component<Record<string, never>, AppState> {
               description: `Weight: ${data.weight}, Height: ${data.height}`,
             },
           ],
+          error: null,
           loading: false,
         });
       } else {
