@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import Spinner from './Spinner';
+import Spinner from '../Spinner';
 
 interface ResultItem {
   name: string;
