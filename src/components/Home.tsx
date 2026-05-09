@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import SearchBar from './SearchBar';
+import SearchBar from './Search/SearchBar';
 import Results from './Results/Results';
 interface Pokemon {
   name: string;
