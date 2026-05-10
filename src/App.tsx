@@ -1,4 +1,4 @@
-import Home from './components/Home';
+import Home from './components/Home/Home';
 import { PureComponent, type ReactNode } from 'react';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
