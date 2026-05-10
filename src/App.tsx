@@ -1,6 +1,6 @@
 import Home from './components/Home';
 import { PureComponent, type ReactNode } from 'react';
-import ErrorBoundary from './components/ErrorBoundary';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 class App extends PureComponent {
   render(): ReactNode {
