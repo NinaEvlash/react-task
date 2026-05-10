@@ -30,18 +30,21 @@ The project includes:
 
 Clone the repository:
 
-````bash
+`````bash
 git clone <https://github.com/NinaEvlash/react-task.git>
+```
 
 Go to the project folder:
 
-```bash
+````bash
 cd react-task
+```
 
 Install dependencies:
 
 ```bash
 npm install
+```
 
 Running the Project
 
@@ -49,6 +52,7 @@ Start development server:
 
 ```bash
 npm run dev
+```
 
 Running Tests
 
@@ -56,11 +60,13 @@ Run all tests:
 
 ```bash
 npm run test
+```
 
 Run tests in watch mode:
 
 ```bash
 npm run test:watch
+```
 
 Coverage Report
 
@@ -68,6 +74,7 @@ Generate coverage report:
 
 ```bash
 npm run test:coverage
+```
 
 Coverage results will be generated in the coverage/ folder.
 
@@ -98,4 +105,4 @@ Coverage results will be generated in the coverage/ folder.
 - API mocking with Vitest
 - localStorage testing
 - User interaction testing
-````
+`````
