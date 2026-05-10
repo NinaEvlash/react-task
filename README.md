@@ -1,5 +1,3 @@
-# rs-react-app
-
 # Pokémon Search App
 
 A React + TypeScript application for searching Pokémon using the PokéAPI.
