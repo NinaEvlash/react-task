@@ -26,57 +26,33 @@ The project includes:
 
 ---
 
-## Installation
+### Prerequisites
 
-Clone the repository:
+1. Clone repo locally: https://github.com/NinaEvlash/react-task.git
+2. Go to folder `unit-testing`
+3. To install all dependencies use [`npm install`](https://docs.npmjs.com/cli/install)
+4. Run **test scripts** in command line.
+5. You will see the number of skipped, passing and failing tests.
 
-`````bash
-git clone <https://github.com/NinaEvlash/react-task.git>
-```
+---
 
-Go to the project folder:
-
-````bash
-cd react-task
-```
-
-Install dependencies:
+### Test scripts
 
 ```bash
-npm install
+
+# Run all tests:
+$ npm run test
+
+# Run tests in watch mode:
+$ npm run test:watch
+
+# Generate coverage report:
+$ npm run test:coverage
+
+# Coverage results will be generated in the coverage/ folder.
 ```
 
-Running the Project
-
-Start development server:
-
-```bash
-npm run dev
-```
-
-Running Tests
-
-Run all tests:
-
-```bash
-npm run test
-```
-
-Run tests in watch mode:
-
-```bash
-npm run test:watch
-```
-
-Coverage Report
-
-Generate coverage report:
-
-```bash
-npm run test:coverage
-```
-
-Coverage results will be generated in the coverage/ folder.
+---
 
 ## Features
 
@@ -105,4 +81,7 @@ Coverage results will be generated in the coverage/ folder.
 - API mocking with Vitest
 - localStorage testing
 - User interaction testing
-`````
+
+```
+
+```
