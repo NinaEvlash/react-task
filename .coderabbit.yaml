@@ -1,0 +1,9 @@
+reviews:
+  profile: chill
+
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+
+chat:
+  auto_reply: true
