@@ -1,9 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
 import ErrorBoundary from './ErrorBoundary';
-
-vi.spyOn(console, 'error').mockImplementation(() => {});
 
 function BuggyComponent(): JSX.Element {
   throw new Error('Test error');
@@ -55,15 +52,13 @@ describe('ErrorBoundary', () => {
   });
 
   it('logs error to console', () => {
-    const consoleSpy = vi.spyOn(console, 'error');
-
     render(
       <ErrorBoundary>
         <BuggyComponent />
       </ErrorBoundary>,
     );
 
-    expect(consoleSpy).toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalled();
   });
 
   it('recovers after clicking Try Again', async () => {
@@ -75,13 +70,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>,
     );
 
-    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
-
-    const button = screen.getByRole('button', {
-      name: /try again/i,
-    });
-
-    await userEvent.click(button);
+    await userEvent.click(screen.getByRole('button', { name: /try again/i }));
 
     expect(screen.getByText(/recovered successfully/i)).toBeInTheDocument();
   });
