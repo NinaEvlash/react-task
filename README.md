@@ -79,7 +79,3 @@ $ npm run test:coverage
 - API mocking with Vitest
 - localStorage testing
 - User interaction testing
-
-```
-
-```
