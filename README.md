@@ -54,7 +54,7 @@ The project includes:
  npm run test:coverage
 ```
 
-# Coverage results will be generated in the coverage/ folder.
+#### Coverage results will be generated in the coverage/ folder.
 
 ---
 
