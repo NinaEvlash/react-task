@@ -201,6 +201,7 @@ describe('Home', () => {
   });
 
   it('triggers ErrorBoundary when fatal error happens', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     const user = userEvent.setup();
 
     render(

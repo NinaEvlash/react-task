@@ -1,6 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 import ErrorBoundary from './ErrorBoundary';
+
+vi.spyOn(console, 'error').mockImplementation(() => {});
 
 function BuggyComponent(): JSX.Element {
   throw new Error('Test error');
@@ -17,11 +20,7 @@ function RecoverableComponent() {
 }
 
 describe('ErrorBoundary', () => {
-  beforeEach(() => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-  });
   afterEach(() => {
-    vi.restoreAllMocks();
     localStorage.clear();
   });
 
