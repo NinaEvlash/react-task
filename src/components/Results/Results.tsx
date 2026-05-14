@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import Spinner from '../Spinner/Spinner';
 import { ResultsProps } from '../../types/results';
 
@@ -26,14 +28,22 @@ export default function Results({ results, loading, error }: ResultsProps) {
         >
           <strong className="block text-lg font-semibold text-gray-800 mb-1">{item.name}</strong>
 
-          <p className="text-gray-600">{item.description}</p>
+          <p className="text-gray-600 mb-4">{item.description}</p>
 
-          <button
-            className="mt-3 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={() => console.log(item.name)}
+          <Link
+            to={`/pokemon/${item.name}`}
+            className="inline-flex items-center
+    px-3 py-1.5
+    text-sm font-medium
+    text-gray-700
+    bg-gray-100
+    rounded-lg
+    hover:bg-gray-200
+    transition-colors
+    "
           >
             Details
-          </button>
+          </Link>
         </div>
       ))}
     </div>

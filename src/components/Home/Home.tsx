@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Outlet, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 
 import SearchBar from '../Search/SearchBar';
 import Results from '../Results/Results';
 import { Pokemon } from '../../types/pokemon';
-import { getPokemonByName, getPokemonList } from '../../api/pokemonApi';
+import { getDataByName, getDataList } from '../../api/dataApi';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,6 +15,11 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const showDetails = location.pathname.includes('/pokemon/');
 
   useEffect(() => {
     const savedQuery = localStorage.getItem('pokemonSearchQuery') || '';
@@ -34,7 +39,7 @@ export default function Home() {
     try {
       let response: Response;
       if (normalizedQuery) {
-        response = await getPokemonByName(normalizedQuery);
+        response = await getDataByName(normalizedQuery);
         if (!response.ok) {
           let message = 'Something went wrong';
 
@@ -68,7 +73,7 @@ export default function Home() {
       const limit = 20;
       const offset = (page - 1) * limit;
 
-      const data = await getPokemonList(limit, offset);
+      const data = await getDataList(limit, offset);
 
       const mapped: Pokemon[] = data.results.map((p: { name: string }) => ({
         name: p.name,
@@ -90,6 +95,9 @@ export default function Home() {
     localStorage.setItem('pokemonSearchQuery', normalized);
 
     setSearchParams({ page: '1' });
+    if (!normalized) {
+      navigate('/');
+    }
   };
 
   const setPage = (newPage: number) => {
@@ -105,7 +113,17 @@ export default function Home() {
       <div className="w-full max-w-2xl space-y-6">
         <SearchBar query={query} onSearch={handleSearch} />
 
-        <Results results={results} loading={loading} error={error} />
+        <div className="flex gap-6 mt-6">
+          <div className="flex-1">
+            <Results results={results} loading={loading} error={error} />
+          </div>
+
+          {showDetails && (
+            <div className="w-1/2 bg-white rounded-2xl shadow-md p-6">
+              <Outlet />
+            </div>
+          )}
+        </div>
 
         {!query && results.length > 0 && (
           <div className="flex gap-3 justify-center">

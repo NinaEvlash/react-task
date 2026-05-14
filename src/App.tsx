@@ -1,15 +1,16 @@
-import Home from './components/Home/Home';
-import { PureComponent, type ReactNode } from 'react';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import { Routes, Route } from 'react-router-dom';
 
-class App extends PureComponent {
-  render(): ReactNode {
-    return (
-      <ErrorBoundary>
-        <Home />
-      </ErrorBoundary>
-    );
-  }
+import Home from './components/Home/Home';
+import Details from './components/Details/Details';
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />}>
+        <Route path="pokemon/:name" element={<Details />} />
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;
