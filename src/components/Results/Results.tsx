@@ -21,9 +21,9 @@ export default function Results({ results, loading, error }: ResultsProps) {
 
   return (
     <div className="space-y-4">
-      {results.map((item, index) => (
+      {results.map((item) => (
         <div
-          key={index}
+          key={item.name}
           className="p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition"
         >
           <strong className="block text-lg font-semibold text-gray-800 mb-1">{item.name}</strong>

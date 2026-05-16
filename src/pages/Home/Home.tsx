@@ -89,13 +89,13 @@ export default function Home() {
   };
 
   const handleSearch = (newQuery: string) => {
-    const normalized = newQuery.trim();
+    setQuery(newQuery);
 
-    setQuery(normalized);
-    localStorage.setItem('pokemonSearchQuery', normalized);
+    localStorage.setItem('pokemonSearchQuery', newQuery);
 
     setSearchParams({ page: '1' });
-    if (!normalized) {
+
+    if (!newQuery.trim()) {
       navigate('/');
     }
   };
@@ -128,6 +128,7 @@ export default function Home() {
         {!query && results.length > 0 && (
           <div className="flex gap-3 justify-center">
             <button
+              type="button"
               className="
      px-4 py-2
       rounded-lg
@@ -150,6 +151,7 @@ export default function Home() {
             <span className="flex items-center text-sm font-medium text-gray-600">Page {page}</span>
 
             <button
+              type="button"
               className="
       px-4 py-2
       rounded-lg
@@ -169,6 +171,7 @@ export default function Home() {
         )}
 
         <button
+          type="button"
           onClick={() => setFatalError('Manual test error')}
           className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
         >

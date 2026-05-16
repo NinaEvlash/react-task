@@ -2,8 +2,8 @@ import { NavLink } from 'react-router-dom';
 
 export default function Navigation() {
   return (
-    <nav className="bg-white shadow-sm px-6 py-4">
-      <div className="flex gap-6">
+    <div className="bg-white shadow-sm px-6 py-4">
+      <nav className="flex gap-6">
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -25,7 +25,7 @@ export default function Navigation() {
         >
           About
         </NavLink>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }

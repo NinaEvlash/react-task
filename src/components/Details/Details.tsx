@@ -48,7 +48,7 @@ export default function Details() {
   if (!item) return null;
 
   return (
-    <div className="flex flex-col items-center">
+    <section className="flex flex-col items-center">
       <img src={item.sprites.front_default} alt={item.name} className="w-40 h-40" />
 
       <h2 className="text-2xl font-bold capitalize mb-4">{item.name}</h2>
@@ -57,6 +57,7 @@ export default function Details() {
       <p>Weight: {item.weight}</p>
       <p>Types: {item.types.map((t) => t.type.name).join(', ')}</p>
       <button
+        type="button"
         className="inline-flex items-center
     px-3 py-1.5
     text-sm font-medium
@@ -69,6 +70,6 @@ export default function Details() {
       >
         Close
       </button>
-    </div>
+    </section>
   );
 }
