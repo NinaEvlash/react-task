@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
@@ -8,17 +9,18 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "composite": true,
+    "outDir": "dist-node"
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "scripts", "tools"]
 }
