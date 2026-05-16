@@ -129,17 +129,17 @@ export default function Home() {
           <div className="flex gap-3 justify-center">
             <button
               className="
-      px-4 py-2
-      rounded-xl
-      bg-blue-500
-      text-white
-      shadow-md
+     px-4 py-2
+      rounded-lg
+      border border-gray-300
+      bg-white
+      text-gray-700
+      text-sm
+      font-medium
       transition
-      hover:bg-blue-600
-      active:scale-95
-      disabled:bg-gray-300
+      hover:bg-gray-100
+      disabled:opacity-40
       disabled:cursor-not-allowed
-      disabled:active:scale-100
     "
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
@@ -147,21 +147,19 @@ export default function Home() {
               Prev
             </button>
 
-            <span className="text-lg font-semibold text-gray-700">Page {page}</span>
+            <span className="flex items-center text-sm font-medium text-gray-600">Page {page}</span>
 
             <button
               className="
       px-4 py-2
-      rounded-xl
-      bg-blue-500
-      text-white
-      shadow-md
+      rounded-lg
+      border border-gray-300
+      bg-white
+      text-gray-700
+      text-sm
+      font-medium
       transition
-      hover:bg-blue-600
-      active:scale-95
-      disabled:bg-gray-300
-      disabled:cursor-not-allowed
-      disabled:active:scale-100
+      hover:bg-gray-100
     "
               onClick={() => setPage(page + 1)}
             >

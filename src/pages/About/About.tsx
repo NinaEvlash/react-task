@@ -16,8 +16,8 @@ export default function About() {
               href="https://github.com/ninaevlash"
               target="_blank"
               rel="noreferrer"
-              className="px-5 py-2 rounded-xl bg-gray-900 text-white 
-            hover:bg-gray-800 transition duration-200 shadow-sm"
+              className="text-gray-800 underline underline-offset-4 
+            hover:text-black transition"
             >
               My GitHub
             </a>
@@ -26,8 +26,8 @@ export default function About() {
               href="https://rs.school/courses/reactjs"
               target="_blank"
               rel="noreferrer"
-              className="px-5 py-2 rounded-xl bg-blue-600 text-white 
-            hover:bg-blue-700 transition duration-200 shadow-sm"
+              className="text-blue-600 underline underline-offset-4 
+            hover:text-blue-700 transition"
             >
               RS School React Course
             </a>
