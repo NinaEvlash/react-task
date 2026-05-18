@@ -87,9 +87,10 @@ export default function Home() {
   };
 
   const handleSearch = (newQuery: string) => {
-    setQuery(newQuery);
+    const trimmedQuery = newQuery.trim();
+    setQuery(trimmedQuery);
 
-    localStorage.setItem('pokemonSearchQuery', newQuery);
+    localStorage.setItem('pokemonSearchQuery', trimmedQuery);
 
     const params = new URLSearchParams();
     params.set('page', '1');
