@@ -7,4 +7,5 @@ export interface ResultsProps {
   results: ResultItem[];
   loading: boolean;
   error: string | null;
+  onSelect: (name: string) => void;
 }

@@ -1,9 +1,7 @@
-import { Link } from 'react-router-dom';
-
 import Spinner from '../Spinner/Spinner';
 import { ResultsProps } from '../../types/results';
 
-export default function Results({ results, loading, error }: ResultsProps) {
+export default function Results({ results, loading, error, onSelect }: ResultsProps) {
   if (loading)
     return (
       <div className="flex justify-center items-center min-h-[200px]">
@@ -30,8 +28,8 @@ export default function Results({ results, loading, error }: ResultsProps) {
 
           <p className="text-gray-600 mb-4">{item.description}</p>
 
-          <Link
-            to={`/pokemon/${item.name}`}
+          <button
+            onClick={() => onSelect(item.name)}
             className="inline-flex items-center
     px-3 py-1.5
     text-sm font-medium
@@ -43,7 +41,7 @@ export default function Results({ results, loading, error }: ResultsProps) {
     "
           >
             Details
-          </Link>
+          </button>
         </div>
       ))}
     </div>

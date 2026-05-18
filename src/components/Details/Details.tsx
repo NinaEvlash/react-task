@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import { getDataDetails } from '../../api/dataApi';
 import Spinner from '../Spinner/Spinner';
 import { PokemonDetails } from '../../types/pokemon';
+import { DetailsProps } from '../../types/details';
 
-export default function Details() {
+export default function Details({ name }: DetailsProps) {
   const [item, setItem] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const navigate = useNavigate();
-  const { name } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     async function fetchData() {
@@ -66,7 +66,11 @@ export default function Details() {
     rounded-lg
     hover:bg-gray-200
     transition-colors mt-4"
-        onClick={() => navigate('/')}
+        onClick={() => {
+          const params = new URLSearchParams(searchParams);
+          params.delete('details');
+          setSearchParams(params);
+        }}
       >
         Close
       </button>

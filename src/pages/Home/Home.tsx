@@ -1,25 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import SearchBar from '../../components/Search/SearchBar';
 import Results from '../../components/Results/Results';
+import Details from '../../components/Details/Details';
 import { Pokemon } from '../../types/pokemon';
 import { getDataByName, getDataList } from '../../api/dataApi';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
+  const details = searchParams.get('details');
 
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Pokemon[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
-
-  const navigate = useNavigate();
-
-  const location = useLocation();
-  const showDetails = location.pathname.includes('/pokemon/');
 
   useEffect(() => {
     const savedQuery = localStorage.getItem('pokemonSearchQuery') || '';
@@ -93,20 +90,31 @@ export default function Home() {
 
     localStorage.setItem('pokemonSearchQuery', newQuery);
 
-    setSearchParams({ page: '1' });
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    params.delete('details');
 
-    if (!newQuery.trim()) {
-      navigate('/');
-    }
+    setSearchParams(params);
   };
 
   const setPage = (newPage: number) => {
-    setSearchParams({ page: String(newPage) });
+    const params = new URLSearchParams(searchParams);
+    params.set('page', String(newPage));
+    setSearchParams(params);
   };
 
   if (fatalError) {
     throw new Error(fatalError);
   }
+
+  const handleSelectPokemon = (name: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set('page', String(page));
+    params.set('details', name);
+
+    setSearchParams(params);
+  };
 
   return (
     <main className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
@@ -115,17 +123,22 @@ export default function Home() {
 
         <section className="flex items-start gap-6 mt-6">
           <section className="flex-1">
-            <Results results={results} loading={loading} error={error} />
+            <Results
+              results={results}
+              loading={loading}
+              error={error}
+              onSelect={handleSelectPokemon}
+            />
           </section>
 
-          {showDetails && (
+          {details && (
             <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6">
-              <Outlet />
+              <Details name={details} />
             </aside>
           )}
         </section>
 
-        {!query && results.length > 0 && (
+        {!loading && !query && results.length > 0 && (
           <section aria-label="Pagination" className="flex gap-3 justify-center">
             <button
               type="button"
