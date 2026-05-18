@@ -30,8 +30,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <section className="min-h-screen flex items-center justify-center bg-gray-100">
-          <div className="w-full max-w-md flex flex-col items-center justify-center p-8 bg-red-50 border border-red-200 rounded-2xl shadow-md text-center space-y-4">
+        <main className="min-h-screen flex items-center justify-center bg-gray-100">
+          <article className="w-full max-w-md flex flex-col items-center justify-center p-8 bg-red-50 border border-red-200 rounded-2xl shadow-md text-center space-y-4">
             <h2 className="text-2xl font-semibold text-red-600">Something went wrong</h2>
 
             <p className="text-gray-600 text-sm">
@@ -47,8 +47,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             >
               Try Again
             </button>
-          </div>
-        </section>
+          </article>
+        </main>
       );
     }
 

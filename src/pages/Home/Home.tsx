@@ -109,75 +109,53 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+    <main className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
       <div className="w-full max-w-2xl space-y-6">
         <SearchBar query={query} onSearch={handleSearch} />
 
-        <div className="flex gap-6 mt-6">
-          <div className="flex-1">
+        <section className="flex items-start gap-6 mt-6">
+          <section className="flex-1">
             <Results results={results} loading={loading} error={error} />
-          </div>
+          </section>
 
           {showDetails && (
-            <div className="w-1/2 bg-white rounded-2xl shadow-md p-6">
+            <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6">
               <Outlet />
-            </div>
+            </aside>
           )}
-        </div>
+        </section>
 
         {!query && results.length > 0 && (
-          <div className="flex gap-3 justify-center">
+          <section aria-label="Pagination" className="flex gap-3 justify-center">
             <button
               type="button"
-              className="
-     px-4 py-2
-      rounded-lg
-      border border-gray-300
-      bg-white
-      text-gray-700
-      text-sm
-      font-medium
-      transition
-      hover:bg-gray-100
-      disabled:opacity-40
-      disabled:cursor-not-allowed
-    "
+              className=" px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-medium transition hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed "
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
             >
               Prev
             </button>
-
             <span className="flex items-center text-sm font-medium text-gray-600">Page {page}</span>
-
             <button
               type="button"
-              className="
-      px-4 py-2
-      rounded-lg
-      border border-gray-300
-      bg-white
-      text-gray-700
-      text-sm
-      font-medium
-      transition
-      hover:bg-gray-100
-    "
+              className=" px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-medium transition hover:bg-gray-100 "
               onClick={() => setPage(page + 1)}
             >
               Next
             </button>
-          </div>
+          </section>
         )}
 
-        <button
-          type="button"
-          onClick={() => setFatalError('Manual test error')}
-          className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
-        >
-          Trigger Error
-        </button>
+        <section className="flex justify-center">
+          <button
+            type="button"
+            onClick={() => setFatalError('Manual test error')}
+            className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
+          >
+            Trigger Error
+          </button>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

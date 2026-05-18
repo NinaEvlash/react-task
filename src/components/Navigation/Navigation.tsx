@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 
 export default function Navigation() {
   return (
-    <div className="bg-white shadow-sm px-6 py-4">
+    <header className="bg-white shadow-sm px-6 py-4">
       <nav className="flex gap-6">
         <NavLink
           to="/"
@@ -26,6 +26,6 @@ export default function Navigation() {
           About
         </NavLink>
       </nav>
-    </div>
+    </header>
   );
 }

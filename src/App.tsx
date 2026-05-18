@@ -10,8 +10,8 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 function App() {
   return (
     <>
-      <Navigation />
       <ErrorBoundary>
+        <Navigation />
         <Routes>
           <Route path="/" element={<Home />}>
             <Route path="pokemon/:name" element={<Details />} />

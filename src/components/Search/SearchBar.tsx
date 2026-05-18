@@ -24,7 +24,7 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
     }
   };
   return (
-    <div className="flex items-center gap-3 mb-5">
+    <section className="flex items-center gap-3 mb-5">
       <label htmlFor="search" className="sr-only">
         Search Pokémon
       </label>
@@ -48,6 +48,6 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
       >
         Search
       </button>
-    </div>
+    </section>
   );
 }
