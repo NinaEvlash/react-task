@@ -51,7 +51,7 @@ export default function Home() {
             setError(message);
             setLoading(false);
 
-            clearQuery();
+            localStorage.removeItem('pokemonSearchQuery');
             return;
           }
 
