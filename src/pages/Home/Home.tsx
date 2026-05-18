@@ -5,6 +5,7 @@ import SearchBar from '../../components/Search/SearchBar';
 import Results from '../../components/Results/Results';
 import { Pokemon } from '../../types/pokemon';
 import { getDataByName, getDataList } from '../../api/dataApi';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,84 +14,84 @@ export default function Home() {
   const selectedPokemon = params.name || null;
   const navigate = useNavigate();
 
-  const [query, setQuery] = useState('');
   const [results, setResults] = useState<Pokemon[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const savedQuery = localStorage.getItem('pokemonSearchQuery') || '';
-    setQuery(savedQuery);
-  }, []);
+  const {
+    value: query,
+    saveValue: setQuery,
+    removeValue: clearQuery,
+  } = useLocalStorage('pokemonSearchQuery');
 
   useEffect(() => {
-    fetchData(query, page);
-  }, [query, page]);
+    const fetchData = async () => {
+      const normalizedQuery = query.trim().toLowerCase();
 
-  const fetchData = async (query: string, page: number) => {
-    const normalizedQuery = query.trim().toLowerCase();
+      setLoading(true);
+      setError(null);
 
-    setLoading(true);
-    setError(null);
+      try {
+        let response: Response;
 
-    try {
-      let response: Response;
-      if (normalizedQuery) {
-        response = await getDataByName(normalizedQuery);
-        if (!response.ok) {
-          let message = 'Something went wrong';
+        if (normalizedQuery) {
+          response = await getDataByName(normalizedQuery);
 
-          if (response.status >= 400 && response.status < 500) {
-            message = 'Pokémon not found';
-          } else if (response.status >= 500) {
-            message = 'Server error. Please try again later.';
+          if (!response.ok) {
+            let message = 'Something went wrong';
+
+            if (response.status >= 400 && response.status < 500) {
+              message = 'Pokémon not found';
+            } else if (response.status >= 500) {
+              message = 'Server error. Please try again later.';
+            }
+
+            setResults([]);
+            setError(message);
+            setLoading(false);
+
+            clearQuery();
+            return;
           }
 
-          setResults([]);
-          setError(message);
-          setLoading(false);
+          const data = await response.json();
 
-          localStorage.removeItem('pokemonSearchQuery');
+          setResults([
+            {
+              name: data.name,
+              description: `Weight: ${data.weight}, Height: ${data.height}`,
+            },
+          ]);
+
+          setLoading(false);
           return;
         }
 
-        const data = await response.json();
+        const limit = 20;
+        const offset = (page - 1) * limit;
 
-        setResults([
-          {
-            name: data.name,
-            description: `Weight: ${data.weight}, Height: ${data.height}`,
-          },
-        ]);
+        const data = await getDataList(limit, offset);
 
+        const mapped: Pokemon[] = data.results.map((p: { name: string }) => ({
+          name: p.name,
+          description: 'No description available',
+        }));
+
+        setResults(mapped);
+      } catch {
+        setError('Network error. Please check your connection.');
+      } finally {
         setLoading(false);
-        return;
       }
+    };
 
-      const limit = 20;
-      const offset = (page - 1) * limit;
-
-      const data = await getDataList(limit, offset);
-
-      const mapped: Pokemon[] = data.results.map((p: { name: string }) => ({
-        name: p.name,
-        description: 'No description available',
-      }));
-
-      setResults(mapped);
-      setLoading(false);
-    } catch {
-      setError('Network error. Please check your connection.');
-      setLoading(false);
-    }
-  };
+    fetchData();
+  }, [query, page, clearQuery]);
 
   const handleSearch = (newQuery: string) => {
     const trimmedQuery = newQuery.trim();
     setQuery(trimmedQuery);
-
-    localStorage.setItem('pokemonSearchQuery', trimmedQuery);
 
     const params = new URLSearchParams();
     params.set('page', '1');
