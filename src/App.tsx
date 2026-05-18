@@ -5,6 +5,7 @@ import About from './pages/About/About';
 import Navigation from './components/Navigation/Navigation';
 import NotFound from './pages/NotFound/NotFound';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import Details from './components/Details/Details';
 
 function App() {
   return (
@@ -12,7 +13,9 @@ function App() {
       <ErrorBoundary>
         <Navigation />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home />}>
+            <Route path="details/:name" element={<Details />} />
+          </Route>
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

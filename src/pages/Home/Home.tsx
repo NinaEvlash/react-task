@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Outlet, useNavigate, useSearchParams, useParams } from 'react-router-dom';
 
 import SearchBar from '../../components/Search/SearchBar';
 import Results from '../../components/Results/Results';
-import Details from '../../components/Details/Details';
 import { Pokemon } from '../../types/pokemon';
 import { getDataByName, getDataList } from '../../api/dataApi';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
-  const details = searchParams.get('details');
+  const params = useParams<{ name?: string }>();
+  const selectedPokemon = params.name || null;
+  const navigate = useNavigate();
 
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Pokemon[]>([]);
@@ -92,9 +93,9 @@ export default function Home() {
 
     const params = new URLSearchParams();
     params.set('page', '1');
-    params.delete('details');
 
     setSearchParams(params);
+    navigate('/');
   };
 
   const setPage = (newPage: number) => {
@@ -109,11 +110,10 @@ export default function Home() {
 
   const handleSelectPokemon = (name: string) => {
     const params = new URLSearchParams(searchParams);
-
+    params.delete('details');
     params.set('page', String(page));
-    params.set('details', name);
 
-    setSearchParams(params);
+    navigate(`/details/${name}${params.toString() ? `?${params.toString()}` : ''}`);
   };
 
   return (
@@ -131,9 +131,9 @@ export default function Home() {
             />
           </section>
 
-          {details && (
+          {selectedPokemon && (
             <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6">
-              <Details name={details} />
+              <Outlet />
             </aside>
           )}
         </section>
