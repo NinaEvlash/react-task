@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import * as dataApi from '../../api/dataApi';
@@ -10,6 +10,16 @@ describe('Home', () => {
   const renderWithRouter = (component: React.ReactElement) => {
     return render(<BrowserRouter>{component}</BrowserRouter>);
   };
+
+  /*function LocationDisplay() {
+    const location = useLocation();
+    return (
+      <div data-testid="location">
+        {location.pathname}
+        {location.search}
+      </div>
+    );
+  }*/
 
   afterEach(() => {
     vi.clearAllMocks();
@@ -217,6 +227,129 @@ describe('Home', () => {
     await waitFor(() => {
       expect(localStorage.getItem('pokemonSearchQuery')).toBe('pikachu');
     });
+  });
+
+  it('shows No results found when list is empty', async () => {
+    vi.spyOn(dataApi, 'getDataList').mockResolvedValue({ results: [] });
+
+    renderWithRouter(<Home />);
+
+    await waitFor(() => {
+      expect(screen.getByText('No results found.')).toBeInTheDocument();
+    });
+  });
+
+  it('goes to next page when Next is clicked', async () => {
+    const user = userEvent.setup();
+
+    vi.spyOn(dataApi, 'getDataList').mockResolvedValue({
+      results: [{ name: 'pikachu', url: '' }],
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/?page=1']}>
+        <Home />
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText(/page 1/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /next/i }));
+
+    expect(await screen.findByText(/page 2/i)).toBeInTheDocument();
+  });
+
+  it('goes to previous page when Prev is clicked', async () => {
+    const user = userEvent.setup();
+
+    vi.spyOn(dataApi, 'getDataList').mockResolvedValue({
+      results: [{ name: 'pikachu', url: '' }],
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/?page=2']}>
+        <Home />
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText(/page 2/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /prev/i }));
+
+    expect(await screen.findByText(/page 1/i)).toBeInTheDocument();
+  });
+
+  it('disables Prev button on page 1', async () => {
+    vi.spyOn(dataApi, 'getDataList').mockResolvedValue({
+      results: [{ name: 'pikachu', url: '' }],
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/?page=1']}>
+        <Home />
+      </MemoryRouter>,
+    );
+
+    const prevButton = await screen.findByRole('button', { name: /prev/i });
+
+    expect(prevButton).toBeDisabled();
+  });
+
+  it('shows correct page from query param', async () => {
+    vi.spyOn(dataApi, 'getDataList').mockResolvedValue({
+      results: [{ name: 'pikachu', url: '' }],
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/?page=2']}>
+        <Home />
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText(/page 2/i)).toBeInTheDocument();
+
+    expect(screen.getByRole('button', { name: /prev/i })).not.toBeDisabled();
+
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
+  });
+
+  it('navigates to root after search', async () => {
+    render(
+      <MemoryRouter initialEntries={['/?page=5']}>
+        <Routes>
+          <Route path="*" element={<Home />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    const user = userEvent.setup();
+
+    await user.type(screen.getByPlaceholderText(/enter a pokémon name/i), 'pikachu');
+
+    await user.click(screen.getByRole('button', { name: /search/i }));
+
+    expect(localStorage.getItem('pokemonSearchQuery')).toBe('pikachu');
+  });
+
+  it('navigates to details page when selecting pokemon', async () => {
+    vi.spyOn(dataApi, 'getDataList').mockResolvedValue({
+      results: [{ name: 'bulbasaur', url: '' }],
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/details/:name" element={<div>DETAILS</div>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText('bulbasaur')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: /details/i }));
+
+    expect(screen.getByText('DETAILS')).toBeInTheDocument();
   });
 
   it('triggers ErrorBoundary when fatal error happens', async () => {
