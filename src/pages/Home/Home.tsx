@@ -26,6 +26,15 @@ export default function Home() {
   } = useLocalStorage('pokemonSearchQuery');
 
   useEffect(() => {
+    if (!searchParams.get('page')) {
+      const params = new URLSearchParams(searchParams);
+      params.set('page', '1');
+
+      setSearchParams(params);
+    }
+  }, [searchParams, setSearchParams]);
+
+  useEffect(() => {
     const fetchData = async () => {
       const normalizedQuery = query.trim().toLowerCase();
 
