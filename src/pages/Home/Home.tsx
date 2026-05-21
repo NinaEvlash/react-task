@@ -6,6 +6,7 @@ import Results from '../../components/Results/Results';
 import { Pokemon } from '../../types/pokemon';
 import { getDataByName, getDataList } from '../../api/dataApi';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { validateQuery } from '../../utils/validateQuery';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,11 +20,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
 
-  const {
-    value: query,
-    saveValue: setQuery,
-    removeValue: clearQuery,
-  } = useLocalStorage('pokemonSearchQuery');
+  const [query, setQuery] = useLocalStorage('pokemonSearchQuery');
 
   useEffect(() => {
     if (!searchParams.get('page')) {
@@ -36,7 +33,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const normalizedQuery = query.trim().toLowerCase();
+      const normalizedQuery = validateQuery(query);
 
       setLoading(true);
       setError(null);
@@ -96,10 +93,10 @@ export default function Home() {
     };
 
     fetchData();
-  }, [query, page, clearQuery]);
+  }, [query, page]);
 
   const handleSearch = (newQuery: string) => {
-    const trimmedQuery = newQuery.trim();
+    const trimmedQuery = validateQuery(newQuery);
     setQuery(trimmedQuery);
 
     const params = new URLSearchParams();
