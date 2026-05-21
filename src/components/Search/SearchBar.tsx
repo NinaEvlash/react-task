@@ -36,9 +36,18 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
           value={input}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          className="px-4 py-2 w-64 rounded-xl border border-gray-300 
-               focus:outline-none focus:ring-2 focus:ring-blue-500 
-               focus:border-blue-500 transition"
+          className="
+          px-4 py-2 w-64 rounded-xl border border-gray-300
+          bg-white dark:bg-gray-800
+          text-gray-800 dark:text-gray-100
+          placeholder-gray-400 dark:placeholder-gray-500
+
+          focus:outline-none
+          focus:ring-2 focus:ring-blue-500
+          focus:border-blue-500
+
+          dark:border-gray-600
+          transition"
         />
         <button
           type="button"

@@ -125,11 +125,11 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+    <main className="min-h-screen bg-gray-100 p-6 flex flex-col items-center dark:bg-gray-950">
       <div className="w-full max-w-2xl space-y-6">
         <SearchBar query={query} onSearch={handleSearch} />
 
-        <section className="flex items-start gap-6 mt-6">
+        <div className="flex items-start gap-6 mt-6">
           <section className="flex-1">
             <Results
               results={results}
@@ -140,17 +140,17 @@ export default function Home() {
           </section>
 
           {selectedPokemon && (
-            <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6">
+            <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6 bg-white dark:bg-gray-800">
               <Outlet />
             </aside>
           )}
-        </section>
+        </div>
 
         {!loading && !query && results.length > 0 && (
           <section aria-label="Pagination" className="flex gap-3 justify-center">
             <button
               type="button"
-              className=" px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-medium transition hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed "
+              className=" px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed "
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
             >
@@ -159,7 +159,7 @@ export default function Home() {
             <span className="flex items-center text-sm font-medium text-gray-600">Page {page}</span>
             <button
               type="button"
-              className=" px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-medium transition hover:bg-gray-100 "
+              className=" px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition hover:bg-gray-200 dark:hover:bg-gray-600 "
               onClick={() => setPage(page + 1)}
             >
               Next

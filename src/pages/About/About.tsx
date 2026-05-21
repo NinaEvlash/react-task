@@ -1,22 +1,22 @@
 export default function About() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <article className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8">
+    <main className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-950 px-4">
+      <article className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">About this project</h1>
 
         <section className="space-y-4 text-center">
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 dark:text-gray-100 text-lg">
             This application was created as part of the React course.
           </p>
 
-          <p className="text-gray-700 font-medium">Author: Nina Yeulash</p>
+          <p className="text-gray-700 dark:text-gray-300 font-medium">Author: Nina Yeulash</p>
 
           <nav aria-label="External links" className="flex flex-col gap-3 items-center pt-4">
             <a
               href="https://github.com/ninaevlash"
               target="_blank"
               rel="noreferrer"
-              className="text-gray-800 underline underline-offset-4 hover:text-black transition"
+              className="text-gray-800 dark:text-gray-100 underline underline-offset-4 hover:text-black transition"
             >
               My GitHub
             </a>
