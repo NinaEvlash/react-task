@@ -1,7 +1,12 @@
 import Spinner from '../Spinner/Spinner';
 import { ResultsProps } from '../../types/results';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { toggleItem } from '../../features/selectedItem/selectedItemSlice';
 
 export default function Results({ results, loading, error, onSelect }: ResultsProps) {
+  const selected = useAppSelector((state) => state.selectedItem.items);
+  console.log(selected);
+  const dispatch = useAppDispatch();
   if (loading)
     return (
       <div className="flex justify-center items-center min-h-[200px]">
@@ -37,6 +42,11 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
           border-gray-200 dark:border-gray-700 
           hover:shadow-md transition"
         >
+          <input
+            type="checkbox"
+            checked={selected.includes(item.name)}
+            onChange={() => dispatch(toggleItem(item.name))}
+          />
           <strong className="block text-lg font-semibold text-gray-800 dark:text-gray-100">
             {item.name}
           </strong>
