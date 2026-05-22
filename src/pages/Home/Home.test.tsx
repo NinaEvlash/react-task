@@ -5,21 +5,13 @@ import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import * as dataApi from '../../api/dataApi';
+import ThemeProvider from '../../providers/ThemeProvider';
+import Navigation from '../../components/Navigation/Navigation';
 
 describe('Home', () => {
   const renderWithRouter = (component: React.ReactElement) => {
     return render(<BrowserRouter>{component}</BrowserRouter>);
   };
-
-  /*function LocationDisplay() {
-    const location = useLocation();
-    return (
-      <div data-testid="location">
-        {location.pathname}
-        {location.search}
-      </div>
-    );
-  }*/
 
   afterEach(() => {
     vi.clearAllMocks();
@@ -373,5 +365,21 @@ describe('Home', () => {
     await waitFor(() => {
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
+  });
+
+  it('toggles theme from header button', async () => {
+    render(
+      <ThemeProvider>
+        <BrowserRouter>
+          <Navigation />
+        </BrowserRouter>
+      </ThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+
+    await userEvent.click(button);
+
+    expect(localStorage.getItem('app-theme')).toBe('dark');
   });
 });

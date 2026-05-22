@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import App from './App';
 import * as dataApi from './api/dataApi';
+import ThemeProvider from './providers/ThemeProvider';
 
 describe('App', () => {
   afterEach(() => {
@@ -14,7 +15,9 @@ describe('App', () => {
 
     render(
       <BrowserRouter>
-        <App />
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
       </BrowserRouter>,
     );
 
