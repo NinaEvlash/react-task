@@ -7,6 +7,7 @@ import { Pokemon } from '../../types/pokemon';
 import { getDataByName, getDataList } from '../../api/dataApi';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { validateQuery } from '../../utils/validateQuery';
+import SelectedItemsPanel from '../../components/SelectedItemsPanel/SelectedItemsPanel';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -164,6 +165,7 @@ export default function Home() {
             >
               Next
             </button>
+            <SelectedItemsPanel />
           </section>
         )}
 

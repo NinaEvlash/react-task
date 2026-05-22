@@ -17,8 +17,11 @@ const selectedItemSlice = createSlice({
         state.items.push(action.payload);
       }
     },
+    clearItems(state) {
+      state.items = [];
+    },
   },
 });
 
-export const { toggleItem } = selectedItemSlice.actions;
+export const { toggleItem, clearItems } = selectedItemSlice.actions;
 export default selectedItemSlice.reducer;

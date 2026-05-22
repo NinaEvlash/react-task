@@ -5,7 +5,6 @@ import { toggleItem } from '../../features/selectedItem/selectedItemSlice';
 
 export default function Results({ results, loading, error, onSelect }: ResultsProps) {
   const selected = useAppSelector((state) => state.selectedItem.items);
-  console.log(selected);
   const dispatch = useAppDispatch();
   if (loading)
     return (
