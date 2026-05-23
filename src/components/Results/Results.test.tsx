@@ -1,12 +1,25 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-
+import type { RootState } from '../../store/store';
 import Results from './Results';
+
+const mockDispatch = vi.fn();
+const mockSelector = vi.fn();
+
+vi.mock('../../store/hooks', () => ({
+  useAppDispatch: () => mockDispatch,
+  useAppSelector: (selector: (state: RootState) => unknown) => mockSelector(selector),
+}));
 
 const onSelect = vi.fn();
 
 describe('Results', () => {
+  beforeEach(() => {
+    mockDispatch.mockReset();
+    mockSelector.mockReset();
+    mockSelector.mockImplementation((selector) => selector({ selectedItem: { items: [] } }));
+  });
   it('shows spinner when loading', () => {
     render(<Results results={[]} loading={true} error={null} onSelect={onSelect} />);
 
@@ -108,5 +121,29 @@ describe('Results', () => {
     await user.click(button);
 
     expect(onSelect).toHaveBeenCalledWith('pikachu');
+  });
+
+  it('dispatches toggleItem when checkbox is clicked', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <Results
+        results={[
+          {
+            name: 'pikachu',
+            description: 'Pokemon named pikachu',
+          },
+        ]}
+        loading={false}
+        error={null}
+        onSelect={onSelect}
+      />,
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+
+    await user.click(checkbox);
+
+    expect(mockDispatch).toHaveBeenCalled();
   });
 });

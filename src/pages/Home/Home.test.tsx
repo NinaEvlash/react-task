@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import { Provider } from 'react-redux';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router-dom';
@@ -7,10 +8,15 @@ import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import * as dataApi from '../../api/dataApi';
 import ThemeProvider from '../../providers/ThemeProvider';
 import Navigation from '../../components/Navigation/Navigation';
+import { store } from '../../store/store';
 
 describe('Home', () => {
   const renderWithRouter = (component: React.ReactElement) => {
-    return render(<BrowserRouter>{component}</BrowserRouter>);
+    return render(
+      <Provider store={store}>
+        <BrowserRouter>{component}</BrowserRouter>
+      </Provider>,
+    );
   };
 
   afterEach(() => {
@@ -57,7 +63,8 @@ describe('Home', () => {
       expect(screen.getByText('ivysaur')).toBeInTheDocument();
     });
 
-    expect(screen.getAllByText('No description available')).toHaveLength(2);
+    expect(screen.getByText('Pokemon named bulbasaur')).toBeInTheDocument();
+    expect(screen.getByText('Pokemon named ivysaur')).toBeInTheDocument();
   });
 
   it('shows message in case of error 404', async () => {
@@ -239,9 +246,11 @@ describe('Home', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/?page=1']}>
-        <Home />
-      </MemoryRouter>,
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/?page=1']}>
+          <Home />
+        </MemoryRouter>
+      </Provider>,
     );
 
     expect(await screen.findByText(/page 1/i)).toBeInTheDocument();
@@ -259,9 +268,11 @@ describe('Home', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/?page=2']}>
-        <Home />
-      </MemoryRouter>,
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/?page=2']}>
+          <Home />
+        </MemoryRouter>
+      </Provider>,
     );
 
     expect(await screen.findByText(/page 2/i)).toBeInTheDocument();
@@ -277,9 +288,11 @@ describe('Home', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/?page=1']}>
-        <Home />
-      </MemoryRouter>,
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/?page=1']}>
+          <Home />
+        </MemoryRouter>
+      </Provider>,
     );
 
     const prevButton = await screen.findByRole('button', { name: /prev/i });
@@ -293,9 +306,11 @@ describe('Home', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/?page=2']}>
-        <Home />
-      </MemoryRouter>,
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/?page=2']}>
+          <Home />
+        </MemoryRouter>
+      </Provider>,
     );
 
     expect(await screen.findByText(/page 2/i)).toBeInTheDocument();
@@ -307,11 +322,13 @@ describe('Home', () => {
 
   it('navigates to root after search', async () => {
     render(
-      <MemoryRouter initialEntries={['/?page=5']}>
-        <Routes>
-          <Route path="*" element={<Home />} />
-        </Routes>
-      </MemoryRouter>,
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/?page=5']}>
+          <Routes>
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>,
     );
 
     const user = userEvent.setup();
@@ -329,12 +346,14 @@ describe('Home', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/']}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/details/:name" element={<div>DETAILS</div>} />
-        </Routes>
-      </MemoryRouter>,
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/']}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/details/:name" element={<div>DETAILS</div>} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>,
     );
 
     expect(await screen.findByText('bulbasaur')).toBeInTheDocument();
@@ -350,9 +369,11 @@ describe('Home', () => {
 
     render(
       <ErrorBoundary>
-        <BrowserRouter>
-          <Home />
-        </BrowserRouter>
+        <Provider store={store}>
+          <BrowserRouter>
+            <Home />
+          </BrowserRouter>
+        </Provider>
       </ErrorBoundary>,
     );
 
