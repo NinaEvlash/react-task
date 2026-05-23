@@ -1,18 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface SelectedItem {
+  name: string;
+  description: string;
+}
+
 const initialState = {
-  items: [] as string[],
+  items: [] as SelectedItem[],
 };
 
 const selectedItemSlice = createSlice({
   name: 'selectedItem',
   initialState,
   reducers: {
-    toggleItem(state, action: PayloadAction<string>) {
-      const exists = state.items.includes(action.payload);
+    toggleItem(state, action: PayloadAction<SelectedItem>) {
+      const exists = state.items.some((item) => item.name === action.payload.name);
 
       if (exists) {
-        state.items = state.items.filter((p) => p !== action.payload);
+        state.items = state.items.filter((item) => item.name !== action.payload.name);
       } else {
         state.items.push(action.payload);
       }

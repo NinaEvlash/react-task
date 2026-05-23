@@ -43,8 +43,15 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
         >
           <input
             type="checkbox"
-            checked={selected.includes(item.name)}
-            onChange={() => dispatch(toggleItem(item.name))}
+            checked={selected.some((selectedItem) => selectedItem.name === item.name)}
+            onChange={() =>
+              dispatch(
+                toggleItem({
+                  name: item.name,
+                  description: item.description,
+                }),
+              )
+            }
           />
           <strong className="block text-lg font-semibold text-gray-800 dark:text-gray-100">
             {item.name}

@@ -82,7 +82,7 @@ export default function Home() {
 
         const mapped: Pokemon[] = data.results.map((p: { name: string }) => ({
           name: p.name,
-          description: 'No description available',
+          description: `Pokemon named ${p.name}`,
         }));
 
         setResults(mapped);

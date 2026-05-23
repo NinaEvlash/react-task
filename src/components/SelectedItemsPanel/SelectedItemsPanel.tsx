@@ -5,16 +5,25 @@ export default function SelectedItemsPanel() {
   const dispatch = useAppDispatch();
 
   const selectedItems = useAppSelector((state) => state.selectedItem.items);
+  console.log('Selected items:', selectedItems);
 
   if (selectedItems.length === 0) {
     return null;
   }
 
   const handleDownload = () => {
-    const data = selectedItems.join('\n');
+    const headers = ['Name', 'Description', 'Details URL'];
 
-    const blob = new Blob([data], {
-      type: 'text/plain',
+    const rows = selectedItems.map((item) => [
+      item.name,
+      item.description,
+      `/details/${item.name}`,
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map((row) => row.join(', '))].join('\n');
+
+    const blob = new Blob([csvContent], {
+      type: 'text/csv;charset=utf-8;',
     });
 
     const url = URL.createObjectURL(blob);
@@ -22,9 +31,14 @@ export default function SelectedItemsPanel() {
     const link = document.createElement('a');
 
     link.href = url;
-    link.download = 'selected-items.txt';
+
+    link.download = `${selectedItems.length}_items.csv`;
+
+    document.body.appendChild(link);
 
     link.click();
+
+    document.body.removeChild(link);
 
     URL.revokeObjectURL(url);
   };
