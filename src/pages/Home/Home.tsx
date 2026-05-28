@@ -19,11 +19,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
 
-  const {
-    value: query,
-    saveValue: setQuery,
-    removeValue: clearQuery,
-  } = useLocalStorage('pokemonSearchQuery');
+  const [query, setQuery] = useLocalStorage('pokemonSearchQuery');
 
   useEffect(() => {
     if (!searchParams.get('page')) {
@@ -96,7 +92,7 @@ export default function Home() {
     };
 
     fetchData();
-  }, [query, page, clearQuery]);
+  }, [query, page]);
 
   const handleSearch = (newQuery: string) => {
     const trimmedQuery = newQuery.trim();

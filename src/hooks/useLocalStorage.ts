@@ -1,26 +1,22 @@
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export function useLocalStorage(key: string, initialValue = '') {
+export function useLocalStorage(key: string, initialValue = ''): [string, (value: string) => void] {
   const [value, setValue] = useState(() => {
-    return localStorage.getItem(key) || initialValue;
+    try {
+      return localStorage.getItem(key) || initialValue;
+    } catch (error) {
+      console.error('Error accessing localStorage:', error);
+      return initialValue;
+    }
   });
 
-  const saveValue = useCallback(
-    (newValue: string) => {
-      setValue(newValue);
-      localStorage.setItem(key, newValue);
-    },
-    [key],
-  );
+  useEffect(() => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+    }
+  }, [key, value]);
 
-  const removeValue = useCallback(() => {
-    setValue(initialValue);
-    localStorage.removeItem(key);
-  }, [initialValue, key]);
-
-  return {
-    value,
-    saveValue,
-    removeValue,
-  };
+  return [value, setValue] as const;
 }
