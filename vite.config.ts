@@ -1,9 +1,10 @@
 import { defineConfig } from 'vitest/config';
 import svgr from 'vite-plugin-svgr';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  plugins: [react(), svgr()],
+  plugins: [react(), svgr(), tailwindcss()],
 
   test: {
     globals: true,
