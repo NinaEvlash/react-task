@@ -15,7 +15,7 @@ export default function About() {
             <a
               href="https://github.com/ninaevlash"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="text-gray-800 underline underline-offset-4 hover:text-black transition"
             >
               My GitHub
@@ -24,7 +24,7 @@ export default function About() {
             <a
               href="https://rs.school/courses/reactjs"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="text-blue-600 underline underline-offset-4 hover:text-blue-700 transition"
             >
               RS School React Course
