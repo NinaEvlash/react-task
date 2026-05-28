@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useSearchParams, useParams } from 'react-router-dom';
 
-import SearchBar from '../../components/Search/SearchBar';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import Results from '../../components/Results/Results';
 import { Pokemon } from '../../types/pokemon';
 import { getDataByName, getDataList } from '../../api/dataApi';
