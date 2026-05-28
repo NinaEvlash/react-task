@@ -15,11 +15,10 @@ export default function Details() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!name) return;
     async function fetchData() {
       try {
         setLoading(true);
-
-        if (!name) return;
 
         const data: PokemonDetails = await getDataDetails(name);
 
