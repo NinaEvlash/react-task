@@ -133,26 +133,25 @@ export default function Home() {
         <SearchBar query={query} onSearch={handleSearch} />
 
         <section className="flex items-start gap-6 mt-6">
-          <section className="flex-1">
-            <Results
-              results={results}
-              loading={loading}
-              error={error}
-              onSelect={handleSelectPokemon}
-            />
-          </section>
-
-          {selectedPokemon && (
-            <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6">
-              <Outlet />
-            </aside>
-          )}
+          <Results
+            results={results}
+            loading={loading}
+            error={error}
+            onSelect={handleSelectPokemon}
+          />
         </section>
+
+        {selectedPokemon && (
+          <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6">
+            <Outlet />
+          </aside>
+        )}
 
         {!loading && !query && results.length > 0 && (
           <section aria-label="Pagination" className="flex gap-3 justify-center">
             <button
               type="button"
+              aria-label="Go to previous page"
               className=" px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-medium transition hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed "
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
@@ -162,6 +161,7 @@ export default function Home() {
             <span className="flex items-center text-sm font-medium text-gray-600">Page {page}</span>
             <button
               type="button"
+              aria-label="Go to next page"
               className=" px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-medium transition hover:bg-gray-100 "
               onClick={() => setPage(page + 1)}
             >

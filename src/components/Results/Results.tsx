@@ -13,12 +13,7 @@ interface ResultsProps {
 }
 
 export default function Results({ results, loading, error, onSelect }: ResultsProps) {
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <Spinner />
-      </div>
-    );
+  if (loading) return <Spinner />;
   if (error) {
     return (
       <div className="text-center text-red-500 bg-red-50 border border-red-200 rounded-xl p-4">
@@ -29,7 +24,7 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
   if (!results.length) return <p>No results found.</p>;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 flex-1">
       {results.map((item) => (
         <div
           key={item.name}
@@ -42,15 +37,16 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
           <button
             type="button"
             onClick={() => onSelect(item.name)}
-            className="inline-flex items-center
-    px-3 py-1.5
-    text-sm font-medium
-    text-gray-700
-    bg-gray-100
-    rounded-lg
-    hover:bg-gray-200
-    transition-colors
-    "
+            className="
+            inline-flex items-center
+            px-3 py-1.5
+            text-sm font-medium
+            text-gray-700
+            bg-gray-100
+            rounded-lg
+            hover:bg-gray-200
+            transition-colors
+            "
           >
             Details
           </button>

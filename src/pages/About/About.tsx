@@ -4,7 +4,7 @@ export default function About() {
       <article className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">About this project</h1>
 
-        <section className="space-y-4 text-center">
+        <div className="space-y-4 text-center">
           <p className="text-gray-600 text-lg">
             This application was created as part of the React course.
           </p>
@@ -30,7 +30,7 @@ export default function About() {
               RS School React Course
             </a>
           </nav>
-        </section>
+        </div>
       </article>
     </main>
   );
