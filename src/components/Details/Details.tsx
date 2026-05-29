@@ -60,8 +60,8 @@ export default function Details() {
   if (!item) return null;
 
   return (
-    <section className="flex flex-col items-center">
-      <img src={item.sprites.front_default} alt={item.name} className="w-40 h-40" />
+    <div className="flex flex-col items-center">
+      <img src={item.sprites.front_default} alt={`Sprite of ${item.name}`} className="w-40 h-40" />
 
       <h2 className="text-2xl font-bold capitalize mb-4">{item.name}</h2>
 
@@ -82,6 +82,6 @@ export default function Details() {
       >
         Close
       </button>
-    </section>
+    </div>
   );
 }

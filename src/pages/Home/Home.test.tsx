@@ -11,16 +11,6 @@ describe('Home', () => {
     return render(<BrowserRouter>{component}</BrowserRouter>);
   };
 
-  /*function LocationDisplay() {
-    const location = useLocation();
-    return (
-      <div data-testid="location">
-        {location.pathname}
-        {location.search}
-      </div>
-    );
-  }*/
-
   afterEach(() => {
     vi.clearAllMocks();
     vi.unstubAllGlobals();

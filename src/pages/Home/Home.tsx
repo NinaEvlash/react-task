@@ -43,29 +43,8 @@ export default function Home() {
       setError(null);
 
       try {
-        let response: Response;
-
         if (normalizedQuery) {
-          response = await getDataByName(normalizedQuery);
-
-          if (!response.ok) {
-            let message = 'Something went wrong';
-
-            if (response.status >= 400 && response.status < 500) {
-              message = 'Pokémon not found';
-            } else if (response.status >= 500) {
-              message = 'Server error. Please try again later.';
-            }
-
-            setResults([]);
-            setError(message);
-            setLoading(false);
-
-            localStorage.removeItem('pokemonSearchQuery');
-            return;
-          }
-
-          const data = await response.json();
+          const data = await getDataByName(normalizedQuery);
 
           setResults([
             {
@@ -74,7 +53,6 @@ export default function Home() {
             },
           ]);
 
-          setLoading(false);
           return;
         }
 
@@ -134,19 +112,21 @@ export default function Home() {
         <SearchBar query={query} onSearch={handleSearch} />
 
         <section className="flex items-start gap-6 mt-6">
-          <Results
-            results={results}
-            loading={loading}
-            error={error}
-            onSelect={handleSelectPokemon}
-          />
-        </section>
+          <div className="w-full">
+            <Results
+              results={results}
+              loading={loading}
+              error={error}
+              onSelect={handleSelectPokemon}
+            />
+          </div>
 
-        {selectedPokemon && (
-          <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6">
-            <Outlet />
-          </aside>
-        )}
+          {selectedPokemon && (
+            <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6">
+              <Outlet />
+            </aside>
+          )}
+        </section>
 
         {!loading && !query && results.length > 0 && (
           <Pagination page={page} onPageChange={setPage} />
