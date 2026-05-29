@@ -6,7 +6,7 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
   const [input, setInput] = useState(query || '');
 
   useEffect(() => {
-    setInput(query);
+    setInput(query ?? '');
   }, [query]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

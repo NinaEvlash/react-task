@@ -29,6 +29,7 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
           <p className="text-gray-600 mb-4">{item.description}</p>
 
           <button
+            type="button"
             onClick={() => onSelect(item.name)}
             className="inline-flex items-center
     px-3 py-1.5
