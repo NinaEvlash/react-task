@@ -3,9 +3,13 @@ import { Outlet, useNavigate, useSearchParams, useParams } from 'react-router-do
 
 import SearchBar from '../../components/SearchBar/SearchBar';
 import Results from '../../components/Results/Results';
-import { Pokemon } from '../../types/pokemon';
 import { getDataByName, getDataList } from '../../api/dataApi';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+
+export interface Pokemon {
+  name: string;
+  description: string;
+}
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();

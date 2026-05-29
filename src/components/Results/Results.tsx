@@ -1,5 +1,16 @@
 import Spinner from '../Spinner/Spinner';
-import { ResultsProps } from '../../types/results';
+
+interface ResultItem {
+  name: string;
+  description: string;
+}
+
+interface ResultsProps {
+  results: ResultItem[];
+  loading: boolean;
+  error: string | null;
+  onSelect: (name: string) => void;
+}
 
 export default function Results({ results, loading, error, onSelect }: ResultsProps) {
   if (loading)

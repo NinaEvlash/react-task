@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { SearchBarProps } from '../../types/search';
+export interface SearchBarProps {
+  query: string;
+  onSearch: (query: string) => void;
+}
 
 export default function SearchBar({ query, onSearch }: SearchBarProps) {
   const [input, setInput] = useState(query || '');

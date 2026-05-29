@@ -3,7 +3,19 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { getDataDetails } from '../../api/dataApi';
 import Spinner from '../Spinner/Spinner';
-import { PokemonDetails } from '../../types/pokemon';
+interface PokemonDetails {
+  name: string;
+  weight: number;
+  height: number;
+  sprites: {
+    front_default: string;
+  };
+  types: {
+    type: {
+      name: string;
+    };
+  }[];
+}
 
 export default function Details() {
   const params = useParams<{ name: string }>();
