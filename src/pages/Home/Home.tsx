@@ -23,6 +23,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
+  const [hasNextPage, setHasNextPage] = useState(true);
 
   const [query, setQuery] = useLocalStorage('pokemonSearchQuery');
 
@@ -60,6 +61,8 @@ export default function Home() {
         const offset = (page - 1) * limit;
 
         const data = await getDataList(limit, offset);
+
+        setHasNextPage(Boolean(data.next));
 
         const mapped: Pokemon[] = data.results.map((p: { name: string }) => ({
           name: p.name,
@@ -129,7 +132,7 @@ export default function Home() {
         </section>
 
         {!loading && !query && results.length > 0 && (
-          <Pagination page={page} onPageChange={setPage} />
+          <Pagination page={page} hasNextPage={hasNextPage} onPageChange={setPage} />
         )}
 
         <section className="flex justify-center">
