@@ -28,7 +28,7 @@ export default function Details() {
 
   useEffect(() => {
     if (!name) return;
-    async function fetchData() {
+    async function fetchData(): Promise<void> {
       try {
         setLoading(true);
 
@@ -78,7 +78,7 @@ export default function Details() {
     rounded-lg
     hover:bg-gray-200
     transition-colors mt-4"
-        onClick={() => navigate('..')}
+        onClick={() => navigate('/')}
       >
         Close
       </button>
