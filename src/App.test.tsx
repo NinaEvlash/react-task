@@ -10,7 +10,12 @@ describe('App', () => {
   });
 
   it('renders Home component', async () => {
-    vi.spyOn(dataApi, 'getDataList').mockResolvedValue({ results: [] });
+    vi.spyOn(dataApi, 'getDataList').mockResolvedValue({
+      count: 0,
+      next: null,
+      previous: null,
+      results: [],
+    });
 
     render(
       <BrowserRouter>

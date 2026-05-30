@@ -70,15 +70,21 @@ export default function Home() {
         }));
 
         setResults(mapped);
-      } catch {
-        setError('Network error. Please check your connection.');
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Network error. Please check your connection.';
+        setError(errorMessage);
+
+        if (err instanceof Error && err.message === 'Pokémon not found') {
+          setQuery('');
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [query, page]);
+  }, [query, page, setQuery]);
 
   const handleSearch = (newQuery: string) => {
     const trimmedQuery = newQuery.trim();
