@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useSearchParams, useParams } from 'react-router-dom';
 
+import { useGetPokemonListQuery, useGetPokemonByNameQuery } from '../../store/api';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import Results from '../../components/Results/Results';
 import Pagination from '../../components/Pagination/Pagination';
-import { getDataByName, getDataList } from '../../api/dataApi';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { validateQuery } from '../../utils/validateQuery';
 import SelectedItemsPanel from '../../components/SelectedItemsPanel/SelectedItemsPanel';
-import { PokemonListResponse, PokemonDetailsResponse } from '../../types/apiTypes';
 
 export interface Pokemon {
   name: string;
@@ -17,18 +16,51 @@ export interface Pokemon {
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const page: number = Number(searchParams.get('page') || 1);
   const params = useParams<{ name?: string }>();
   const selectedPokemon: string | null = params.name || null;
   const navigate = useNavigate();
-
-  const [results, setResults] = useState<Pokemon[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
-  const [hasNextPage, setHasNextPage] = useState(true);
-
   const [query, setQuery] = useLocalStorage('pokemonSearchQuery');
+
+  const page: number = Number(searchParams.get('page') || 1);
+  const limit = 20;
+  const offset = (page - 1) * limit;
+
+  const {
+    data: listData,
+    isLoading: listLoading,
+    error: listError,
+  } = useGetPokemonListQuery({ limit, offset });
+
+  const normalizedQuery = validateQuery(query) ? query.trim().toLowerCase() : '';
+
+  const {
+    data: searchData,
+    isLoading: searchLoading,
+    error: searchError,
+  } = useGetPokemonByNameQuery(normalizedQuery, {
+    skip: !normalizedQuery,
+  });
+
+  const results = normalizedQuery
+    ? searchData
+      ? [
+          {
+            name: searchData.name,
+            description: `Weight: ${searchData.weight}, Height: ${searchData.height}`,
+          },
+        ]
+      : []
+    : (listData?.results.map((p) => ({
+        name: p.name,
+        description: 'No description available',
+      })) ?? []);
+
+  const loading = normalizedQuery ? searchLoading : listLoading;
+
+  const error = normalizedQuery ? (searchError as Error)?.message : (listError as Error)?.message;
+
+  const hasNextPage = listData ? offset + limit < (listData.count || 0) : false;
 
   useEffect(() => {
     if (!searchParams.get('page')) {
@@ -38,56 +70,6 @@ export default function Home() {
       setSearchParams(params);
     }
   }, [searchParams, setSearchParams]);
-
-  useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      const normalizedQuery = validateQuery(query);
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        if (normalizedQuery) {
-          const data: PokemonDetailsResponse = await getDataByName(normalizedQuery);
-
-          setResults([
-            {
-              name: data.name,
-              description: `Weight: ${data.weight}, Height: ${data.height}`,
-            },
-          ]);
-
-          return;
-        }
-
-        const limit: number = 20;
-        const offset: number = (page - 1) * limit;
-
-        const data: PokemonListResponse = await getDataList(limit, offset);
-
-        setHasNextPage(Boolean(data.next));
-
-        const mapped: Pokemon[] = data.results.map((p: { name: string }) => ({
-          name: p.name,
-          description: `Pokemon named ${p.name}`,
-        }));
-
-        setResults(mapped);
-      } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : 'Network error. Please check your connection.';
-        setError(errorMessage);
-
-        if (err instanceof Error && err.message === 'Pokémon not found') {
-          setQuery('');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [query, page, setQuery, searchParams]);
 
   const handleSearch = (newQuery: string): void => {
     const trimmedQuery = newQuery.trim();
