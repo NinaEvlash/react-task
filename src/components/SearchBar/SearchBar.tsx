@@ -12,16 +12,16 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
     setInput(query ?? '');
   }, [query]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInput(e.target.value);
   };
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     onSearch(input);
     setInput('');
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter') {
       handleClick();
     }

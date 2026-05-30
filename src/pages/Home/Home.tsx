@@ -6,6 +6,7 @@ import Results from '../../components/Results/Results';
 import Pagination from '../../components/Pagination/Pagination';
 import { getDataByName, getDataList } from '../../api/dataApi';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { PokemonListResponse, PokemonDetailsResponse } from '../../types/apiTypes';
 
 export interface Pokemon {
   name: string;
@@ -14,9 +15,9 @@ export interface Pokemon {
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const page = Number(searchParams.get('page') || 1);
+  const page: number = Number(searchParams.get('page') || 1);
   const params = useParams<{ name?: string }>();
-  const selectedPokemon = params.name || null;
+  const selectedPokemon: string | null = params.name || null;
   const navigate = useNavigate();
 
   const [results, setResults] = useState<Pokemon[]>([]);
@@ -29,7 +30,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!searchParams.get('page')) {
-      const params = new URLSearchParams(searchParams);
+      const params: URLSearchParams = new URLSearchParams(searchParams);
       params.set('page', '1');
 
       setSearchParams(params);
@@ -37,7 +38,7 @@ export default function Home() {
   }, [searchParams, setSearchParams]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (): Promise<void> => {
       const normalizedQuery = query.trim().toLowerCase();
 
       setLoading(true);
@@ -45,7 +46,7 @@ export default function Home() {
 
       try {
         if (normalizedQuery) {
-          const data = await getDataByName(normalizedQuery);
+          const data: PokemonDetailsResponse = await getDataByName(normalizedQuery);
 
           setResults([
             {
@@ -57,10 +58,10 @@ export default function Home() {
           return;
         }
 
-        const limit = 20;
-        const offset = (page - 1) * limit;
+        const limit: number = 20;
+        const offset: number = (page - 1) * limit;
 
-        const data = await getDataList(limit, offset);
+        const data: PokemonListResponse = await getDataList(limit, offset);
 
         setHasNextPage(Boolean(data.next));
 
@@ -86,19 +87,19 @@ export default function Home() {
     fetchData();
   }, [query, page, setQuery]);
 
-  const handleSearch = (newQuery: string) => {
+  const handleSearch = (newQuery: string): void => {
     const trimmedQuery = newQuery.trim();
     setQuery(trimmedQuery);
 
-    const params = new URLSearchParams();
+    const params: URLSearchParams = new URLSearchParams();
     params.set('page', '1');
 
     setSearchParams(params);
     navigate('/');
   };
 
-  const setPage = (newPage: number) => {
-    const params = new URLSearchParams(searchParams);
+  const setPage = (newPage: number): void => {
+    const params: URLSearchParams = new URLSearchParams(searchParams);
     params.set('page', String(newPage));
     setSearchParams(params);
   };
@@ -107,8 +108,8 @@ export default function Home() {
     throw new Error(fatalError);
   }
 
-  const handleSelectPokemon = (name: string) => {
-    const params = new URLSearchParams(searchParams);
+  const handleSelectPokemon = (name: string): void => {
+    const params: URLSearchParams = new URLSearchParams(searchParams);
     params.delete('details');
     params.set('page', String(page));
 

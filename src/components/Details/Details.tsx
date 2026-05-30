@@ -19,7 +19,7 @@ interface PokemonDetails {
 
 export default function Details() {
   const params = useParams<{ name: string }>();
-  const name = params.name || '';
+  const name: string = params.name || '';
   const [item, setItem] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

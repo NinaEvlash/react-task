@@ -18,11 +18,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, info: React.ErrorInfo) {
+  componentDidCatch(error: Error, info: React.ErrorInfo): void {
     console.error('Caught error in ErrorBoundary:', error, info);
   }
 
-  handleReset = () => {
+  handleReset = (): void => {
     localStorage.removeItem('pokemonSearchQuery');
     this.setState({ hasError: false });
   };
