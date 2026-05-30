@@ -1,17 +1,22 @@
 import Spinner from '../Spinner/Spinner';
-import { ResultsProps } from '../../types/results';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toggleItem } from '../../features/selectedItem/selectedItemSlice';
+interface ResultItem {
+  name: string;
+  description: string;
+}
+
+interface ResultsProps {
+  results: ResultItem[];
+  loading: boolean;
+  error: string | null;
+  onSelect: (name: string) => void;
+}
 
 export default function Results({ results, loading, error, onSelect }: ResultsProps) {
   const selected = useAppSelector((state) => state.selectedItem.items);
   const dispatch = useAppDispatch();
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <Spinner />
-      </div>
-    );
+  if (loading) return <Spinner />;
   if (error) {
     return (
       <div
@@ -31,7 +36,7 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
   if (!results.length) return <p>No results found.</p>;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 flex-1">
       {results.map((item) => (
         <div
           key={item.name}
@@ -60,6 +65,7 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
           <p className=" mb-4 border-gray-200 dark:border-gray-700">{item.description}</p>
 
           <button
+            type="button"
             onClick={() => onSelect(item.name)}
             className="inline-flex items-center
     px-3 py-1.5

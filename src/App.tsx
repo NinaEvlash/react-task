@@ -9,18 +9,16 @@ import Details from './components/Details/Details';
 
 function App() {
   return (
-    <>
-      <ErrorBoundary>
-        <Navigation />
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route path="details/:name" element={<Details />} />
-          </Route>
-          <Route path="/about" element={<About />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </ErrorBoundary>
-    </>
+    <ErrorBoundary>
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<Home />}>
+          <Route path="details/:name" element={<Details />} />
+        </Route>
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </ErrorBoundary>
   );
 }
 

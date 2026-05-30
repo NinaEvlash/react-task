@@ -3,11 +3,23 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { getDataDetails } from '../../api/dataApi';
 import Spinner from '../Spinner/Spinner';
-import { PokemonDetails } from '../../types/pokemon';
+interface PokemonDetails {
+  name: string;
+  weight: number;
+  height: number;
+  sprites: {
+    front_default: string;
+  };
+  types: {
+    type: {
+      name: string;
+    };
+  }[];
+}
 
 export default function Details() {
   const params = useParams<{ name: string }>();
-  const name = params.name || '';
+  const name: string = params.name || '';
   const [item, setItem] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -15,11 +27,10 @@ export default function Details() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchData() {
+    if (!name) return;
+    async function fetchData(): Promise<void> {
       try {
         setLoading(true);
-
-        if (!name) return;
 
         const data: PokemonDetails = await getDataDetails(name);
 
@@ -49,8 +60,8 @@ export default function Details() {
   if (!item) return null;
 
   return (
-    <section className="flex flex-col items-center">
-      <img src={item.sprites.front_default} alt={item.name} className="w-40 h-40" />
+    <div className="flex flex-col items-center">
+      <img src={item.sprites.front_default} alt={`Sprite of ${item.name}`} className="w-40 h-40" />
 
       <h2 className="text-2xl font-bold capitalize mb-4">{item.name}</h2>
 
@@ -67,10 +78,10 @@ export default function Details() {
     rounded-lg
     hover:bg-gray-200 dark:hover:bg-gray-600
     transition-colors mt-4"
-        onClick={() => navigate('..')}
+        onClick={() => navigate('/')}
       >
         Close
       </button>
-    </section>
+    </div>
   );
 }

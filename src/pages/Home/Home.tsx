@@ -1,31 +1,38 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useSearchParams, useParams } from 'react-router-dom';
 
-import SearchBar from '../../components/Search/SearchBar';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import Results from '../../components/Results/Results';
-import { Pokemon } from '../../types/pokemon';
+import Pagination from '../../components/Pagination/Pagination';
 import { getDataByName, getDataList } from '../../api/dataApi';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { validateQuery } from '../../utils/validateQuery';
 import SelectedItemsPanel from '../../components/SelectedItemsPanel/SelectedItemsPanel';
+import { PokemonListResponse, PokemonDetailsResponse } from '../../types/apiTypes';
+
+export interface Pokemon {
+  name: string;
+  description: string;
+}
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const page = Number(searchParams.get('page') || 1);
+  const page: number = Number(searchParams.get('page') || 1);
   const params = useParams<{ name?: string }>();
-  const selectedPokemon = params.name || null;
+  const selectedPokemon: string | null = params.name || null;
   const navigate = useNavigate();
 
   const [results, setResults] = useState<Pokemon[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
+  const [hasNextPage, setHasNextPage] = useState(true);
 
   const [query, setQuery] = useLocalStorage('pokemonSearchQuery');
 
   useEffect(() => {
     if (!searchParams.get('page')) {
-      const params = new URLSearchParams(searchParams);
+      const params: URLSearchParams = new URLSearchParams(searchParams);
       params.set('page', '1');
 
       setSearchParams(params);
@@ -33,36 +40,15 @@ export default function Home() {
   }, [searchParams, setSearchParams]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (): Promise<void> => {
       const normalizedQuery = validateQuery(query);
 
       setLoading(true);
       setError(null);
 
       try {
-        let response: Response;
-
         if (normalizedQuery) {
-          response = await getDataByName(normalizedQuery);
-
-          if (!response.ok) {
-            let message = 'Something went wrong';
-
-            if (response.status >= 400 && response.status < 500) {
-              message = 'Pokémon not found';
-            } else if (response.status >= 500) {
-              message = 'Server error. Please try again later.';
-            }
-
-            setResults([]);
-            setError(message);
-            setLoading(false);
-
-            localStorage.removeItem('pokemonSearchQuery');
-            return;
-          }
-
-          const data = await response.json();
+          const data: PokemonDetailsResponse = await getDataByName(normalizedQuery);
 
           setResults([
             {
@@ -71,14 +57,15 @@ export default function Home() {
             },
           ]);
 
-          setLoading(false);
           return;
         }
 
-        const limit = 20;
-        const offset = (page - 1) * limit;
+        const limit: number = 20;
+        const offset: number = (page - 1) * limit;
 
-        const data = await getDataList(limit, offset);
+        const data: PokemonListResponse = await getDataList(limit, offset);
+
+        setHasNextPage(Boolean(data.next));
 
         const mapped: Pokemon[] = data.results.map((p: { name: string }) => ({
           name: p.name,
@@ -86,29 +73,35 @@ export default function Home() {
         }));
 
         setResults(mapped);
-      } catch {
-        setError('Network error. Please check your connection.');
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Network error. Please check your connection.';
+        setError(errorMessage);
+
+        if (err instanceof Error && err.message === 'Pokémon not found') {
+          setQuery('');
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [query, page]);
+  }, [query, page, setQuery, searchParams]);
 
-  const handleSearch = (newQuery: string) => {
-    const trimmedQuery = validateQuery(newQuery);
+  const handleSearch = (newQuery: string): void => {
+    const trimmedQuery = newQuery.trim();
     setQuery(trimmedQuery);
 
-    const params = new URLSearchParams();
+    const params: URLSearchParams = new URLSearchParams();
     params.set('page', '1');
 
     setSearchParams(params);
     navigate('/');
   };
 
-  const setPage = (newPage: number) => {
-    const params = new URLSearchParams(searchParams);
+  const setPage = (newPage: number): void => {
+    const params: URLSearchParams = new URLSearchParams(searchParams);
     params.set('page', String(newPage));
     setSearchParams(params);
   };
@@ -117,8 +110,8 @@ export default function Home() {
     throw new Error(fatalError);
   }
 
-  const handleSelectPokemon = (name: string) => {
-    const params = new URLSearchParams(searchParams);
+  const handleSelectPokemon = (name: string): void => {
+    const params: URLSearchParams = new URLSearchParams(searchParams);
     params.delete('details');
     params.set('page', String(page));
 
@@ -130,43 +123,25 @@ export default function Home() {
       <div className="w-full max-w-2xl space-y-6">
         <SearchBar query={query} onSearch={handleSearch} />
 
-        <div className="flex items-start gap-6 mt-6">
-          <section className="flex-1">
+        <section className="flex items-start gap-6 mt-6">
+          <div className="w-full">
             <Results
               results={results}
               loading={loading}
               error={error}
               onSelect={handleSelectPokemon}
             />
-          </section>
+          </div>
 
           {selectedPokemon && (
             <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6 bg-white dark:bg-gray-800">
               <Outlet />
             </aside>
           )}
-        </div>
+        </section>
 
         {!loading && !query && results.length > 0 && (
-          <section aria-label="Pagination" className="flex gap-3 justify-center">
-            <button
-              type="button"
-              className=" px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed "
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            >
-              Prev
-            </button>
-            <span className="flex items-center text-sm font-medium text-gray-600">Page {page}</span>
-            <button
-              type="button"
-              className=" px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition hover:bg-gray-200 dark:hover:bg-gray-600 "
-              onClick={() => setPage(page + 1)}
-            >
-              Next
-            </button>
-            <SelectedItemsPanel />
-          </section>
+          <Pagination page={page} hasNextPage={hasNextPage} onPageChange={setPage} />
         )}
 
         <section className="flex justify-center">
@@ -178,6 +153,7 @@ export default function Home() {
             Trigger Error
           </button>
         </section>
+        <SelectedItemsPanel />
       </div>
     </main>
   );

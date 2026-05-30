@@ -4,8 +4,8 @@ export default function About() {
       <article className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">About this project</h1>
 
-        <section className="space-y-4 text-center">
-          <p className="text-gray-600 dark:text-gray-100 text-lg">
+        <div className="space-y-4 text-center">
+          <p className="text-gray-600 text-lg">
             This application was created as part of the React course.
           </p>
 
@@ -15,8 +15,8 @@ export default function About() {
             <a
               href="https://github.com/ninaevlash"
               target="_blank"
-              rel="noreferrer"
-              className="text-gray-800 dark:text-gray-100 underline underline-offset-4 hover:text-black transition"
+              rel="noopener noreferrer"
+              className="text-gray-800 underline underline-offset-4 hover:text-black transition"
             >
               My GitHub
             </a>
@@ -24,13 +24,13 @@ export default function About() {
             <a
               href="https://rs.school/courses/reactjs"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="text-blue-600 underline underline-offset-4 hover:text-blue-700 transition"
             >
               RS School React Course
             </a>
           </nav>
-        </section>
+        </div>
       </article>
     </main>
   );
