@@ -5,30 +5,29 @@ export default function SelectedItemsPanel() {
   const dispatch = useAppDispatch();
 
   const selectedItems = useAppSelector((state) => state.selectedItem.items);
-  console.log('Selected items:', selectedItems);
 
   if (selectedItems.length === 0) {
     return null;
   }
 
-  const handleDownload = () => {
-    const headers = ['Name', 'Description', 'Details URL'];
+  const handleDownload = (): void => {
+    const headers: string[] = ['Name', 'Description', 'Details URL'];
 
-    const rows = selectedItems.map((item) => [
+    const rows: string[][] = selectedItems.map((item) => [
       item.name,
       item.description,
       `/details/${item.name}`,
     ]);
 
-    const csvContent = [headers.join(','), ...rows.map((row) => row.join(', '))].join('\n');
+    const csvContent: string = [headers.join(','), ...rows.map((row) => row.join(', '))].join('\n');
 
-    const blob = new Blob([csvContent], {
+    const blob: Blob = new Blob([csvContent], {
       type: 'text/csv;charset=utf-8;',
     });
 
-    const url = URL.createObjectURL(blob);
+    const url: string = URL.createObjectURL(blob);
 
-    const link = document.createElement('a');
+    const link: HTMLAnchorElement = document.createElement('a');
 
     link.href = url;
 

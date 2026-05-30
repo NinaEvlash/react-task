@@ -12,8 +12,8 @@ export default function Navigation() {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? 'text-blue-600 font-semibold cursor-default'
-              : 'text-gray-700 hover:text-blue-600 transition'
+              ? 'text-blue-600 dark:text-blue-400  font-semibold cursor-default'
+              : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 transition'
           }
         >
           Home
@@ -23,8 +23,8 @@ export default function Navigation() {
           to="/about"
           className={({ isActive }) =>
             isActive
-              ? 'text-blue-600 font-semibold cursor-default'
-              : 'text-gray-700 hover:text-blue-600 transition'
+              ? 'text-blue-600 dark:text-blue-400  font-semibold cursor-default'
+              : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 transition'
           }
         >
           About

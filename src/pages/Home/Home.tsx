@@ -119,7 +119,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6 flex flex-col items-center dark:bg-gray-950">
+    <main className="min-h-screen bg-gray-100 p-6 pb-24 flex flex-col items-center dark:bg-gray-950">
       <div className="w-full max-w-2xl space-y-6">
         <SearchBar query={query} onSearch={handleSearch} />
 

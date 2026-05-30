@@ -21,9 +21,10 @@ vi.mock('react-router-dom', async () => {
 describe('Details', () => {
   const renderWithRouter = (component: React.ReactElement) => {
     return render(
-      <MemoryRouter initialEntries={['/pokemon/pikachu']}>
+      <MemoryRouter initialEntries={['/details/pikachu']}>
         <Routes>
-          <Route path="/pokemon/:name" element={component} />
+          <Route path="/" element={<div />} />
+          <Route path="details/:name" element={component} />
         </Routes>
       </MemoryRouter>,
     );
@@ -93,6 +94,6 @@ describe('Details', () => {
 
     await userEvent.click(button);
 
-    expect(mockedNavigate).toHaveBeenCalledWith('..');
+    expect(mockedNavigate).toHaveBeenCalledWith('/');
   });
 });
