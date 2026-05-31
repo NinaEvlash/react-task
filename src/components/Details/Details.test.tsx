@@ -1,24 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import Details from './Details';
 import * as api from '../../store/api';
-
-type PokemonQueryResult = ReturnType<typeof api.useGetPokemonByNameQuery>;
-
-function createQueryResult(overrides: Partial<PokemonQueryResult>): PokemonQueryResult {
-  return {
-    data: undefined,
-    error: undefined,
-    isLoading: false,
-    isFetching: false,
-    isSuccess: false,
-    isError: false,
-    refetch: vi.fn(),
-    ...overrides,
-  } as PokemonQueryResult;
-}
+import { createQueryResult } from '../../__tests__/queryFactories';
 
 vi.mock('../../store/api', async () => {
   const actual = await vi.importActual('../../store/api');
@@ -63,13 +50,21 @@ describe('Details', () => {
   });
 
   it('shows error message', () => {
+    const error404: FetchBaseQueryError = {
+      status: 404,
+      data: 'Not found',
+    };
+
     vi.mocked(api.useGetPokemonByNameQuery).mockReturnValue(
-      createQueryResult({ error: { status: 404 } }),
+      createQueryResult({
+        isError: true,
+        error: error404,
+      }),
     );
 
     renderWithRouter(<Details />);
 
-    expect(screen.getByText(/failed to load pokemon/i)).toBeInTheDocument();
+    expect(screen.getByText(/pokémon not found/i)).toBeInTheDocument();
   });
 
   it('renders pokemon details', () => {

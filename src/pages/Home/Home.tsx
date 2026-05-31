@@ -8,6 +8,7 @@ import Pagination from '../../components/Pagination/Pagination';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { validateQuery } from '../../utils/validateQuery';
 import SelectedItemsPanel from '../../components/SelectedItemsPanel/SelectedItemsPanel';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export interface Pokemon {
   name: string;
@@ -53,14 +54,16 @@ export default function Home() {
       : []
     : (listData?.results.map((p) => ({
         name: p.name,
-        description: 'No description available',
+        description: `Pokemon named ${p.name}`,
       })) ?? []);
 
   const loading = normalizedQuery ? searchLoading : listLoading;
 
-  const error = normalizedQuery ? (searchError as Error)?.message : (listError as Error)?.message;
+  const activeError = normalizedQuery ? searchError : listError;
 
-  const hasNextPage = listData ? offset + limit < (listData.count || 0) : false;
+  const errorMessage = getErrorMessage(activeError);
+
+  const hasNextPage = (listData?.count ?? 0) > offset + limit;
 
   useEffect(() => {
     if (!searchParams.get('page')) {
@@ -110,7 +113,7 @@ export default function Home() {
             <Results
               results={results}
               loading={loading}
-              error={error}
+              error={errorMessage}
               onSelect={handleSelectPokemon}
             />
           </div>

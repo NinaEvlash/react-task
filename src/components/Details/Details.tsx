@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useGetPokemonByNameQuery } from '../../store/api';
 import Spinner from '../Spinner/Spinner';
 import { PokemonDetailsResponse } from '../../types/apiTypes';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export default function Details() {
   const params = useParams<{ name: string }>();
@@ -20,7 +21,7 @@ export default function Details() {
 
   const item: PokemonDetailsResponse | undefined = searchData;
   const loading = name ? searchLoading : false;
-  const error = searchError ? 'Failed to load pokemon details' : '';
+  const error = getErrorMessage(searchError);
 
   if (loading)
     return (
