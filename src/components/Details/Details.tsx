@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getDataDetails } from '../../api/dataApi';
+import { getDataByName } from '../../api/dataApi';
 import Spinner from '../Spinner/Spinner';
 interface PokemonDetails {
   name: string;
@@ -32,7 +32,7 @@ export default function Details() {
       try {
         setLoading(true);
 
-        const data: PokemonDetails = await getDataDetails(name);
+        const data: PokemonDetails = await getDataByName(name);
 
         setItem(data);
       } catch {

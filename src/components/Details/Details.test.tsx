@@ -21,10 +21,9 @@ vi.mock('react-router-dom', async () => {
 describe('Details', () => {
   const renderWithRouter = (component: React.ReactElement) => {
     return render(
-      <MemoryRouter initialEntries={['/details/pikachu']}>
+      <MemoryRouter initialEntries={['/pokemon/pikachu']}>
         <Routes>
-          <Route path="/" element={<div />} />
-          <Route path="details/:name" element={component} />
+          <Route path="/pokemon/:name" element={component} />
         </Routes>
       </MemoryRouter>,
     );
@@ -35,7 +34,7 @@ describe('Details', () => {
   });
 
   test('renders pokemon details', async () => {
-    vi.spyOn(dataApi, 'getDataDetails').mockResolvedValue({
+    vi.spyOn(dataApi, 'getDataByName').mockResolvedValue({
       name: 'pikachu',
       height: 4,
       weight: 60,
@@ -63,7 +62,7 @@ describe('Details', () => {
   });
 
   test('shows error message', async () => {
-    vi.spyOn(dataApi, 'getDataDetails').mockRejectedValue(new Error('API error'));
+    vi.spyOn(dataApi, 'getDataByName').mockRejectedValue(new Error('API error'));
 
     renderWithRouter(<Details />);
 
@@ -71,7 +70,7 @@ describe('Details', () => {
   });
 
   test('calls navigate when close button clicked', async () => {
-    vi.spyOn(dataApi, 'getDataDetails').mockResolvedValue({
+    vi.spyOn(dataApi, 'getDataByName').mockResolvedValue({
       name: 'pikachu',
       height: 4,
       weight: 60,

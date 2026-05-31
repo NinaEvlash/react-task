@@ -1,7 +1,10 @@
-import { getDataByName, getDataList, getDataDetails } from './dataApi';
+import { getDataByName, getDataList } from './dataApi';
+
+const originalFetch = globalThis.fetch;
 
 afterEach(() => {
   vi.restoreAllMocks();
+  globalThis.fetch = originalFetch;
 });
 
 describe('getDataByName', () => {
@@ -88,53 +91,5 @@ describe('getDataList', () => {
     });
 
     await expect(getDataList(10, 20)).rejects.toThrow('Failed to load Pokémon list');
-  });
-});
-
-describe('getDataDetails', () => {
-  test('returns pokemon data', async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue({
-        name: 'pikachu',
-      }),
-    });
-
-    const result = await getDataDetails('pikachu');
-
-    expect(fetch).toHaveBeenCalledWith('https://pokeapi.co/api/v2/pokemon/pikachu');
-
-    expect(result).toEqual({
-      name: 'pikachu',
-    });
-  });
-
-  test('throws not found error for 404 response', async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 404,
-    });
-
-    await expect(getDataDetails('pikachu')).rejects.toThrow('Pokémon not found');
-  });
-
-  test('throws server error for 500 response', async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 500,
-    });
-
-    await expect(getDataDetails('pikachu')).rejects.toThrow(
-      'Server error. Please try again later.',
-    );
-  });
-
-  test('throws generic error for other failed responses', async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 400,
-    });
-
-    await expect(getDataDetails('pikachu')).rejects.toThrow('Failed to fetch pokemon');
   });
 });
