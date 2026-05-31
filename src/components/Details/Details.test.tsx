@@ -34,7 +34,7 @@ describe('Details', () => {
   });
 
   test('renders pokemon details', async () => {
-    vi.spyOn(dataApi, 'getDataDetails').mockResolvedValue({
+    vi.spyOn(dataApi, 'getDataByName').mockResolvedValue({
       name: 'pikachu',
       height: 4,
       weight: 60,
@@ -62,7 +62,7 @@ describe('Details', () => {
   });
 
   test('shows error message', async () => {
-    vi.spyOn(dataApi, 'getDataDetails').mockRejectedValue(new Error('API error'));
+    vi.spyOn(dataApi, 'getDataByName').mockRejectedValue(new Error('API error'));
 
     renderWithRouter(<Details />);
 
@@ -70,7 +70,7 @@ describe('Details', () => {
   });
 
   test('calls navigate when close button clicked', async () => {
-    vi.spyOn(dataApi, 'getDataDetails').mockResolvedValue({
+    vi.spyOn(dataApi, 'getDataByName').mockResolvedValue({
       name: 'pikachu',
       height: 4,
       weight: 60,
