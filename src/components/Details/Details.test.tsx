@@ -93,6 +93,6 @@ describe('Details', () => {
 
     await userEvent.click(button);
 
-    expect(mockedNavigate).toHaveBeenCalledWith('..');
+    expect(mockedNavigate).toHaveBeenCalledWith('/');
   });
 });
