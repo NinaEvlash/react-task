@@ -1,48 +1,26 @@
-import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getDataDetails } from '../../api/dataApi';
+import { useGetPokemonByNameQuery } from '../../store/api';
 import Spinner from '../Spinner/Spinner';
-interface PokemonDetails {
-  name: string;
-  weight: number;
-  height: number;
-  sprites: {
-    front_default: string;
-  };
-  types: {
-    type: {
-      name: string;
-    };
-  }[];
-}
+import { PokemonDetailsResponse } from '../../types/apiTypes';
 
 export default function Details() {
   const params = useParams<{ name: string }>();
   const name: string = params.name || '';
-  const [item, setItem] = useState<PokemonDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!name) return;
-    async function fetchData(): Promise<void> {
-      try {
-        setLoading(true);
+  const {
+    data: searchData,
+    isLoading: searchLoading,
+    error: searchError,
+  } = useGetPokemonByNameQuery(name, {
+    skip: !name,
+  });
 
-        const data: PokemonDetails = await getDataDetails(name);
-
-        setItem(data);
-      } catch {
-        setError('Failed to load pokemon');
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, [name]);
+  const item: PokemonDetailsResponse | undefined = searchData;
+  const loading = name ? searchLoading : false;
+  const error = searchError ? 'Failed to load pokemon details' : '';
 
   if (loading)
     return (
