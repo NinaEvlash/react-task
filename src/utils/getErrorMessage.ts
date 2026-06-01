@@ -29,6 +29,14 @@ export function getErrorMessage(error: ApiError): string {
       return 'Server error. Please try again later.';
     }
 
+    if ('data' in error && typeof error.data === 'string' && error.data.trim()) {
+      return error.data;
+    }
+
+    if ('error' in error && typeof error.error === 'string' && error.error.trim()) {
+      return error.error;
+    }
+
     return 'Something went wrong';
   }
 
