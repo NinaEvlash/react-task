@@ -649,4 +649,63 @@ describe('Home', () => {
 
     expect(mockedDispatch).toHaveBeenCalledWith(pokemonApi.util.invalidateTags(['PokemonList']));
   });
+
+  it('invalidates list and selected pokemon cache when Refresh is clicked', async () => {
+    const user = userEvent.setup();
+
+    vi.mocked(api.useGetPokemonListQuery).mockReturnValue(
+      createListQueryResult({
+        data: {
+          count: 1,
+          next: null,
+          previous: null,
+          results: [{ name: 'pikachu', url: '' }],
+        },
+        isSuccess: true,
+      }),
+    );
+
+    vi.mocked(api.useGetPokemonByNameQuery).mockReturnValue(
+      createQueryResult({
+        data: {
+          name: 'pikachu',
+          weight: 60,
+          height: 4,
+          sprites: {
+            front_default: 'pikachu.png',
+          },
+          types: [
+            {
+              type: {
+                name: 'electric',
+              },
+            },
+          ],
+        },
+        isSuccess: true,
+      }),
+    );
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/details/pikachu?page=1']}>
+          <Routes>
+            <Route path="/details/:name" element={<Home />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /refresh/i }));
+
+    expect(mockedDispatch).toHaveBeenCalledWith(
+      pokemonApi.util.invalidateTags([
+        'PokemonList',
+        {
+          type: 'Pokemon',
+          id: 'pikachu',
+        },
+      ]),
+    );
+  });
 });
