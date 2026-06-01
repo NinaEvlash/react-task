@@ -13,12 +13,16 @@ export const pokemonApi = createApi({
       query: ({ limit, offset }) => `pokemon?limit=${limit}&offset=${offset}`,
 
       keepUnusedDataFor: cacheTTL,
+
+      providesTags: (_result) => (_result ? ['PokemonList'] : []),
     }),
 
     getPokemonByName: builder.query<PokemonDetailsResponse, string>({
       query: (name: string) => `pokemon/${name}`,
 
       keepUnusedDataFor: cacheTTL,
+
+      providesTags: (_result, _error, name) => [{ type: 'Pokemon', id: name }],
     }),
   }),
 });

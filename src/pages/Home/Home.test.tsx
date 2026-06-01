@@ -11,6 +11,7 @@ import Navigation from '../../components/Navigation/Navigation';
 import { store } from '../../store/store';
 import * as api from '../../store/api';
 import { createQueryResult, createListQueryResult } from '../../__tests__/queryFactories';
+import { pokemonApi } from '../../store/api';
 
 vi.mock('../../store/api', async () => {
   const actual = await vi.importActual('../../store/api');
@@ -19,6 +20,17 @@ vi.mock('../../store/api', async () => {
     ...actual,
     useGetPokemonByNameQuery: vi.fn(),
     useGetPokemonListQuery: vi.fn(),
+  };
+});
+
+const mockedDispatch = vi.fn();
+
+vi.mock('react-redux', async () => {
+  const actual = await vi.importActual<typeof import('react-redux')>('react-redux');
+
+  return {
+    ...actual,
+    useDispatch: () => mockedDispatch,
   };
 });
 
@@ -590,5 +602,51 @@ describe('Home', () => {
     await userEvent.click(button);
 
     expect(localStorage.getItem('app-theme')).toBe('dark');
+  });
+
+  it('invalidates pokemon list cache when Refresh is clicked', async () => {
+    const user = userEvent.setup();
+
+    vi.mocked(api.useGetPokemonListQuery).mockReturnValue(
+      createListQueryResult({
+        data: {
+          count: 1,
+          next: null,
+          previous: null,
+          results: [{ name: 'pikachu', url: '' }],
+        },
+        isSuccess: true,
+      }),
+    );
+
+    vi.mocked(api.useGetPokemonByNameQuery).mockReturnValue(createQueryResult({}));
+
+    renderWithRouter(<Home />);
+
+    await user.click(screen.getByRole('button', { name: /refresh/i }));
+
+    expect(mockedDispatch).toHaveBeenCalled();
+  });
+
+  it('dispatches invalidateTags action on Refresh click', async () => {
+    const user = userEvent.setup();
+
+    vi.mocked(api.useGetPokemonListQuery).mockReturnValue(
+      createListQueryResult({
+        data: {
+          count: 1,
+          next: null,
+          previous: null,
+          results: [{ name: 'pikachu', url: '' }],
+        },
+        isSuccess: true,
+      }),
+    );
+
+    renderWithRouter(<Home />);
+
+    await user.click(screen.getByRole('button', { name: /refresh/i }));
+
+    expect(mockedDispatch).toHaveBeenCalledWith(pokemonApi.util.invalidateTags(['PokemonList']));
   });
 });

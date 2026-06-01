@@ -9,6 +9,8 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { validateQuery } from '../../utils/validateQuery';
 import SelectedItemsPanel from '../../components/SelectedItemsPanel/SelectedItemsPanel';
 import { getErrorMessage } from '../../utils/getErrorMessage';
+import { useDispatch } from 'react-redux';
+import { pokemonApi } from '../../store/api';
 
 export interface Pokemon {
   name: string;
@@ -22,6 +24,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [fatalError, setFatalError] = useState<string | null>(null);
   const [query, setQuery] = useLocalStorage('pokemonSearchQuery');
+  const dispatch = useDispatch();
 
   const page: number = Number(searchParams.get('page') || 1);
   const limit = 20;
@@ -103,6 +106,19 @@ export default function Home() {
     navigate(`/details/${name}${params.toString() ? `?${params.toString()}` : ''}`);
   };
 
+  const handleRefresh = (): void => {
+    const tags: ('PokemonList' | { type: 'Pokemon'; id: string })[] = ['PokemonList'];
+
+    if (selectedPokemon) {
+      tags.push({
+        type: 'Pokemon',
+        id: selectedPokemon,
+      });
+    }
+
+    dispatch(pokemonApi.util.invalidateTags(tags));
+  };
+
   return (
     <main className="min-h-screen bg-gray-100 p-6 pb-24 flex flex-col items-center dark:bg-gray-950">
       <div className="w-full max-w-2xl space-y-6">
@@ -129,11 +145,37 @@ export default function Home() {
           <Pagination page={page} hasNextPage={hasNextPage} onPageChange={setPage} />
         )}
 
-        <section className="flex justify-center">
+        <section className="flex justify-between items-center">
+          <button
+            type="button"
+            onClick={handleRefresh}
+            className="
+      px-4 py-2
+      rounded-xl
+      bg-blue-500
+      text-white
+      hover:bg-blue-600
+      dark:bg-blue-600
+      dark:hover:bg-blue-700
+      transition-colors
+    "
+          >
+            Refresh
+          </button>
+
           <button
             type="button"
             onClick={() => setFatalError('Manual test error')}
-            className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
+            className="
+      px-4 py-2
+      rounded-xl
+      bg-red-500
+      text-white
+      hover:bg-red-600
+      dark:bg-red-600
+      dark:hover:bg-red-700
+      transition-colors
+    "
           >
             Trigger Error
           </button>
