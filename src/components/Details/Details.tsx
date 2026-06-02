@@ -70,7 +70,7 @@ export default function Details() {
       <p>Types: {item.types.map((t) => t.type.name).join(', ')}</p>
       <button
         type="button"
-        className="inline-flex items-center
+        className="cursor-pointer inline-flex items-center
     px-3 py-1.5
     text-sm font-medium
     text-gray-700

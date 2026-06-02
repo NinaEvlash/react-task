@@ -45,7 +45,7 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
       <button
         type="button"
         onClick={handleClick}
-        className="px-4 py-2 rounded-xl bg-blue-600 text-white 
+        className="cursor-pointer px-4 py-2 rounded-xl bg-blue-600 text-white 
                hover:bg-blue-700 active:scale-95 
                transition duration-200 shadow-md"
       >

@@ -146,7 +146,7 @@ export default function Home() {
           <button
             type="button"
             onClick={() => setFatalError('Manual test error')}
-            className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
+            className="cursor-pointer px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
           >
             Trigger Error
           </button>

@@ -38,6 +38,7 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
             type="button"
             onClick={() => onSelect(item.name)}
             className="
+            cursor-pointer
             inline-flex items-center
             px-3 py-1.5
             text-sm font-medium
