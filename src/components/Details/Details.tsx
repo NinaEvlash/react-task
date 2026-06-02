@@ -8,7 +8,7 @@ interface PokemonDetails {
   weight: number;
   height: number;
   sprites: {
-    front_default: string;
+    front_default: string | null;
   };
   types: {
     type: {
@@ -61,7 +61,11 @@ export default function Details() {
 
   return (
     <div className="flex flex-col items-center">
-      <img src={item.sprites.front_default} alt={`Sprite of ${item.name}`} className="w-40 h-40" />
+      <img
+        src={item.sprites.front_default ?? '/placeholder.png'}
+        alt={`Sprite of ${item.name}`}
+        className="w-40 h-40"
+      />
 
       <h2 className="text-2xl font-bold capitalize mb-4">{item.name}</h2>
 

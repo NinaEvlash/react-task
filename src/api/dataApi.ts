@@ -1,7 +1,7 @@
 import { PokemonDetailsResponse, PokemonListResponse } from '../types/apiTypes';
 
 export async function getDataByName(name: string): Promise<PokemonDetailsResponse> {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(name)}`);
   if (!response.ok) {
     if (response.status === 404) {
       throw new Error('Pokémon not found');

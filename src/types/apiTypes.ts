@@ -22,7 +22,7 @@ export interface PokemonDetailsResponse {
   weight: number;
   height: number;
   sprites: {
-    front_default: string;
+    front_default: string | null;
   };
   types: PokemonTypeInfo[];
 }

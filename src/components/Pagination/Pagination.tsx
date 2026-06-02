@@ -11,7 +11,7 @@ export default function Pagination({ totalPages }: PaginationProps) {
 
   const changePage = (page: number): void => {
     const params = new URLSearchParams(searchParams);
-    params.set('page', String(page));
+    params.set('page', String(Math.max(1, page)));
     setSearchParams(params);
   };
 

@@ -15,7 +15,9 @@ export interface Pokemon {
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const page: number = Number(searchParams.get('page') || 1);
+  const pageParam = Number(searchParams.get('page'));
+
+  const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
   const params = useParams<{ name?: string }>();
   const selectedPokemon: string | null = params.name || null;
   const navigate = useNavigate();
