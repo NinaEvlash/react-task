@@ -33,8 +33,8 @@ export default function Pagination({ totalPages }: PaginationProps) {
         type="button"
         aria-label="Go to next page"
         className="cursor-pointer px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-medium transition hover:bg-gray-100"
-        disabled={currentPage === totalPages}
-        onClick={() => changePage(currentPage + 1)}
+        disabled={currentPage >= totalPages}
+        onClick={() => changePage(Math.min(currentPage + 1, totalPages))}
       >
         Next
       </button>
