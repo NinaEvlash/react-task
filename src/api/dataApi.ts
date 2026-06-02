@@ -14,7 +14,7 @@ export async function getDataByName(name: string): Promise<PokemonDetailsRespons
     throw new Error('Something went wrong');
   }
 
-  return response.json() as Promise<PokemonDetailsResponse>;
+  return response.json();
 }
 
 export async function getDataList(limit: number, offset: number): Promise<PokemonListResponse> {
@@ -28,5 +28,5 @@ export async function getDataList(limit: number, offset: number): Promise<Pokemo
     throw new Error('Failed to load Pokémon list');
   }
 
-  return response.json() as Promise<PokemonListResponse>;
+  return response.json();
 }
