@@ -24,7 +24,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
-  const [hasNextPage, setHasNextPage] = useState(true);
+
+  const [totalPages, setTotalPages] = useState(1);
 
   const [query, setQuery] = useLocalStorage('pokemonSearchQuery');
 
@@ -62,8 +63,7 @@ export default function Home() {
         const offset: number = (page - 1) * limit;
 
         const data: PokemonListResponse = await getDataList(limit, offset);
-
-        setHasNextPage(Boolean(data.next));
+        setTotalPages(Math.ceil(data.count / limit));
 
         const mapped: Pokemon[] = data.results.map((p: { name: string }) => ({
           name: p.name,
@@ -96,12 +96,6 @@ export default function Home() {
 
     setSearchParams(params);
     navigate('/');
-  };
-
-  const setPage = (newPage: number): void => {
-    const params: URLSearchParams = new URLSearchParams(searchParams);
-    params.set('page', String(newPage));
-    setSearchParams(params);
   };
 
   if (fatalError) {
@@ -138,9 +132,7 @@ export default function Home() {
           )}
         </section>
 
-        {!loading && !query && results.length > 0 && (
-          <Pagination page={page} hasNextPage={hasNextPage} onPageChange={setPage} />
-        )}
+        {!loading && !query && results.length > 0 && <Pagination totalPages={totalPages} />}
 
         <section className="flex justify-center">
           <button
