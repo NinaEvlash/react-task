@@ -4,7 +4,7 @@ interface PokemonListResult {
 }
 
 export interface PokemonListResponse {
-  count?: number;
+  count: number;
   next?: string | null;
   previous?: string | null;
   results: PokemonListResult[];
@@ -22,7 +22,7 @@ export interface PokemonDetailsResponse {
   weight: number;
   height: number;
   sprites: {
-    front_default: string;
+    front_default: string | null;
   };
   types: PokemonTypeInfo[];
 }

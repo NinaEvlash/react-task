@@ -67,15 +67,17 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
           <button
             type="button"
             onClick={() => onSelect(item.name)}
-            className="inline-flex items-center
-    px-3 py-1.5
-    text-sm font-medium
-    text-gray-700 dark:text-gray-300
-    bg-gray-100 dark:bg-gray-700
-    rounded-lg
-    hover:bg-gray-200 dark:hover:bg-gray-600
-    transition-colors
-    "
+            className="
+            cursor-pointer
+            inline-flex items-center
+            px-3 py-1.5
+            text-sm font-medium
+            text-gray-700
+            bg-gray-100
+            rounded-lg
+            hover:bg-gray-200
+            transition-colors
+            "
           >
             Details
           </button>
