@@ -5,6 +5,7 @@ This project demonstrates different approaches to form handling in React. The ap
 The project was created as part of a learning assignment focused on modern React form development practices.
 
 ## Features
+
 1. Modal Window with React Portals
 2. State Management
 3. Basic Form Fields
@@ -14,6 +15,7 @@ The project was created as part of a learning assignment focused on modern React
 7. Test Coverage
 
 ## Technologies
+
 - React
 - TypeScript
 - Vite
