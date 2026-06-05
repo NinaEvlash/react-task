@@ -1,23 +1,31 @@
 .overlay {
   position: fixed;
   inset: 0;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal {
+  position: relative;
   background-color: white;
-  padding: 20px;
+  padding: 40px;
   border-radius: 8px;
-
   min-width: 400px;
 }
 
 .modal:focus {
-  outline: 4px solid red;
+  outline: 4px solid blue;
   outline-offset: 5px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
 }

@@ -15,3 +15,11 @@ body {
   margin: 0 auto;
   text-align: center;
 }
+
+.cards {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}

@@ -50,7 +50,9 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
         className="modal"
         onClick={(event) => event.stopPropagation()}
       >
-        <button onClick={onClose}>X</button>
+        <button className="close-button" onClick={onClose}>
+          X
+        </button>
 
         {children}
       </div>
