@@ -1,0 +1,23 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+
+  min-width: 400px;
+}
+
+.modal:focus {
+  outline: 4px solid red;
+  outline-offset: 5px;
+}
