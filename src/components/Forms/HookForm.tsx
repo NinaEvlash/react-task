@@ -1,14 +1,12 @@
-import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm, SubmitHandler, Resolver } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { addSubmission } from '../../store/formsSlice';
+import { fileToBase64 } from '../../utils/fileToBase64';
+import { formSchema } from '../../validation/formSchema';
 
-type FormValues = {
-  name: string;
-  age: number;
-  email: string;
-  gender: 'male' | 'female' | 'other';
-  terms: boolean;
-};
+type FormValues = yup.InferType<typeof formSchema>;
 
 type Props = {
   onClose: () => void;
@@ -20,20 +18,36 @@ export const HookForm = ({ onClose }: Props) => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    resolver: yupResolver(formSchema) as Resolver<FormValues, unknown, FormValues>,
+  });
 
-  const onSubmit = (data: FormValues) => {
+  const file = watch('image');
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const file = data.image?.[0];
+
+    if (!file) return;
+
+    const imageBase64 = await fileToBase64(file);
+
     dispatch(
       addSubmission({
         id: crypto.randomUUID(),
         type: 'rhf',
-        ...data,
+        name: data.name,
+        email: data.email,
+        age: data.age,
+        gender: data.gender as 'male' | 'female' | 'other',
+        terms: data.terms,
+        image: imageBase64,
       }),
     );
+
     onClose();
   };
-
   return (
     <form className="form" onSubmit={handleSubmit(onSubmit)}>
       <label htmlFor="name" className="label">
@@ -51,7 +65,13 @@ export const HookForm = ({ onClose }: Props) => {
       <label htmlFor="age" className="label">
         Age
       </label>
-      <input id="age" className="input" type="number" {...register('age')} />
+      <input
+        className="input"
+        type="number"
+        {...register('age', {
+          valueAsNumber: true,
+        })}
+      />
       <p className="error">{errors.age?.message}</p>
 
       <label htmlFor="gender" className="label">
@@ -67,6 +87,22 @@ export const HookForm = ({ onClose }: Props) => {
         <input id="terms" type="checkbox" {...register('terms')} />I agree to the terms and
         conditions
       </label>
+      <p className="error">{errors.terms?.message}</p>
+
+      <label htmlFor="image" className="file-label">
+        Upload photo
+      </label>
+
+      <input
+        className="file-input"
+        id="image"
+        type="file"
+        accept=".png,.jpg,.jpeg"
+        {...register('image')}
+      />
+
+      <p>{file?.[0]?.name || 'No file selected'}</p>
+      <p className="error">{errors.image?.message}</p>
 
       <button className="button" type="submit">
         Submit

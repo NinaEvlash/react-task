@@ -1,3 +1,7 @@
+p {
+  margin: 0;
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -49,4 +53,22 @@
 .button:disabled {
   background: #aaa;
   cursor: not-allowed;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: inline-block;
+  padding: 10px 16px;
+  background-color: #4a90e2;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.file-label:hover {
+  background: #357bd8;
 }

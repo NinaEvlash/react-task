@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type FormData = {
+export type Submission = {
   id: string;
   type: 'uncontrolled' | 'rhf';
   name: string;
@@ -8,10 +8,11 @@ export type FormData = {
   age: number;
   gender: 'male' | 'female' | 'other';
   terms: boolean;
+  image: string;
 };
 
 type FormsState = {
-  submissions: FormData[];
+  submissions: Submission[];
 };
 
 const initialState: FormsState = {
@@ -22,7 +23,7 @@ const formsSlice = createSlice({
   name: 'forms',
   initialState,
   reducers: {
-    addSubmission: (state, action: PayloadAction<FormData>) => {
+    addSubmission: (state, action: PayloadAction<Submission>) => {
       state.submissions.push(action.payload);
     },
   },

@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addSubmission } from '../../store/formsSlice';
-import type { FormData } from '../../store/formsSlice';
+import type { Submission } from '../../store/formsSlice';
 import './Form.css';
+import { fileToBase64 } from '../../utils/fileToBase64';
+import { validateImage } from '../../utils/validateImage';
 
 type Props = {
   onClose: () => void;
@@ -10,11 +13,30 @@ type Props = {
 export const UncontrolledForm = ({ onClose }: Props) => {
   const dispatch = useDispatch();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [fileName, setFileName] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const data: FormData = {
+
+    const file = formData.get('image');
+
+    if (!(file instanceof File) || file.size === 0) {
+      alert('Please select an image');
+      return;
+    }
+
+    const error = validateImage(file);
+
+    if (error) {
+      alert(error);
+      return;
+    }
+
+    const imageBase64 = await fileToBase64(file);
+
+    const data: Submission = {
       id: crypto.randomUUID(),
       type: 'uncontrolled',
       name: formData.get('name') as string,
@@ -22,9 +44,15 @@ export const UncontrolledForm = ({ onClose }: Props) => {
       age: formData.get('age') ? Number(formData.get('age')) : 0,
       gender: formData.get('gender') as 'male' | 'female' | 'other',
       terms: formData.get('terms') !== null,
+      image: '',
     };
 
-    dispatch(addSubmission(data));
+    dispatch(
+      addSubmission({
+        ...data,
+        image: imageBase64,
+      }),
+    );
     onClose();
   };
 
@@ -57,6 +85,20 @@ export const UncontrolledForm = ({ onClose }: Props) => {
       <label htmlFor="terms" className="label">
         <input id="terms" type="checkbox" name="terms" />I agree to the terms and conditions
       </label>
+
+      <label htmlFor="image" className="file-label">
+        Upload photo
+      </label>
+      <input
+        id="image"
+        name="image"
+        type="file"
+        accept=".png,.jpg,.jpeg"
+        className="file-input"
+        onChange={(e) => setFileName(e.target.files?.[0]?.name ?? '')}
+      />
+
+      <p className="selected-file">{fileName || 'No file selected'}</p>
 
       <button className="button" type="submit">
         Submit
