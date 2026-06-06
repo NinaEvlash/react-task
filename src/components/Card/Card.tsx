@@ -5,9 +5,12 @@ type CardProps = {
   name: string;
   email: string;
   id: string;
+  age: number;
+  gender: 'male' | 'female' | 'other';
+  terms: boolean;
 };
 
-export const Card = ({ type, name, email }: CardProps) => {
+export const Card = ({ type, name, email, age, gender, terms }: CardProps) => {
   return (
     <div className="card">
       <p>
@@ -18,6 +21,15 @@ export const Card = ({ type, name, email }: CardProps) => {
       </p>
       <p>
         <b>Email:</b> {email}
+      </p>
+      <p>
+        <b>Age:</b> {age}
+      </p>
+      <p>
+        <b>Gender:</b> {gender}
+      </p>
+      <p>
+        <b>Terms:</b> {terms ? 'Yes' : 'No'}
       </p>
     </div>
   );

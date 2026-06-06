@@ -16,6 +16,10 @@ body {
   text-align: center;
 }
 
+.left-button {
+  margin-right: 10px;
+}
+
 .cards {
   margin-top: 20px;
   display: flex;

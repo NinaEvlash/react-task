@@ -27,9 +27,13 @@ function App() {
       <div className="container">
         <h1>React Forms</h1>
 
-        <button onClick={() => openModal('uncontrolled')}>Uncontrolled Form</button>
+        <button className="left-button" onClick={() => openModal('uncontrolled')}>
+          Uncontrolled Form
+        </button>
 
-        <button onClick={() => openModal('rhf')}>React Hook Form</button>
+        <button className="right-button" onClick={() => openModal('rhf')}>
+          React Hook Form
+        </button>
 
         <div className="cards">
           {submissions.map((item) => (

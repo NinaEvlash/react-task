@@ -5,6 +5,9 @@ export type FormData = {
   type: 'uncontrolled' | 'rhf';
   name: string;
   email: string;
+  age: number;
+  gender: 'male' | 'female' | 'other';
+  terms: boolean;
 };
 
 type FormsState = {

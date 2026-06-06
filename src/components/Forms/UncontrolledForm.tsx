@@ -19,6 +19,9 @@ export const UncontrolledForm = ({ onClose }: Props) => {
       type: 'uncontrolled',
       name: formData.get('name') as string,
       email: formData.get('email') as string,
+      age: formData.get('age') ? Number(formData.get('age')) : 0,
+      gender: formData.get('gender') as 'male' | 'female' | 'other',
+      terms: formData.get('terms') !== null,
     };
 
     dispatch(addSubmission(data));
@@ -27,11 +30,33 @@ export const UncontrolledForm = ({ onClose }: Props) => {
 
   return (
     <form className="form" onSubmit={handleSubmit}>
-      <label className="label">Name</label>
-      <input className="input" name="name" />
+      <label htmlFor="name" className="label">
+        Name
+      </label>
+      <input id="name" className="input" name="name" />
 
-      <label className="label">Email</label>
-      <input className="input" name="email" />
+      <label htmlFor="email" className="label">
+        Email
+      </label>
+      <input id="email" className="input" name="email" />
+
+      <label htmlFor="age" className="label">
+        Age
+      </label>
+      <input id="age" className="input" name="age" type="number" />
+
+      <label htmlFor="gender" className="label">
+        Gender
+      </label>
+      <select id="gender" className="input" name="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+
+      <label htmlFor="terms" className="label">
+        <input id="terms" type="checkbox" name="terms" />I agree to the terms and conditions
+      </label>
 
       <button className="button" type="submit">
         Submit
