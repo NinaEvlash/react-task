@@ -10,6 +10,7 @@ export type Submission = {
   terms: boolean;
   image: string;
   password: string;
+  country: string;
 };
 
 type FormsState = {

@@ -1,10 +1,13 @@
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, SubmitHandler, Resolver } from 'react-hook-form';
+import { useForm, SubmitHandler, Resolver, Controller } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import { addSubmission } from '../../store/formsSlice';
 import { fileToBase64 } from '../../utils/fileToBase64';
 import { formSchema } from '../../validation/formSchema';
+import { CountryAutocomplete } from '../Autocomplete/Autocomplete';
 
 type FormValues = yup.InferType<typeof formSchema>;
 
@@ -15,9 +18,12 @@ type Props = {
 export const HookForm = ({ onClose }: Props) => {
   const dispatch = useDispatch();
 
+  const countryList = useSelector((state: RootState) => state.countries.countries);
+
   const {
     register,
     handleSubmit,
+    control,
     watch,
     formState: { errors, isValid },
   } = useForm<FormValues>({
@@ -52,6 +58,7 @@ export const HookForm = ({ onClose }: Props) => {
         terms: data.terms,
         image: imageBase64,
         password: data.password,
+        country: data.country,
       }),
     );
 
@@ -156,6 +163,26 @@ export const HookForm = ({ onClose }: Props) => {
             {...register('confirmPassword')}
           />
           <p className="error">{errors.confirmPassword?.message}</p>
+        </div>
+        <div className="form-field">
+          <label htmlFor="country" className="label">
+            Country
+          </label>
+
+          <Controller
+            name="country"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <CountryAutocomplete
+                countries={countryList}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+
+          <p className="error">{errors.country?.message}</p>
         </div>
       </div>
 

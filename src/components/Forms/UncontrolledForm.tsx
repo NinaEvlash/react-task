@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addSubmission } from '../../store/formsSlice';
 import type { Submission } from '../../store/formsSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import './Form.css';
 import { fileToBase64 } from '../../utils/fileToBase64';
 import { validateImage } from '../../utils/validateImage';
+import { CountryAutocomplete } from '../Autocomplete/Autocomplete';
 
 type Props = {
   onClose: () => void;
@@ -20,6 +23,9 @@ export const UncontrolledForm = ({ onClose }: Props) => {
   const hasLowercase = /[a-z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasSpecial = /[^A-Za-z0-9]/.test(password);
+
+  const [country, setCountry] = useState('');
+  const countryList = useSelector((state: RootState) => state.countries.countries);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +58,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
       terms: formData.get('terms') !== null,
       image: '',
       password: formData.get('password') as string,
+      country: formData.get('country') as string,
     };
 
     dispatch(
@@ -152,6 +159,15 @@ export const UncontrolledForm = ({ onClose }: Props) => {
           </label>
 
           <input id="confirmPassword" name="confirmPassword" type="password" className="input" />
+        </div>
+
+        <div className="form-field">
+          <label htmlFor="country" className="label">
+            Country
+          </label>
+          <CountryAutocomplete countries={countryList} value={country} onChange={setCountry} />
+
+          <input type="hidden" name="country" value={country} />
         </div>
       </div>
 

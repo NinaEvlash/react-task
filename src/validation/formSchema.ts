@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { countryList } from '../data/countries';
 
 export const formSchema = yup.object({
   name: yup
@@ -67,4 +68,9 @@ export const formSchema = yup.object({
     .string()
     .required('Confirm password is required')
     .oneOf([yup.ref('password')], 'Passwords must match'),
+
+  country: yup
+    .string()
+    .required('Country is required')
+    .oneOf(countryList, 'Country must exist in the list'),
 });

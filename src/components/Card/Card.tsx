@@ -14,6 +14,7 @@ type CardProps = {
 export const Card = ({ type, name, email, age, gender, terms, image }: CardProps) => {
   return (
     <div className="card">
+      <img src={image} alt={name} className="card-image" />
       <p>
         <b>Type:</b> {type}
       </p>
@@ -32,7 +33,6 @@ export const Card = ({ type, name, email, age, gender, terms, image }: CardProps
       <p>
         <b>Terms:</b> {terms ? 'Yes' : 'No'}
       </p>
-      <img src={image} alt={name} className="card-image" />
     </div>
   );
 };
