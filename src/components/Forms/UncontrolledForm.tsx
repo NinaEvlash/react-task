@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { ValidationError } from 'yup';
 import { addSubmission } from '../../store/formsSlice';
 import type { Submission } from '../../store/formsSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import './Form.css';
 import { fileToBase64 } from '../../utils/fileToBase64';
-import { validateImage } from '../../utils/validateImage';
 import { CountryAutocomplete } from '../Autocomplete/Autocomplete';
+import { formSchema } from '../../validation/formSchema';
 
 type Props = {
   onClose: () => void;
@@ -18,6 +19,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
 
   const [fileName, setFileName] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const hasUppercase = /[A-Z]/.test(password);
   const hasLowercase = /[a-z]/.test(password);
@@ -32,17 +34,41 @@ export const UncontrolledForm = ({ onClose }: Props) => {
 
     const formData = new FormData(e.currentTarget as HTMLFormElement);
 
-    const file = formData.get('image');
+    const values = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      age: Number(formData.get('age')),
+      gender: formData.get('gender'),
+      terms: formData.get('terms') !== null,
+      password,
+      confirmPassword: formData.get('confirmPassword'),
+      country,
+      image: formData.get('image'),
+    };
 
-    if (!(file instanceof File) || file.size === 0) {
-      alert('Please select an image');
-      return;
+    try {
+      await formSchema.validate(values, { abortEarly: false });
+      setErrors({});
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        const validationErrors: Record<string, string> = {};
+
+        error.inner.forEach((err) => {
+          if (err.path) validationErrors[err.path] = err.message;
+        });
+
+        setErrors(validationErrors);
+        return;
+      }
     }
 
-    const error = validateImage(file);
+    const file = formData.get('image');
 
-    if (error) {
-      alert(error);
+    if (!(file instanceof File)) {
+      setErrors((prev) => ({
+        ...prev,
+        image: 'Image is required',
+      }));
       return;
     }
 
@@ -51,22 +77,18 @@ export const UncontrolledForm = ({ onClose }: Props) => {
     const data: Submission = {
       id: crypto.randomUUID(),
       type: 'uncontrolled',
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-      age: formData.get('age') ? Number(formData.get('age')) : 0,
-      gender: formData.get('gender') as 'male' | 'female' | 'other',
-      terms: formData.get('terms') !== null,
-      image: '',
-      password: formData.get('password') as string,
-      country: formData.get('country') as string,
+      name: values.name as string,
+      email: values.email as string,
+      age: Number(values.age),
+      gender: values.gender as 'male' | 'female' | 'other',
+      terms: values.terms as boolean,
+      image: imageBase64,
+      password,
+      confirmPassword: values.confirmPassword as string,
+      country,
     };
 
-    dispatch(
-      addSubmission({
-        ...data,
-        image: imageBase64,
-      }),
-    );
+    dispatch(addSubmission(data));
     onClose();
   };
 
@@ -78,6 +100,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
             Name
           </label>
           <input id="name" className="input" name="name" />
+          <p className="error">{errors.name}</p>
         </div>
 
         <div className="form-field">
@@ -85,6 +108,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
             Email
           </label>
           <input id="email" className="input" name="email" />
+          <p className="error">{errors.email}</p>
         </div>
 
         <div className="form-field">
@@ -92,6 +116,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
             Age
           </label>
           <input id="age" className="input" name="age" type="number" />
+          <p className="error">{errors.age}</p>
         </div>
 
         <div className="form-field">
@@ -103,12 +128,14 @@ export const UncontrolledForm = ({ onClose }: Props) => {
             <option value="female">Female</option>
             <option value="other">Other</option>
           </select>
+          <p className="error">{errors.gender}</p>
         </div>
 
         <div className="form-field">
           <label htmlFor="terms" className="label">
             <input id="terms" type="checkbox" name="terms" />I agree to the terms and conditions
           </label>
+          <p className="error">{errors.terms}</p>
         </div>
 
         <div className="form-field">
@@ -127,6 +154,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
 
             <p className="selected-file">{fileName || 'No file selected'}</p>
           </div>
+          <p className="error">{errors.image}</p>
         </div>
 
         <div className="form-field">
@@ -151,6 +179,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
 
             <li className={hasSpecial ? 'valid' : 'invalid'}>Special character</li>
           </ul>
+          <p className="error">{errors.password}</p>
         </div>
 
         <div className="form-field">
@@ -159,6 +188,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
           </label>
 
           <input id="confirmPassword" name="confirmPassword" type="password" className="input" />
+          <p className="error">{errors.confirmPassword}</p>
         </div>
 
         <div className="form-field">
@@ -168,6 +198,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
           <CountryAutocomplete countries={countryList} value={country} onChange={setCountry} />
 
           <input type="hidden" name="country" value={country} />
+          <p className="error">{errors.country}</p>
         </div>
       </div>
 

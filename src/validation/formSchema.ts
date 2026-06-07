@@ -41,27 +41,31 @@ export const formSchema = yup.object({
       return true;
     }),
 
-  gender: yup.string().required('Select gender'),
+  gender: yup.string().required('Select gender').oneOf(['male', 'female', 'other']),
 
   terms: yup.boolean().oneOf([true], 'You must accept terms').required(),
 
   image: yup
-    .mixed<FileList>()
-    .test('required', 'Image is required', (files) => {
-      return !!files?.length;
+    .mixed<File | FileList>()
+    .test('required', 'Image is required', (value) => {
+      if (!value) return false;
+      if (value instanceof FileList) return value.length > 0;
+      if (value instanceof File) return true;
+      return false;
     })
-    .test('fileType', 'Only PNG/JPEG', (files) => {
-      const file = files?.[0];
+    .test('fileType', 'Only PNG/JPEG', (value) => {
+      if (!value) return true;
+      const file = value instanceof FileList ? value[0] : value;
       if (!file) return true;
-
       return ['image/png', 'image/jpeg'].includes(file.type);
     })
-    .test('fileSize', 'Max 2MB', (files) => {
-      const file = files?.[0];
+    .test('fileSize', 'Max 2MB', (value) => {
+      if (!value) return true;
+      const file = value instanceof FileList ? value[0] : value;
       if (!file) return true;
-
       return file.size <= 2 * 1024 * 1024;
     }),
+
   password: yup.string().required('Password is required'),
 
   confirmPassword: yup

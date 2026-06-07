@@ -31,7 +31,7 @@ export const HookForm = ({ onClose }: Props) => {
     mode: 'onChange',
   });
 
-  const file = watch('image');
+  const watchImage = watch('image');
 
   const password = watch('password') || '';
 
@@ -41,7 +41,8 @@ export const HookForm = ({ onClose }: Props) => {
   const hasSpecial = /[^A-Za-z0-9]/.test(password);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const file = data.image?.[0];
+    const fileValue = data.image;
+    const file = fileValue instanceof FileList ? fileValue[0] : fileValue;
 
     if (!file) return;
 
@@ -58,6 +59,7 @@ export const HookForm = ({ onClose }: Props) => {
         terms: data.terms,
         image: imageBase64,
         password: data.password,
+        confirmPassword: data.confirmPassword,
         country: data.country,
       }),
     );
@@ -130,7 +132,11 @@ export const HookForm = ({ onClose }: Props) => {
               {...register('image')}
             />
 
-            <p>{file?.[0]?.name || 'No file selected'}</p>
+            <p>
+              {watchImage instanceof FileList
+                ? watchImage?.[0]?.name
+                : watchImage?.name || 'No file selected'}
+            </p>
           </div>
 
           <p className="error">{errors.image?.message}</p>
