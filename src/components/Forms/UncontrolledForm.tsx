@@ -14,6 +14,12 @@ export const UncontrolledForm = ({ onClose }: Props) => {
   const dispatch = useDispatch();
 
   const [fileName, setFileName] = useState('');
+  const [password, setPassword] = useState('');
+
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecial = /[^A-Za-z0-9]/.test(password);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +51,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
       gender: formData.get('gender') as 'male' | 'female' | 'other',
       terms: formData.get('terms') !== null,
       image: '',
+      password: formData.get('password') as string,
     };
 
     dispatch(
@@ -58,47 +65,95 @@ export const UncontrolledForm = ({ onClose }: Props) => {
 
   return (
     <form className="form" onSubmit={handleSubmit}>
-      <label htmlFor="name" className="label">
-        Name
-      </label>
-      <input id="name" className="input" name="name" />
+      <div className="form-section">
+        <div className="form-field">
+          <label htmlFor="name" className="label">
+            Name
+          </label>
+          <input id="name" className="input" name="name" />
+        </div>
 
-      <label htmlFor="email" className="label">
-        Email
-      </label>
-      <input id="email" className="input" name="email" />
+        <div className="form-field">
+          <label htmlFor="email" className="label">
+            Email
+          </label>
+          <input id="email" className="input" name="email" />
+        </div>
 
-      <label htmlFor="age" className="label">
-        Age
-      </label>
-      <input id="age" className="input" name="age" type="number" />
+        <div className="form-field">
+          <label htmlFor="age" className="label">
+            Age
+          </label>
+          <input id="age" className="input" name="age" type="number" />
+        </div>
 
-      <label htmlFor="gender" className="label">
-        Gender
-      </label>
-      <select id="gender" className="input" name="gender">
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-        <option value="other">Other</option>
-      </select>
+        <div className="form-field">
+          <label htmlFor="gender" className="label">
+            Gender
+          </label>
+          <select id="gender" className="input" name="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
 
-      <label htmlFor="terms" className="label">
-        <input id="terms" type="checkbox" name="terms" />I agree to the terms and conditions
-      </label>
+        <div className="form-field">
+          <label htmlFor="terms" className="label">
+            <input id="terms" type="checkbox" name="terms" />I agree to the terms and conditions
+          </label>
+        </div>
 
-      <label htmlFor="image" className="file-label">
-        Upload photo
-      </label>
-      <input
-        id="image"
-        name="image"
-        type="file"
-        accept=".png,.jpg,.jpeg"
-        className="file-input"
-        onChange={(e) => setFileName(e.target.files?.[0]?.name ?? '')}
-      />
+        <div className="form-field">
+          <div className="file-row">
+            <label htmlFor="image" className="file-label">
+              Upload photo
+            </label>
+            <input
+              id="image"
+              name="image"
+              type="file"
+              accept=".png,.jpg,.jpeg"
+              className="file-input"
+              onChange={(e) => setFileName(e.target.files?.[0]?.name ?? '')}
+            />
 
-      <p className="selected-file">{fileName || 'No file selected'}</p>
+            <p className="selected-file">{fileName || 'No file selected'}</p>
+          </div>
+        </div>
+
+        <div className="form-field">
+          <label htmlFor="password" className="label">
+            Password
+          </label>
+
+          <input
+            id="password"
+            name="password"
+            type="password"
+            className="input"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <ul className="password-strength">
+            <li className={hasUppercase ? 'valid' : 'invalid'}>Uppercase letter</li>
+
+            <li className={hasLowercase ? 'valid' : 'invalid'}>Lowercase letter</li>
+
+            <li className={hasNumber ? 'valid' : 'invalid'}>Number</li>
+
+            <li className={hasSpecial ? 'valid' : 'invalid'}>Special character</li>
+          </ul>
+        </div>
+
+        <div className="form-field">
+          <label htmlFor="confirmPassword" className="label">
+            Confirm password
+          </label>
+
+          <input id="confirmPassword" name="confirmPassword" type="password" className="input" />
+        </div>
+      </div>
 
       <button className="button" type="submit">
         Submit

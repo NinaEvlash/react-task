@@ -16,14 +16,15 @@
 }
 
 .modal:focus {
-  outline: 4px solid blue;
+  outline: 4px solid #7c5cff;
+  box-shadow: 0 6px 20px rgba(124, 92, 255, 0.12);
   outline-offset: 5px;
 }
 
 .close-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 0;
+  right: 0;
   background: transparent;
   border: none;
   font-size: 18px;

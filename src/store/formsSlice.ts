@@ -9,6 +9,7 @@ export type Submission = {
   gender: 'male' | 'female' | 'other';
   terms: boolean;
   image: string;
+  password: string;
 };
 
 type FormsState = {
