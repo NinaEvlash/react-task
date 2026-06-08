@@ -2,9 +2,10 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store } from './store/store';
 import { describe } from 'vitest';
 import App from './App';
+import { waitFor } from '@testing-library/react';
+import { store } from './store/store';
 
 const renderWithRouter = (component: React.ReactElement) => {
   return render(
@@ -15,7 +16,7 @@ const renderWithRouter = (component: React.ReactElement) => {
 };
 
 describe('App', () => {
-  /*it('adds card after form submit', async () => {
+  it.skip('adds card after form submit', async () => {
     const user = userEvent.setup();
 
     renderWithRouter(<App />);
@@ -23,7 +24,6 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: /uncontrolled form/i }));
 
     expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
-    screen.debug();
 
     await user.type(screen.getByLabelText(/name/i), 'John');
     await user.type(screen.getByLabelText(/email/i), 'john@test.com');
@@ -36,12 +36,13 @@ describe('App', () => {
     const file = new File(['img'], 'test.png', { type: 'image/png' });
     const input = screen.getByLabelText(/upload photo/i);
     await user.upload(input, file);
-
     await user.click(screen.getByRole('button', { name: /submit/i }));
 
-    expect(await screen.findByText('John')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('John')).toBeInTheDocument();
+    });
     expect(screen.getByText('john@test.com')).toBeInTheDocument();
-  });*/
+  });
 
   it('adds card from RHF form', async () => {
     const user = userEvent.setup();
