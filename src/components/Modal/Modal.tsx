@@ -17,10 +17,6 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
 
     previousFocus.current = document.activeElement as HTMLElement;
 
-    requestAnimationFrame(() => {
-      modalRef.current?.focus();
-    });
-
     return () => {
       previousFocus.current?.focus();
     };
@@ -44,12 +40,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
 
   return createPortal(
     <div className="overlay" onClick={onClose}>
-      <div
-        ref={modalRef}
-        tabIndex={-1}
-        className="modal"
-        onClick={(event) => event.stopPropagation()}
-      >
+      <div ref={modalRef} className="modal" onClick={(event) => event.stopPropagation()}>
         <button className="close-button" onClick={onClose}>
           X
         </button>
