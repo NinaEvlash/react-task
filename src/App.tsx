@@ -27,11 +27,11 @@ function App() {
       <div className="container">
         <h1>React Forms</h1>
 
-        <button className="left-button" onClick={() => openModal('uncontrolled')}>
+        <button type="button" className="left-button" onClick={() => openModal('uncontrolled')}>
           Uncontrolled Form
         </button>
 
-        <button className="right-button" onClick={() => openModal('rhf')}>
+        <button type="button" className="right-button" onClick={() => openModal('rhf')}>
           React Hook Form
         </button>
 

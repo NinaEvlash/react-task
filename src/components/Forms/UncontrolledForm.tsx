@@ -68,7 +68,9 @@ export const UncontrolledForm = ({ onClose }: Props) => {
 
     const file = formData.get('image');
 
-    if (!(file instanceof File)) {
+    const fileObj = file instanceof FileList ? file[0] : file;
+
+    if (!(fileObj instanceof File)) {
       setErrors((prev) => ({
         ...prev,
         image: 'Image is required',
@@ -76,7 +78,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
       return;
     }
 
-    const imageBase64 = await fileToBase64(file);
+    const imageBase64 = await fileToBase64(fileObj);
 
     const data: Submission = {
       id: crypto.randomUUID(),

@@ -96,6 +96,7 @@ export const HookForm = ({ onClose }: Props) => {
             Age
           </label>
           <input
+            id="age"
             className="input"
             type="number"
             {...register('age', {
@@ -186,11 +187,14 @@ export const HookForm = ({ onClose }: Props) => {
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <CountryAutocomplete
-                countries={countryList}
-                value={field.value}
-                onChange={field.onChange}
-              />
+              <>
+                <CountryAutocomplete
+                  countries={countryList}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+                <input type="hidden" name="country" value={field.value} readOnly />
+              </>
             )}
           />
 

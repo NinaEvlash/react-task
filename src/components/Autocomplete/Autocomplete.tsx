@@ -17,6 +17,7 @@ export const CountryAutocomplete = ({ countries, value, onChange }: Props) => {
   return (
     <div className="autocomplete">
       <input
+        id="country"
         className="input"
         value={value}
         autoComplete="off"
