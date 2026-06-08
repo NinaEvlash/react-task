@@ -28,6 +28,7 @@ export const HookForm = ({ onClose }: Props) => {
     watch,
     formState: { errors, isValid },
     setFocus,
+    reset,
   } = useForm<FormValues>({
     resolver: yupResolver(formSchema) as Resolver<FormValues, unknown, FormValues>,
     mode: 'onChange',
@@ -70,6 +71,7 @@ export const HookForm = ({ onClose }: Props) => {
       }),
     );
 
+    reset();
     onClose();
   };
   return (

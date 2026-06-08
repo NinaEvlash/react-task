@@ -49,9 +49,10 @@ export const formSchema = yup.object({
     .mixed<File | FileList>()
     .test('required', 'Image is required', (value) => {
       if (!value) return false;
-      if (value instanceof FileList) return value.length > 0;
-      if (value instanceof File) return true;
-      return false;
+
+      const file = value instanceof FileList ? value[0] : value;
+
+      return !!file && file.name.trim() !== '';
     })
     .test('fileType', 'Only PNG/JPEG', (value) => {
       if (!value) return true;

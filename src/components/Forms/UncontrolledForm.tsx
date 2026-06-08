@@ -21,6 +21,8 @@ export const UncontrolledForm = ({ onClose }: Props) => {
     firstInputRef.current?.focus();
   }, []);
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   const [fileName, setFileName] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -58,7 +60,9 @@ export const UncontrolledForm = ({ onClose }: Props) => {
         const validationErrors: Record<string, string> = {};
 
         error.inner.forEach((err) => {
-          if (err.path) validationErrors[err.path] = err.message;
+          if (err.path && !validationErrors[err.path]) {
+            validationErrors[err.path] = err.message;
+          }
         });
 
         setErrors(validationErrors);
@@ -68,9 +72,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
 
     const file = formData.get('image');
 
-    const fileObj = file instanceof FileList ? file[0] : file;
-
-    if (!(fileObj instanceof File)) {
+    if (!(file instanceof File)) {
       setErrors((prev) => ({
         ...prev,
         image: 'Image is required',
@@ -78,7 +80,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
       return;
     }
 
-    const imageBase64 = await fileToBase64(fileObj);
+    const imageBase64 = await fileToBase64(file);
 
     const data: Submission = {
       id: crypto.randomUUID(),
@@ -95,11 +97,17 @@ export const UncontrolledForm = ({ onClose }: Props) => {
     };
 
     dispatch(addSubmission(data));
+
+    formRef.current?.reset();
+    setFileName('');
+    setPassword('');
+    setCountry('');
+
     onClose();
   };
 
   return (
-    <form className="form" onSubmit={handleSubmit}>
+    <form ref={formRef} className="form" onSubmit={handleSubmit}>
       <div className="form-section">
         <div className="form-field">
           <label htmlFor="name" className="label">
