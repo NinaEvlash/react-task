@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { ValidationError } from 'yup';
 import { addSubmission } from '../../store/formsSlice';
@@ -16,6 +16,10 @@ type Props = {
 
 export const UncontrolledForm = ({ onClose }: Props) => {
   const dispatch = useDispatch();
+  const firstInputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    firstInputRef.current?.focus();
+  }, []);
 
   const [fileName, setFileName] = useState('');
   const [password, setPassword] = useState('');
@@ -99,7 +103,7 @@ export const UncontrolledForm = ({ onClose }: Props) => {
           <label htmlFor="name" className="label">
             Name
           </label>
-          <input id="name" className="input" name="name" />
+          <input id="name" className="input" name="name" ref={firstInputRef} />
           <p className="error">{errors.name}</p>
         </div>
 

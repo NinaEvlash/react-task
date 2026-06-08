@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, SubmitHandler, Resolver, Controller } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
@@ -26,10 +27,15 @@ export const HookForm = ({ onClose }: Props) => {
     control,
     watch,
     formState: { errors, isValid },
+    setFocus,
   } = useForm<FormValues>({
     resolver: yupResolver(formSchema) as Resolver<FormValues, unknown, FormValues>,
     mode: 'onChange',
   });
+
+  useEffect(() => {
+    setFocus('name');
+  }, [setFocus]);
 
   const watchImage = watch('image');
 
