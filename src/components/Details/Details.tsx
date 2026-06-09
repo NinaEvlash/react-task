@@ -22,7 +22,7 @@ export default function Details() {
   const name: string = params.name || '';
   const [item, setItem] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -31,6 +31,7 @@ export default function Details() {
     async function fetchData(): Promise<void> {
       try {
         setLoading(true);
+        setError(null);
 
         const data: PokemonDetails = await getDataByName(name);
 
