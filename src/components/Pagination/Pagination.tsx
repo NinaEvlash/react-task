@@ -7,7 +7,8 @@ type PaginationProps = {
 export default function Pagination({ totalPages }: PaginationProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentPage = Number(searchParams.get('page')) || 1;
+  const rawPage = Number(searchParams.get('page'));
+  const currentPage = Number.isNaN(rawPage) ? 1 : Math.min(Math.max(rawPage, 1), totalPages);
 
   const changePage = (page: number): void => {
     const params = new URLSearchParams(searchParams);
