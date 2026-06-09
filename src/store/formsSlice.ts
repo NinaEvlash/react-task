@@ -27,6 +27,7 @@ const formsSlice = createSlice({
   initialState,
   reducers: {
     addSubmission: (state, action: PayloadAction<Submission>) => {
+      console.log(action.payload);
       state.submissions.push(action.payload);
     },
   },

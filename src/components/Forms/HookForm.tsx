@@ -142,9 +142,9 @@ export const HookForm = ({ onClose }: Props) => {
             />
 
             <p>
-              {watchImage instanceof FileList
-                ? watchImage?.[0]?.name
-                : watchImage?.name || 'No file selected'}
+              {watchImage instanceof FileList && watchImage.length > 0
+                ? watchImage[0].name
+                : 'No file selected'}
             </p>
           </div>
 
