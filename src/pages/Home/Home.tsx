@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useNavigate, useSearchParams, useParams } from 'react-router-dom';
+import { Outlet, useNavigate, useSearchParams, useParams } from 'react-router';
 
 import SearchBar from '../../components/SearchBar/SearchBar';
 import Results from '../../components/Results/Results';

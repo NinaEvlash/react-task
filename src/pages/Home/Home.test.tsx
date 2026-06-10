@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router';
 import Home from './Home';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import * as dataApi from '../../api/dataApi';
