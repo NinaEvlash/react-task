@@ -9,7 +9,7 @@ describe('App', () => {
     vi.clearAllMocks();
   });
 
-  it('renders Home component', async () => {
+  it('renders Home component', () => {
     vi.spyOn(dataApi, 'getDataList').mockResolvedValue({
       count: 0,
       next: null,

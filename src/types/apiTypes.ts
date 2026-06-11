@@ -1,19 +1,19 @@
-export interface PokemonType {
+export type PokemonType = {
   name: string;
   url?: string;
-}
+};
 
-export interface PokemonListResponse {
+export type PokemonListResponse = {
   count: number;
   next?: string | null;
   previous?: string | null;
   results: PokemonType[];
-}
-export interface PokemonTypeInfo {
+};
+export type PokemonTypeInfo = {
   type: PokemonType;
-}
+};
 
-export interface PokemonDetailsResponse {
+export type PokemonDetailsResponse = {
   name: string;
   weight: number;
   height: number;
@@ -21,4 +21,4 @@ export interface PokemonDetailsResponse {
     front_default: string | null;
   };
   types: PokemonTypeInfo[];
-}
+};

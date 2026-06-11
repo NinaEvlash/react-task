@@ -19,7 +19,7 @@ describe('NotFound page', () => {
     expect(screen.getByRole('link', { name: /back to home/i })).toBeInTheDocument();
   });
 
-  test('navigates to home via link', async () => {
+  test('navigates to home via link', () => {
     render(
       <MemoryRouter initialEntries={['/404']}>
         <Routes>

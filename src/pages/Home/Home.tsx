@@ -6,20 +6,24 @@ import Results from '../../components/Results/Results';
 import Pagination from '../../components/Pagination/Pagination';
 import { getDataByName, getDataList } from '../../api/dataApi';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { PokemonDetailsResponse, PokemonListResponse, PokemonType } from '../../types/apiTypes';
+import type {
+  PokemonDetailsResponse,
+  PokemonListResponse,
+  PokemonType,
+} from '../../types/apiTypes';
 
-export interface Pokemon {
+export type Pokemon = {
   name: string;
   description: string;
-}
+};
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const pageParam = Number(searchParams.get('page'));
+  const pageParameter = Number(searchParams.get('page'));
 
-  const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
+  const page = Number.isInteger(pageParameter) && pageParameter > 0 ? pageParameter : 1;
   const params = useParams<{ name?: string }>();
-  const selectedPokemon: string | null = params.name || null;
+  const selectedPokemon: string | null = params.name ?? null;
   const navigate = useNavigate();
 
   const [results, setResults] = useState<Pokemon[]>([]);
@@ -54,14 +58,14 @@ export default function Home() {
           setResults([
             {
               name: data.name,
-              description: `Weight: ${data.weight}, Height: ${data.height}`,
+              description: `Weight: ${String(data.weight)}, Height: ${String(data.height)}`,
             },
           ]);
 
           return;
         }
 
-        const limit: number = 20;
+        const limit = 20;
         const offset: number = (page - 1) * limit;
 
         const data: PokemonListResponse = await getDataList(limit, offset);
@@ -73,12 +77,12 @@ export default function Home() {
         }));
 
         setResults(mapped);
-      } catch (err) {
+      } catch (error_) {
         const errorMessage =
-          err instanceof Error ? err.message : 'Network error. Please check your connection.';
+          error_ instanceof Error ? error_.message : 'Network error. Please check your connection.';
         setError(errorMessage);
 
-        if (err instanceof Error && err.message === 'Pokémon not found') {
+        if (error_ instanceof Error && error_.message === 'Pokémon not found') {
           setQuery('');
         }
       } finally {
@@ -86,7 +90,7 @@ export default function Home() {
       }
     };
 
-    fetchData();
+    void fetchData();
   }, [query, page, setQuery]);
 
   const handleSearch = (newQuery: string): void => {
@@ -97,7 +101,7 @@ export default function Home() {
     params.set('page', '1');
 
     setSearchParams(params);
-    navigate('/');
+    void navigate('/');
   };
 
   if (fatalError) {
@@ -109,7 +113,7 @@ export default function Home() {
     params.delete('details');
     params.set('page', String(page));
 
-    navigate(`/details/${name}${params.toString() ? `?${params.toString()}` : ''}`);
+    void navigate(`/details/${name}${params.toString() ? `?${params.toString()}` : ''}`);
   };
 
   return (

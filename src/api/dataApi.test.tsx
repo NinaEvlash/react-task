@@ -1,6 +1,7 @@
 import { getDataByName, getDataList } from './dataApi';
 
 const originalFetch = globalThis.fetch;
+const ARG_GET_DATA = 20;
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -69,7 +70,7 @@ describe('getDataList', () => {
       json: vi.fn().mockResolvedValue(mockJson),
     });
 
-    const result = await getDataList(10, 20);
+    const result = await getDataList(10, ARG_GET_DATA);
 
     expect(fetch).toHaveBeenCalledWith('https://pokeapi.co/api/v2/pokemon?limit=10&offset=20');
     expect(result).toEqual(mockJson);
@@ -81,7 +82,9 @@ describe('getDataList', () => {
       status: 500,
     });
 
-    await expect(getDataList(10, 20)).rejects.toThrow('Server error. Please try again later.');
+    await expect(getDataList(10, ARG_GET_DATA)).rejects.toThrow(
+      'Server error. Please try again later.',
+    );
   });
 
   it('throws list error for non-500 failed responses', async () => {
@@ -90,6 +93,6 @@ describe('getDataList', () => {
       status: 404,
     });
 
-    await expect(getDataList(10, 20)).rejects.toThrow('Failed to load Pokémon list');
+    await expect(getDataList(10, ARG_GET_DATA)).rejects.toThrow('Failed to load Pokémon list');
   });
 });

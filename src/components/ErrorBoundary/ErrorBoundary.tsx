@@ -1,12 +1,13 @@
-import React, { Component, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React, { Component } from 'react';
 
-interface ErrorBoundaryProps {
+type ErrorBoundaryProps = {
   children: ReactNode;
-}
+};
 
-interface ErrorBoundaryState {
+type ErrorBoundaryState = {
   hasError: boolean;
-}
+};
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
@@ -14,24 +15,38 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(): ErrorBoundaryState {
+  public static getDerivedStateFromError(): ErrorBoundaryState {
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, info: React.ErrorInfo): void {
+  public componentDidCatch(error: Error, info: React.ErrorInfo): void {
     console.error('Caught error in ErrorBoundary:', error, info);
   }
 
-  handleReset = (): void => {
+  public handleReset = (): void => {
     localStorage.removeItem('pokemonSearchQuery');
     this.setState({ hasError: false });
   };
 
-  render() {
+  public render() {
     if (this.state.hasError) {
       return (
         <main className="min-h-screen flex items-center justify-center bg-gray-100">
-          <article className="w-full max-w-md flex flex-col items-center justify-center p-8 bg-red-50 border border-red-200 rounded-2xl shadow-md text-center space-y-4">
+          <article
+            className="
+             w-full 
+             max-w-md 
+             flex f
+             lex-col 
+             items-center 
+             justify-center 
+             p-8 bg-red-50 
+             border 
+             border-red-200 
+             rounded-2xl 
+             shadow-md
+             text-centerspace-y-4"
+          >
             <h2 className="text-2xl font-semibold text-red-600">Something went wrong</h2>
 
             <p className="text-gray-600 text-sm">
