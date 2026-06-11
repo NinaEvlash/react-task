@@ -1,4 +1,4 @@
-interface PokemonListResult {
+export interface PokemonType {
   name: string;
   url?: string;
 }
@@ -7,14 +7,10 @@ export interface PokemonListResponse {
   count: number;
   next?: string | null;
   previous?: string | null;
-  results: PokemonListResult[];
+  results: PokemonType[];
 }
-
-interface PokemonTypeInfo {
-  type: {
-    name: string;
-    url?: string;
-  };
+export interface PokemonTypeInfo {
+  type: PokemonType;
 }
 
 export interface PokemonDetailsResponse {

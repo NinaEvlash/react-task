@@ -6,7 +6,7 @@ import Results from '../../components/Results/Results';
 import Pagination from '../../components/Pagination/Pagination';
 import { getDataByName, getDataList } from '../../api/dataApi';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { PokemonListResponse, PokemonDetailsResponse } from '../../types/apiTypes';
+import { PokemonDetailsResponse, PokemonListResponse, PokemonType } from '../../types/apiTypes';
 
 export interface Pokemon {
   name: string;
@@ -67,7 +67,7 @@ export default function Home() {
         const data: PokemonListResponse = await getDataList(limit, offset);
         setTotalPages(Math.ceil(data.count / limit));
 
-        const mapped: Pokemon[] = data.results.map((p: { name: string }) => ({
+        const mapped: Pokemon[] = data.results.map((p: PokemonType) => ({
           name: p.name,
           description: 'No description available',
         }));

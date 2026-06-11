@@ -3,24 +3,12 @@ import { useNavigate, useParams } from 'react-router';
 
 import { getDataByName } from '../../api/dataApi';
 import Spinner from '../Spinner/Spinner';
-interface PokemonDetails {
-  name: string;
-  weight: number;
-  height: number;
-  sprites: {
-    front_default: string | null;
-  };
-  types: {
-    type: {
-      name: string;
-    };
-  }[];
-}
+import { PokemonDetailsResponse } from '../../types/apiTypes';
 
 export default function Details() {
-  const params = useParams<{ name: string }>();
-  const name: string = params.name || '';
-  const [item, setItem] = useState<PokemonDetails | null>(null);
+  const params = useParams<{ name?: string }>();
+  const name = params.name ?? '';
+  const [item, setItem] = useState<PokemonDetailsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +21,7 @@ export default function Details() {
         setLoading(true);
         setError(null);
 
-        const data: PokemonDetails = await getDataByName(name);
+        const data: PokemonDetailsResponse = await getDataByName(name);
 
         setItem(data);
       } catch {
