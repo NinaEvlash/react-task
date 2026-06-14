@@ -66,3 +66,72 @@
 ![](public/image-9.png)  
 **Ranked Chart:**  
 ![](public/image-10.png)
+
+## After optimization
+
+### Sorting
+
+### Sort by name
+
+- Commit duration:
+- Render duration:
+- Observation:
+
+### Screenshot:
+
+**Flame Graph:**  
+![]()  
+**Ranked Chart:**  
+![]()
+
+### Sort by population
+
+- Commit duration:
+- Render duration:
+- Observation:
+
+### Screenshot:
+
+**Flame Graph:**  
+![]()  
+**Ranked Chart:**  
+![]()
+
+### Search country
+
+- Commit duration:
+- Render duration:
+- Observation:
+
+### Screenshot:
+
+**Flame Graph:**  
+![]()  
+**Ranked Chart:**  
+![]()
+
+### Change year
+
+- Commit duration:
+- Render duration:
+- Observation:
+
+### Screenshot:
+
+**Flame Graph:**  
+![]()  
+**Ranked Chart:**  
+![]()
+
+### Toggle columns
+
+- Commit duration:
+- Render duration:
+- Observation:
+
+### Screenshot:
+
+**Flame Graph:**  
+![]()  
+**Ranked Chart:**  
+![]()
