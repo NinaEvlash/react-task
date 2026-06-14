@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import type { YearData } from '../../types';
 import { formatNumber } from '../../utils/format-utils';
 
@@ -10,7 +10,7 @@ type DataTableProps = {
   columns: string[];
 };
 
-export const DataTable = ({ data, year, columns }: DataTableProps) => {
+export const DataTable = memo(({ data, year, columns }: DataTableProps) => {
   const record = useMemo(() => data.find((d) => d.year === year), [data, year]);
 
   if (!record) {
@@ -33,4 +33,4 @@ export const DataTable = ({ data, year, columns }: DataTableProps) => {
       </tbody>
     </table>
   );
-};
+});
