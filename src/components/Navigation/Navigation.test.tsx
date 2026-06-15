@@ -2,12 +2,15 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import Navigation from './Navigation';
+import ThemeProvider from '../../providers/ThemeProvider';
 
 describe('Navigation', () => {
   test('renders navigation links', () => {
     render(
       <MemoryRouter>
-        <Navigation />
+        <ThemeProvider>
+          <Navigation />
+        </ThemeProvider>
       </MemoryRouter>,
     );
 

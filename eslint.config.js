@@ -144,6 +144,7 @@ export default defineConfig([
       'unicorn/number-literal-case': 'off',
       'unicorn/prefer-query-selector': 'off',
       'unicorn/explicit-length-check': 'off',
+      'unicorn/prefer-string-replace-all': 'off',
     },
   },
   {

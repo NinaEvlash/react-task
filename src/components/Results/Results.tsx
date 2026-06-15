@@ -1,4 +1,6 @@
 import Spinner from '../Spinner/Spinner';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { toggleItem } from '../../features/selectedItem/selectedItemSlice';
 
 type ResultItem = {
   name: string;
@@ -13,12 +15,23 @@ type ResultsProps = {
 };
 
 export default function Results({ results, loading, error, onSelect }: ResultsProps) {
+  const selected = useAppSelector((state) => state.selectedItem.items);
+  const dispatch = useAppDispatch();
   if (loading) {
     return <Spinner />;
   }
   if (error) {
     return (
-      <div className="text-center text-red-500 bg-red-50 border border-red-200 rounded-xl p-4">
+      <div
+        className="
+        text-center
+        bg-red-50 dark:bg-red-950
+        text-red-700 dark:text-red-200
+        border border-red-
+        200 dark:border-red-800
+        rounded-xl
+        p-4"
+      >
         {error}
       </div>
     );
@@ -32,11 +45,29 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
       {results.map((item) => (
         <div
           key={item.name}
-          className="p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition"
+          className="
+          p-4 rounded-xl shadow-sm border border-gray-200 
+          bg-white dark:bg-gray-800 
+          border-gray-200 dark:border-gray-700 
+          hover:shadow-md transition"
         >
-          <strong className="block text-lg font-semibold text-gray-800 mb-1">{item.name}</strong>
+          <input
+            type="checkbox"
+            checked={selected.some((selectedItem) => selectedItem.name === item.name)}
+            onChange={() =>
+              dispatch(
+                toggleItem({
+                  name: item.name,
+                  description: item.description,
+                }),
+              )
+            }
+          />
+          <strong className="block text-lg font-semibold text-gray-800 dark:text-gray-100">
+            {item.name}
+          </strong>
 
-          <p className="text-gray-600 mb-4">{item.description}</p>
+          <p className=" mb-4 border-gray-200 dark:border-gray-700">{item.description}</p>
 
           <button
             type="button"

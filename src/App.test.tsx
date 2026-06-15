@@ -1,8 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
+import { Provider } from 'react-redux';
 import { vi } from 'vitest';
 import App from './App';
 import * as dataApi from './api/dataApi';
+import ThemeProvider from './providers/ThemeProvider';
+import { store } from './store/store';
 
 describe('App', () => {
   afterEach(() => {
@@ -18,9 +21,13 @@ describe('App', () => {
     });
 
     render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>,
+      <Provider store={store}>
+        <BrowserRouter>
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
+        </BrowserRouter>
+      </Provider>,
     );
 
     expect(screen.getByPlaceholderText('Enter a Pokémon name')).toBeInTheDocument();

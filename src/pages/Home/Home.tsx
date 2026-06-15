@@ -6,6 +6,8 @@ import Results from '../../components/Results/Results';
 import Pagination from '../../components/Pagination/Pagination';
 import { getDataByName, getDataList } from '../../api/dataApi';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { validateQuery } from '../../utils/validateQuery';
+import SelectedItemsPanel from '../../components/SelectedItemsPanel/SelectedItemsPanel';
 import type {
   PokemonDetailsResponse,
   PokemonListResponse,
@@ -46,7 +48,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
-      const normalizedQuery = query.trim().toLowerCase();
+      const normalizedQuery = validateQuery(query);
 
       setLoading(true);
       setError(null);
@@ -73,7 +75,7 @@ export default function Home() {
 
         const mapped: Pokemon[] = data.results.map((p: PokemonType) => ({
           name: p.name,
-          description: 'No description available',
+          description: `Pokemon named ${p.name}`,
         }));
 
         setResults(mapped);
@@ -91,7 +93,7 @@ export default function Home() {
     };
 
     void fetchData();
-  }, [query, page, setQuery]);
+  }, [query, page, setQuery, searchParams]);
 
   const handleSearch = (newQuery: string): void => {
     const trimmedQuery = newQuery.trim();
@@ -117,7 +119,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+    <main className="min-h-screen bg-gray-100 p-6 pb-24 flex flex-col items-center dark:bg-gray-950">
       <div className="w-full max-w-2xl space-y-6">
         <SearchBar query={query} onSearch={handleSearch} />
 
@@ -132,7 +134,7 @@ export default function Home() {
           </div>
 
           {selectedPokemon && (
-            <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6">
+            <aside className="w-1/2 sticky top-6 bg-white rounded-2xl shadow-md p-6 bg-white dark:bg-gray-800">
               <Outlet />
             </aside>
           )}
@@ -149,6 +151,7 @@ export default function Home() {
             Trigger Error
           </button>
         </section>
+        <SelectedItemsPanel />
       </div>
     </main>
   );
