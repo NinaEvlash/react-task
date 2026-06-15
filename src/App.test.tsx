@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { Provider } from 'react-redux';
 import { vi } from 'vitest';
 import App from './App';
@@ -12,7 +12,7 @@ describe('App', () => {
     vi.clearAllMocks();
   });
 
-  it('renders Home component', async () => {
+  it('renders Home component', () => {
     vi.spyOn(dataApi, 'getDataList').mockResolvedValue({
       count: 0,
       next: null,

@@ -2,14 +2,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router';
 import Home from './Home';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import * as dataApi from '../../api/dataApi';
 import ThemeProvider from '../../providers/ThemeProvider';
 import Navigation from '../../components/Navigation/Navigation';
 import { store } from '../../store/store';
-import { PokemonListResponse } from '../../types/apiTypes';
+import type { PokemonListResponse } from '../../types/apiTypes';
 
 describe('Home', () => {
   const renderWithRouter = (component: React.ReactElement) => {
@@ -76,7 +76,7 @@ describe('Home', () => {
 
     renderWithRouter(<Home />);
 
-    const input = screen.getByPlaceholderText('Enter a Pokémon name') as HTMLInputElement;
+    const input = screen.getByPlaceholderText('Enter a Pokémon name');
     const button = screen.getByRole('button', { name: /search/i });
 
     await user.type(input, 'unknown');
@@ -199,7 +199,7 @@ describe('Home', () => {
 
     renderWithRouter(<Home />);
 
-    const input = screen.getByPlaceholderText('Enter a Pokémon name') as HTMLInputElement;
+    const input = screen.getByPlaceholderText('Enter a Pokémon name');
     const button = screen.getByRole('button', { name: /search/i });
 
     await user.type(input, 'pikachu');
@@ -209,9 +209,12 @@ describe('Home', () => {
     expect(localStorage.getItem('pokemonSearchQuery')).toBeNull();
   });
 
-  it('shows loading state during fetch', async () => {
+  it('shows loading state during fetch', () => {
     vi.spyOn(dataApi, 'getDataList').mockImplementation(
-      () => new Promise<PokemonListResponse>(() => {}),
+      () =>
+        new Promise<PokemonListResponse>(() => {
+          // intentionally never resolves to test loading state
+        }),
     );
 
     renderWithRouter(<Home />);
@@ -323,9 +326,9 @@ describe('Home', () => {
       </Provider>,
     );
 
-    const prevButton = await screen.findByRole('button', { name: /prev/i });
+    const previousButton = await screen.findByRole('button', { name: /prev/i });
 
-    expect(prevButton).toBeDisabled();
+    expect(previousButton).toBeDisabled();
   });
 
   it.skip('shows correct page from query param', async () => {

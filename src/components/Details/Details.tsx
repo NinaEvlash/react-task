@@ -1,38 +1,29 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { getDataByName } from '../../api/dataApi';
 import Spinner from '../Spinner/Spinner';
-interface PokemonDetails {
-  name: string;
-  weight: number;
-  height: number;
-  sprites: {
-    front_default: string | null;
-  };
-  types: {
-    type: {
-      name: string;
-    };
-  }[];
-}
+import type { PokemonDetailsResponse } from '../../types/apiTypes';
 
 export default function Details() {
-  const params = useParams<{ name: string }>();
-  const name: string = params.name || '';
-  const [item, setItem] = useState<PokemonDetails | null>(null);
+  const params = useParams<{ name?: string }>();
+  const name = params.name ?? '';
+  const [item, setItem] = useState<PokemonDetailsResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!name) return;
+    if (!name) {
+      return;
+    }
     async function fetchData(): Promise<void> {
       try {
         setLoading(true);
+        setError(null);
 
-        const data: PokemonDetails = await getDataByName(name);
+        const data: PokemonDetailsResponse = await getDataByName(name);
 
         setItem(data);
       } catch {
@@ -41,15 +32,18 @@ export default function Details() {
         setLoading(false);
       }
     }
-    fetchData();
+    void fetchData();
   }, [name]);
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <Spinner />
-      </div>
-    );
+  if (loading) {
+    {
+      return (
+        <div className="flex justify-center items-center min-h-[200px]">
+          <Spinner />
+        </div>
+      );
+    }
+  }
   if (error) {
     return (
       <div className="text-center text-red-500 bg-red-50 border border-red-200 rounded-xl p-4">
@@ -57,7 +51,9 @@ export default function Details() {
       </div>
     );
   }
-  if (!item) return null;
+  if (!item) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col items-center">
@@ -82,7 +78,7 @@ export default function Details() {
     rounded-lg
     hover:bg-gray-200 dark:hover:bg-gray-600
     transition-colors mt-4"
-        onClick={() => navigate('/')}
+        onClick={() => void navigate('/')}
       >
         Close
       </button>

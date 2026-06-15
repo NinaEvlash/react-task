@@ -1,23 +1,19 @@
-interface PokemonListResult {
+export type PokemonType = {
   name: string;
   url?: string;
-}
+};
 
-export interface PokemonListResponse {
+export type PokemonListResponse = {
   count: number;
   next?: string | null;
   previous?: string | null;
-  results: PokemonListResult[];
-}
+  results: PokemonType[];
+};
+export type PokemonTypeInfo = {
+  type: PokemonType;
+};
 
-interface PokemonTypeInfo {
-  type: {
-    name: string;
-    url?: string;
-  };
-}
-
-export interface PokemonDetailsResponse {
+export type PokemonDetailsResponse = {
   name: string;
   weight: number;
   height: number;
@@ -25,4 +21,4 @@ export interface PokemonDetailsResponse {
     front_default: string | null;
   };
   types: PokemonTypeInfo[];
-}
+};

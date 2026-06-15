@@ -20,7 +20,7 @@ describe('SearchBar', () => {
   it('renders empty input when query is empty', () => {
     render(<SearchBar query="" onSearch={vi.fn()} />);
 
-    const input = screen.getByPlaceholderText('Enter a Pokémon name') as HTMLInputElement;
+    const input = screen.getByPlaceholderText('Enter a Pokémon name');
 
     expect(input.value).toBe('');
   });

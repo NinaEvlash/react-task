@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router';
 
 import NotFound from './NotFound';
 import About from '../About/About';
@@ -19,7 +19,7 @@ describe('NotFound page', () => {
     expect(screen.getByRole('link', { name: /back to home/i })).toBeInTheDocument();
   });
 
-  test('navigates to home via link', async () => {
+  test('navigates to home via link', () => {
     render(
       <MemoryRouter initialEntries={['/404']}>
         <Routes>

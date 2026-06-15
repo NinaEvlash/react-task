@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 export function useLocalStorage(key: string, initialValue = ''): [string, (value: string) => void] {
   const [value, setValue] = useState(() => {
     try {
-      return localStorage.getItem(key) || initialValue;
+      return localStorage.getItem(key) ?? initialValue;
     } catch (error) {
       console.error('Error accessing localStorage:', error);
       return initialValue;
