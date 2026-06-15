@@ -36,8 +36,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             className="
              w-full 
              max-w-md 
-             flex f
-             lex-col 
+             flex 
+             flex-col 
              items-center 
              justify-center 
              p-8 bg-red-50 
@@ -45,7 +45,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
              border-red-200 
              rounded-2xl 
              shadow-md
-             text-centerspace-y-4"
+             text-center
+             space-y-4"
           >
             <h2 className="text-2xl font-semibold text-red-600">Something went wrong</h2>
 
