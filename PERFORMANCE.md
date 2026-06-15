@@ -73,65 +73,77 @@
 
 ### Sort by name
 
-- Commit duration:
-- Render duration:
-- Observation:
+- Commit duration: 2.6 s
+- Render duration: 17.4 ms
+- Observation: Rendering performance improved significantly after applying memoization and virtualization. Only visible country cards are rendered, reducing commit duration by 67.5% and render duration by 96.0%. Sorting by name became much more responsive.
 
 ### Screenshot:
 
 **Flame Graph:**  
-![]()  
+![](public/image-11.png)  
 **Ranked Chart:**  
-![]()
+![](public/image-12.png)
 
 ### Sort by population
 
-- Commit duration:
-- Render duration:
-- Observation:
+- Commit duration: 2.2 s
+- Render duration: 77.2 ms
+- Observation: Sorting by population still requires additional calculations for each country, but memoization and virtualization significantly reduced rendering work. Commit duration decreased by 50.0% and render duration by 84.8%.
 
 ### Screenshot:
 
 **Flame Graph:**  
-![]()  
+![](public/image-13.png)  
 **Ranked Chart:**  
-![]()
+![](public/image-14.png)
 
 ### Search country
 
-- Commit duration:
-- Render duration:
-- Observation:
+- Commit duration: 4.7 s
+- Render duration: 2.5 ms
+- Observation: Search interactions became much more efficient. Memoized calculations and components prevent unnecessary re-renders, reducing commit duration by 78.6% and render duration by 93.8%.
 
 ### Screenshot:
 
 **Flame Graph:**  
-![]()  
+![](public/image-15.png)  
 **Ranked Chart:**  
-![]()
+![](public/image-16.png)
 
 ### Change year
 
-- Commit duration:
-- Render duration:
-- Observation:
+- Commit duration: 2.9 s
+- Render duration: 48 ms
+- Observation: Changing the year still requires updating country data and tables, so rendering work remains necessary. Commit duration improved by 27.5%, while render duration increased by 37.5% because country cards and tables must update their displayed values for the newly selected year.
 
 ### Screenshot:
 
 **Flame Graph:**  
-![]()  
+![](public/image-17.png)  
 **Ranked Chart:**  
-![]()
+![](public/image-18.png)
 
 ### Toggle columns
 
-- Commit duration:
-- Render duration:
-- Observation:
+- Commit duration: 1 s
+- Render duration: 16.2 ms
+- Observation: Column toggling became more efficient after memoization and virtualization. Only affected components are updated, reducing commit duration by 44.4% and render duration by 68.3%.
 
 ### Screenshot:
 
 **Flame Graph:**  
-![]()  
+![](public/image-19.png)  
 **Ranked Chart:**  
-![]()
+![](public/image-20.png)
+
+## Overall Results
+
+The applied optimizations significantly improved application performance:
+
+- useMemo reduced expensive recalculations of filtered and sorted country data.
+- useCallback stabilized event handler references and prevented unnecessary child component updates.
+- React.memo reduced avoidable re-renders of YearSelector, CountryCard, and DataTable.
+- Proper keys improved React reconciliation.
+- Custom virtualization reduced the number of rendered country cards from the full dataset to only the visible items.
+
+The largest improvements were observed during sorting and searching operations, with render duration reductions ranging from 68% to 96% and commit duration reductions ranging from 27% to 79%.

@@ -17,7 +17,7 @@ type CountryListProps = {
 };
 
 const ITEM_HEIGHT = 300;
-const CONTAINER_HEIGHT = 610;
+const CONTAINER_HEIGHT = 600;
 
 export const CountryList = ({
   countries,
