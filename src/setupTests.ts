@@ -1,14 +1,18 @@
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 
-vi.spyOn(console, 'error').mockImplementation(() => {});
-vi.spyOn(console, 'warn').mockImplementation(() => {});
+vi.spyOn(console, 'error').mockImplementation(() => {
+  // intentionally never resolves to test loading state
+});
+vi.spyOn(console, 'warn').mockImplementation(() => {
+  // intentionally never resolves to test loading state
+});
 
-window.addEventListener('error', (event) => {
+globalThis.addEventListener('error', (event) => {
   event.preventDefault();
 });
 
-window.addEventListener('unhandledrejection', (event) => {
+globalThis.addEventListener('unhandledrejection', (event) => {
   event.preventDefault();
 });
 

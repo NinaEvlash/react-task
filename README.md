@@ -34,7 +34,19 @@ The project includes:
 
 ---
 
-### Test scripts
+### Scripts
+
+#### Installation:
+
+```bash
+npm install
+```
+
+#### Running
+
+```bash
+npm run dev
+```
 
 #### Run all tests:
 
@@ -42,19 +54,11 @@ The project includes:
  npm run test
 ```
 
-#### Run tests in watch mode:
-
-```bash
- npm run test:watch
-```
-
 #### Generate coverage report:
 
 ```bash
  npm run test:coverage
 ```
-
-#### Coverage results will be generated in the coverage/ folder.
 
 ---
 

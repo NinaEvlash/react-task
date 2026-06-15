@@ -1,15 +1,25 @@
-import Home from './components/Home/Home';
-import { PureComponent, type ReactNode } from 'react';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import { Routes, Route } from 'react-router';
 
-class App extends PureComponent {
-  render(): ReactNode {
-    return (
-      <ErrorBoundary>
-        <Home />
-      </ErrorBoundary>
-    );
-  }
+import Home from './pages/Home/Home';
+import About from './pages/About/About';
+import Navigation from './components/Navigation/Navigation';
+import NotFound from './pages/NotFound/NotFound';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import Details from './components/Details/Details';
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<Home />}>
+          <Route path="details/:name" element={<Details />} />
+        </Route>
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </ErrorBoundary>
+  );
 }
 
 export default App;
