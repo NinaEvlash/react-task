@@ -48,7 +48,9 @@ describe('useLocalStorage', () => {
       throw new Error('getItem error');
     });
 
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+      // intentionally never resolves to test loading state
+    });
 
     const { result } = renderHook(() => useLocalStorage('theme', 'light'));
 
@@ -62,7 +64,9 @@ describe('useLocalStorage', () => {
       throw new Error('setItem error');
     });
 
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+      // intentionally never resolves to test loading state
+    });
 
     const { result } = renderHook(() => useLocalStorage('theme', 'light'));
 

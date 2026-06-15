@@ -18,7 +18,15 @@ export default function About() {
               href="https://github.com/ninaevlash"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-800 dark:text-gray-200 underline underline-offset-4 hover:text-black dark:hover:text-white transition"
+              className="
+              text-gray-800 
+              dark:text-gray-200 
+              underline 
+              underline-offset-4 
+              hover:text-black 
+              dark:hover:text-white 
+              transition
+              "
             >
               My GitHub
             </a>
@@ -27,7 +35,15 @@ export default function About() {
               href="https://rs.school/courses/reactjs"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 underline underline-offset-4 hover:text-blue-700 dark:hover:text-blue-300 transition"
+              className="
+              text-blue-600 
+              dark:text-blue-400 
+              underline 
+              underline-offset-4 
+              hover:text-blue-700 
+              dark:hover:text-blue-300 
+              transition
+              "
             >
               RS School React Course
             </a>

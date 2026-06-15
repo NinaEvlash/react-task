@@ -1,12 +1,12 @@
-import { ReactNode, useCallback, useMemo } from 'react';
+import { type ReactNode, useCallback, useMemo } from 'react';
 
 import { ThemeContext } from '../context/ThemeContext';
-import { Theme } from '../types/theme';
+import { type Theme } from '../types/theme';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
-interface Props {
+type Props = {
   children: ReactNode;
-}
+};
 
 export default function ThemeProvider({ children }: Props) {
   const [theme, setTheme] = useLocalStorage('app-theme', 'light');

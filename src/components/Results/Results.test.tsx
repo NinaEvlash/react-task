@@ -5,7 +5,19 @@ import type { RootState } from '../../store/store';
 import Results from './Results';
 
 const mockDispatch = vi.fn();
-const mockSelector = vi.fn();
+
+const mockState = {
+  selectedItem: {
+    items: [
+      {
+        name: 'Item 1',
+        description: 'Description 1',
+      },
+    ],
+  },
+};
+
+const mockSelector = vi.fn((selector: (state: typeof mockState) => unknown) => selector(mockState));
 
 vi.mock('../../store/hooks', () => ({
   useAppDispatch: () => mockDispatch,

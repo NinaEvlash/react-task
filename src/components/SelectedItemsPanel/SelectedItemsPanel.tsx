@@ -31,13 +31,13 @@ export default function SelectedItemsPanel() {
 
     link.href = url;
 
-    link.download = `${selectedItems.length}_items.csv`;
+    link.download = `${String(selectedItems.length)}_items.csv`;
 
-    document.body.appendChild(link);
+    document.body.append(link);
 
     link.click();
 
-    document.body.removeChild(link);
+    link.remove();
 
     URL.revokeObjectURL(url);
   };
