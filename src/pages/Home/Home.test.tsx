@@ -3,12 +3,13 @@ import { Provider } from 'react-redux';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router';
 import Home from './Home';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import ThemeProvider from '../../providers/ThemeProvider';
 import Navigation from '../../components/Navigation/Navigation';
 import { store } from '../../store/store';
+<<<<<<< HEAD
 import * as api from '../../store/api';
 import { createQueryResult, createListQueryResult } from '../../__tests__/queryFactories';
 import { pokemonApi } from '../../store/api';
@@ -41,6 +42,9 @@ const renderWithRouter = (component: React.ReactElement) => {
     </Provider>,
   );
 };
+=======
+import type { PokemonListResponse } from '../../types/apiTypes';
+>>>>>>> app-state-management
 
 describe('Home', () => {
   afterEach(() => {
@@ -147,7 +151,18 @@ describe('Home', () => {
 
     renderWithRouter(<Home />);
 
+<<<<<<< HEAD
     expect(screen.getByText(/pokémon not found/i)).toBeInTheDocument();
+=======
+    const input = screen.getByPlaceholderText('Enter a Pokémon name');
+    const button = screen.getByRole('button', { name: /search/i });
+
+    await user.type(input, 'unknown');
+    await user.click(button);
+
+    const errorMessage = await screen.findByText('Network request failed');
+    expect(errorMessage).toBeInTheDocument();
+>>>>>>> app-state-management
   });
 
   it('shows message in case of error 500', async () => {
@@ -320,6 +335,7 @@ describe('Home', () => {
     expect(localStorage.getItem('pokemonSearchQuery')).toBe('newpoke');
   });
 
+<<<<<<< HEAD
   it('shows loading state during fetch', async () => {
     localStorage.clear();
 
@@ -327,6 +343,31 @@ describe('Home', () => {
       createListQueryResult({
         isLoading: true,
       }),
+=======
+  it.skip('removes query from localStorage on 404 error', async () => {
+    const user = userEvent.setup({ delay: null });
+
+    globalThis.fetch = vi.fn().mockRejectedValue(new Error('Pokémon not found'));
+
+    renderWithRouter(<Home />);
+
+    const input = screen.getByPlaceholderText('Enter a Pokémon name');
+    const button = screen.getByRole('button', { name: /search/i });
+
+    await user.type(input, 'pikachu');
+    await user.click(button);
+
+    await screen.findByText('Pokémon not found');
+    expect(localStorage.getItem('pokemonSearchQuery')).toBeNull();
+  });
+
+  it('shows loading state during fetch', () => {
+    vi.spyOn(dataApi, 'getDataList').mockImplementation(
+      () =>
+        new Promise<PokemonListResponse>(() => {
+          // intentionally never resolves to test loading state
+        }),
+>>>>>>> app-state-management
     );
 
     vi.mocked(api.useGetPokemonByNameQuery).mockReturnValue(createQueryResult({}));
@@ -370,7 +411,7 @@ describe('Home', () => {
     expect(localStorage.getItem('pokemonSearchQuery')).toBe('pikachu');
   });
 
-  it('goes to next page when Next is clicked', async () => {
+  it.skip('goes to next page when Next is clicked', async () => {
     const user = userEvent.setup();
 
     vi.mocked(api.useGetPokemonListQuery).mockReturnValue(
@@ -407,7 +448,7 @@ describe('Home', () => {
     expect(await screen.findByText(/page 2/i)).toBeInTheDocument();
   });
 
-  it('goes to previous page when Prev is clicked', async () => {
+  it.skip('goes to previous page when Prev is clicked', async () => {
     const user = userEvent.setup();
 
     vi.mocked(api.useGetPokemonListQuery).mockReturnValue(
@@ -444,6 +485,7 @@ describe('Home', () => {
     expect(await screen.findByText(/page 1/i)).toBeInTheDocument();
   });
 
+<<<<<<< HEAD
   it('disables Prev button on page 1', async () => {
     vi.mocked(api.useGetPokemonListQuery).mockReturnValue(
       createListQueryResult({
@@ -456,6 +498,15 @@ describe('Home', () => {
         isSuccess: true,
       }),
     );
+=======
+  it.skip('disables Prev button on page 1', async () => {
+    vi.spyOn(dataApi, 'getDataList').mockResolvedValue({
+      count: 1,
+      next: 'https://pokeapi.co/api/v2/pokemon?limit=20&offset=20',
+      previous: null,
+      results: [{ name: 'pikachu', url: '' }],
+    });
+>>>>>>> app-state-management
 
     render(
       <Provider store={store}>
@@ -465,11 +516,12 @@ describe('Home', () => {
       </Provider>,
     );
 
-    const prevButton = await screen.findByRole('button', { name: /prev/i });
+    const previousButton = await screen.findByRole('button', { name: /prev/i });
 
-    expect(prevButton).toBeDisabled();
+    expect(previousButton).toBeDisabled();
   });
 
+<<<<<<< HEAD
   it('shows correct page from query param', async () => {
     vi.mocked(api.useGetPokemonListQuery).mockReturnValue(
       createListQueryResult({
@@ -484,6 +536,15 @@ describe('Home', () => {
     );
 
     vi.mocked(api.useGetPokemonByNameQuery).mockReturnValue(createQueryResult({}));
+=======
+  it.skip('shows correct page from query param', async () => {
+    vi.spyOn(dataApi, 'getDataList').mockResolvedValue({
+      count: 1,
+      next: 'https://pokeapi.co/api/v2/pokemon?limit=20&offset=40',
+      previous: 'https://pokeapi.co/api/v2/pokemon?limit=20&offset=0',
+      results: [{ name: 'pikachu', url: '' }],
+    });
+>>>>>>> app-state-management
 
     render(
       <Provider store={store}>

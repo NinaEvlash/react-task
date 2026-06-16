@@ -1,32 +1,59 @@
-export default function Pagination({
-  page,
-  hasNextPage,
-  onPageChange,
-}: {
-  page: number;
-  hasNextPage: boolean;
-  onPageChange: (page: number) => void;
-}) {
+import { useSearchParams } from 'react-router';
+
+type PaginationProps = {
+  totalPages: number;
+};
+
+export default function Pagination({ totalPages }: PaginationProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const rawPage = Number(searchParams.get('page'));
+  const currentPage = Number.isNaN(rawPage) ? 1 : Math.min(Math.max(rawPage, 1), totalPages);
+
+  const changePage = (page: number): void => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', String(Math.max(1, page)));
+    setSearchParams(params);
+  };
+
   return (
     <section aria-label="Pagination" className="flex gap-3 justify-center">
       <button
         type="button"
         aria-label="Go to previous page"
-        className="px-4 py-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition hover:bg-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed"
-        disabled={page === 1}
-        onClick={() => onPageChange(page - 1)}
+        className="
+        cursor-pointer 
+        px-4 py-2 
+        rounded-lg 
+        border border-gray-300 
+        bg-white text-gray-700 
+        text-sm font-medium 
+        transition hover:bg-gray-100 
+        disabled:opacity-40 
+        disabled:cursor-not-allowed
+        "
+        disabled={currentPage === 1}
+        onClick={() => changePage(currentPage - 1)}
       >
         Prev
       </button>
-      <span className="flex items-center text-sm font-medium text-gray-600 dark:text-gray-300">
-        Page {page}
+      <span className="flex items-center text-sm font-medium text-gray-600">
+        Page {currentPage}
       </span>
       <button
         type="button"
         aria-label="Go to next page"
-        className="px-4 py-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition hover:bg-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600"
-        disabled={!hasNextPage}
-        onClick={() => onPageChange(page + 1)}
+        className="
+        cursor-pointer 
+        px-4 py-2 
+        rounded-lg 
+        border border-gray-300 
+        bg-white text-gray-700 
+        text-sm font-medium 
+        transition hover:bg-gray-100
+        "
+        disabled={currentPage >= totalPages}
+        onClick={() => changePage(Math.min(currentPage + 1, totalPages))}
       >
         Next
       </button>

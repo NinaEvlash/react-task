@@ -1,12 +1,16 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-interface SelectedItem {
+type SelectedItem = {
   name: string;
   description: string;
-}
+};
 
-const initialState = {
-  items: [] as SelectedItem[],
+type SelectedItemState = {
+  items: SelectedItem[];
+};
+
+const initialState: SelectedItemState = {
+  items: [],
 };
 
 const selectedItemSlice = createSlice({

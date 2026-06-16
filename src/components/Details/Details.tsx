@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { useGetPokemonByNameQuery } from '../../store/api';
 import Spinner from '../Spinner/Spinner';
@@ -23,12 +23,15 @@ export default function Details() {
   const loading = name ? searchLoading : false;
   const error = getErrorMessage(searchError);
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <Spinner />
-      </div>
-    );
+  if (loading) {
+    {
+      return (
+        <div className="flex justify-center items-center min-h-[200px]">
+          <Spinner />
+        </div>
+      );
+    }
+  }
   if (error) {
     return (
       <div className="text-center text-red-500 bg-red-50 border border-red-200 rounded-xl p-4">
@@ -36,11 +39,17 @@ export default function Details() {
       </div>
     );
   }
-  if (!item) return null;
+  if (!item) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col items-center">
-      <img src={item.sprites.front_default} alt={`Sprite of ${item.name}`} className="w-40 h-40" />
+      <img
+        src={item.sprites.front_default ?? '/placeholder.png'}
+        alt={`Sprite of ${item.name}`}
+        className="w-40 h-40"
+      />
 
       <h2 className="text-2xl font-bold capitalize mb-4">{item.name}</h2>
 
@@ -49,7 +58,7 @@ export default function Details() {
       <p>Types: {item.types.map((t) => t.type.name).join(', ')}</p>
       <button
         type="button"
-        className="inline-flex items-center
+        className="cursor-pointer inline-flex items-center
     px-3 py-1.5
     text-sm font-medium
     text-gray-700 dark:text-gray-300
@@ -57,7 +66,7 @@ export default function Details() {
     rounded-lg
     hover:bg-gray-200 dark:hover:bg-gray-600
     transition-colors mt-4"
-        onClick={() => navigate('/')}
+        onClick={() => void navigate('/')}
       >
         Close
       </button>

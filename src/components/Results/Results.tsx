@@ -1,22 +1,25 @@
 import Spinner from '../Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toggleItem } from '../../features/selectedItem/selectedItemSlice';
-interface ResultItem {
+
+type ResultItem = {
   name: string;
   description: string;
-}
+};
 
-interface ResultsProps {
+type ResultsProps = {
   results: ResultItem[];
   loading: boolean;
   error: string | null;
   onSelect: (name: string) => void;
-}
+};
 
 export default function Results({ results, loading, error, onSelect }: ResultsProps) {
   const selected = useAppSelector((state) => state.selectedItem.items);
   const dispatch = useAppDispatch();
-  if (loading) return <Spinner />;
+  if (loading) {
+    return <Spinner />;
+  }
   if (error) {
     return (
       <div
@@ -33,7 +36,9 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
       </div>
     );
   }
-  if (!results.length) return <p>No results found.</p>;
+  if (!results.length) {
+    return <p>No results found.</p>;
+  }
 
   return (
     <div className="space-y-4 flex-1">
@@ -67,15 +72,17 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
           <button
             type="button"
             onClick={() => onSelect(item.name)}
-            className="inline-flex items-center
-    px-3 py-1.5
-    text-sm font-medium
-    text-gray-700 dark:text-gray-300
-    bg-gray-100 dark:bg-gray-700
-    rounded-lg
-    hover:bg-gray-200 dark:hover:bg-gray-600
-    transition-colors
-    "
+            className="
+            cursor-pointer
+            inline-flex items-center
+            px-3 py-1.5
+            text-sm font-medium
+            text-gray-700
+            bg-gray-100
+            rounded-lg
+            hover:bg-gray-200
+            transition-colors
+            "
           >
             Details
           </button>

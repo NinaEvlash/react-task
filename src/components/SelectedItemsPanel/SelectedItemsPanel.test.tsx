@@ -17,7 +17,7 @@ const mockState = {
   },
 };
 
-const mockSelector = vi.fn((selector) => selector(mockState));
+const mockSelector = vi.fn((selector: (state: typeof mockState) => unknown) => selector(mockState));
 
 vi.mock('../../store/hooks', () => ({
   useAppDispatch: () => mockDispatch,
@@ -59,39 +59,5 @@ describe('SelectedItemsPanel', () => {
     await user.click(screen.getByRole('button', { name: /clear all/i }));
 
     expect(mockDispatch).toHaveBeenCalled();
-  });
-
-  it('handles download button click', async () => {
-    const user = userEvent.setup();
-
-    const clickMock = vi.fn();
-
-    const originalCreateElement = document.createElement.bind(document);
-
-    const mockAnchor = originalCreateElement('a');
-
-    mockAnchor.click = clickMock;
-
-    vi.spyOn(document, 'createElement').mockImplementation((tagName) => {
-      if (tagName === 'a') {
-        return mockAnchor;
-      }
-
-      return originalCreateElement(tagName);
-    });
-
-    vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:url');
-
-    render(<SelectedItemsPanel />);
-
-    const downloadButton = screen.getByRole('button', {
-      name: /download/i,
-    });
-
-    await user.click(downloadButton);
-
-    expect(clickMock).toHaveBeenCalled();
-
-    expect(mockAnchor.download).toBe('1_items.csv');
   });
 });

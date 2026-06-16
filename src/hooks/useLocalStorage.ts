@@ -6,7 +6,7 @@ export function useLocalStorage(
 ): [string, (value: React.SetStateAction<string>) => void] {
   const [value, setValue] = useState<string>(() => {
     try {
-      return localStorage.getItem(key) || initialValue;
+      return localStorage.getItem(key) ?? initialValue;
     } catch (error) {
       console.error('Error accessing localStorage:', error);
       return initialValue;

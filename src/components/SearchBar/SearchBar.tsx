@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
-export interface SearchBarProps {
+export type SearchBarProps = {
   query: string;
   onSearch: (query: string) => void;
-}
+};
 
 export default function SearchBar({ query, onSearch }: SearchBarProps) {
   const [input, setInput] = useState(query || '');
 
   useEffect(() => {
-    setInput(query ?? '');
+    setInput(query);
   }, [query]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setInput(e.target.value);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setInput(event.target.value);
   };
 
   const handleClick = (): void => {
@@ -21,8 +21,8 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
     setInput('');
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === 'Enter') {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === 'Enter') {
       handleClick();
     }
   };
@@ -45,7 +45,7 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
       <button
         type="button"
         onClick={handleClick}
-        className="px-4 py-2 rounded-xl bg-blue-600 text-white 
+        className="cursor-pointer px-4 py-2 rounded-xl bg-blue-600 text-white 
                hover:bg-blue-700 active:scale-95 
                transition duration-200 shadow-md"
       >
