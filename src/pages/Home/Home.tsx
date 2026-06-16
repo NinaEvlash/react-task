@@ -8,17 +8,9 @@ import Pagination from '../../components/Pagination/Pagination';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { validateQuery } from '../../utils/validateQuery';
 import SelectedItemsPanel from '../../components/SelectedItemsPanel/SelectedItemsPanel';
-<<<<<<< HEAD
 import { getErrorMessage } from '../../utils/getErrorMessage';
 import { useDispatch } from 'react-redux';
 import { pokemonApi } from '../../store/api';
-=======
-import type {
-  PokemonDetailsResponse,
-  PokemonListResponse,
-  PokemonType,
-} from '../../types/apiTypes';
->>>>>>> app-state-management
 
 export type Pokemon = {
   name: string;
@@ -27,22 +19,10 @@ export type Pokemon = {
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-<<<<<<< HEAD
-=======
-  const pageParameter = Number(searchParams.get('page'));
-
-  const page = Number.isInteger(pageParameter) && pageParameter > 0 ? pageParameter : 1;
->>>>>>> app-state-management
   const params = useParams<{ name?: string }>();
   const selectedPokemon: string | null = params.name ?? null;
   const navigate = useNavigate();
   const [fatalError, setFatalError] = useState<string | null>(null);
-<<<<<<< HEAD
-=======
-
-  const [totalPages, setTotalPages] = useState(1);
-
->>>>>>> app-state-management
   const [query, setQuery] = useLocalStorage('pokemonSearchQuery');
   const dispatch = useDispatch();
 
@@ -55,6 +35,8 @@ export default function Home() {
     isLoading: listLoading,
     error: listError,
   } = useGetPokemonListQuery({ limit, offset });
+
+  const totalPages = Math.ceil((listData?.count ?? 0) / limit);
 
   const normalizedQuery = validateQuery(query) ? query.trim().toLowerCase() : '';
 
@@ -86,8 +68,6 @@ export default function Home() {
 
   const errorMessage = getErrorMessage(activeError);
 
-  const hasNextPage = (listData?.count ?? 0) > offset + limit;
-
   useEffect(() => {
     if (!searchParams.get('page')) {
       const params: URLSearchParams = new URLSearchParams(searchParams);
@@ -97,58 +77,6 @@ export default function Home() {
     }
   }, [searchParams, setSearchParams]);
 
-<<<<<<< HEAD
-=======
-  useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      const normalizedQuery = validateQuery(query);
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        if (normalizedQuery) {
-          const data: PokemonDetailsResponse = await getDataByName(normalizedQuery);
-
-          setResults([
-            {
-              name: data.name,
-              description: `Weight: ${String(data.weight)}, Height: ${String(data.height)}`,
-            },
-          ]);
-
-          return;
-        }
-
-        const limit = 20;
-        const offset: number = (page - 1) * limit;
-
-        const data: PokemonListResponse = await getDataList(limit, offset);
-        setTotalPages(Math.ceil(data.count / limit));
-
-        const mapped: Pokemon[] = data.results.map((p: PokemonType) => ({
-          name: p.name,
-          description: `Pokemon named ${p.name}`,
-        }));
-
-        setResults(mapped);
-      } catch (error_) {
-        const errorMessage =
-          error_ instanceof Error ? error_.message : 'Network error. Please check your connection.';
-        setError(errorMessage);
-
-        if (error_ instanceof Error && error_.message === 'Pokémon not found') {
-          setQuery('');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void fetchData();
-  }, [query, page, setQuery, searchParams]);
-
->>>>>>> app-state-management
   const handleSearch = (newQuery: string): void => {
     const trimmedQuery = newQuery.trim();
     setQuery(trimmedQuery);
@@ -230,20 +158,7 @@ export default function Home() {
           <button
             type="button"
             onClick={() => setFatalError('Manual test error')}
-<<<<<<< HEAD
-            className="
-      px-4 py-2
-      rounded-xl
-      bg-red-500
-      text-white
-      hover:bg-red-600
-      dark:bg-red-600
-      dark:hover:bg-red-700
-      transition-colors
-    "
-=======
             className="cursor-pointer px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
->>>>>>> app-state-management
           >
             Trigger Error
           </button>
