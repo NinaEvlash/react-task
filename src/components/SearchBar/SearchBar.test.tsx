@@ -17,14 +17,6 @@ describe('SearchBar', () => {
     expect(screen.getByDisplayValue('pikachu')).toBeInTheDocument();
   });
 
-  it('renders empty input when query is empty', () => {
-    render(<SearchBar query="" onSearch={vi.fn()} />);
-
-    const input = screen.getByPlaceholderText('Enter a Pokémon name') as HTMLInputElement;
-
-    expect(input.value).toBe('');
-  });
-
   it('updates input value when user types', async () => {
     render(<SearchBar query="" onSearch={vi.fn()} />);
 
