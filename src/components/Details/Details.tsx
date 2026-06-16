@@ -2,12 +2,12 @@ import { useNavigate, useParams } from 'react-router';
 
 import { useGetPokemonByNameQuery } from '../../store/api';
 import Spinner from '../Spinner/Spinner';
-import { PokemonDetailsResponse } from '../../types/apiTypes';
+import type { PokemonDetailsResponse } from '../../types/apiTypes';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export default function Details() {
   const params = useParams<{ name: string }>();
-  const name: string = params.name || '';
+  const name: string = params.name ?? '';
 
   const navigate = useNavigate();
 

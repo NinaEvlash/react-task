@@ -23,7 +23,7 @@ describe('App', () => {
     vi.clearAllMocks();
   });
 
-  it('renders Home component', async () => {
+  it('renders Home component', () => {
     vi.mocked(api.useGetPokemonListQuery).mockReturnValue(
       createListQueryResult({
         data: {

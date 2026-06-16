@@ -1,8 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { PokemonDetailsResponse, PokemonListResponse } from '../types/apiTypes';
+import type { PokemonDetailsResponse, PokemonListResponse } from '../types/apiTypes';
 
-const cacheTTL = Number(import.meta.env.VITE_POKEMON_CACHE_TTL ?? 300);
+const CACHE_TTL = 300;
+
+const cacheTTL = Number(import.meta.env.VITE_POKEMON_CACHE_TTL ?? CACHE_TTL);
 
 export const pokemonApi = createApi({
   reducerPath: 'pokemonApi',
@@ -10,7 +12,7 @@ export const pokemonApi = createApi({
   tagTypes: ['Pokemon', 'PokemonList'],
   endpoints: (builder) => ({
     getPokemonList: builder.query<PokemonListResponse, { limit: number; offset: number }>({
-      query: ({ limit, offset }) => `pokemon?limit=${limit}&offset=${offset}`,
+      query: ({ limit, offset }) => `pokemon?limit=${String(limit)}&offset=${String(offset)}`,
 
       keepUnusedDataFor: cacheTTL,
 

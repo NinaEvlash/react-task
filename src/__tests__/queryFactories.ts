@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import * as api from '../store/api';
+import type * as api from '../store/api';
 
 export type PokemonQueryResult = ReturnType<typeof api.useGetPokemonByNameQuery>;
 export type PokemonListQueryResult = ReturnType<typeof api.useGetPokemonListQuery>;
@@ -14,7 +14,7 @@ export function createQueryResult(overrides: Partial<PokemonQueryResult>): Pokem
     isError: false,
     refetch: vi.fn(),
     ...overrides,
-  } as PokemonQueryResult;
+  };
 }
 
 export function createListQueryResult(
@@ -29,5 +29,5 @@ export function createListQueryResult(
     isError: false,
     refetch: vi.fn(),
     ...overrides,
-  } as PokemonListQueryResult;
+  };
 }

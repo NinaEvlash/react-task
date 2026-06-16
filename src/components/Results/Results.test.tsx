@@ -6,7 +6,7 @@ import Results from './Results';
 
 const mockDispatch = vi.fn();
 
-const mockState = {
+const mockState: RootState = {
   selectedItem: {
     items: [
       {
@@ -15,9 +15,11 @@ const mockState = {
       },
     ],
   },
+
+  pokemonApi: {} as RootState['pokemonApi'],
 };
 
-const mockSelector = vi.fn((selector: (state: typeof mockState) => unknown) => selector(mockState));
+const mockSelector = vi.fn((selector: (state: RootState) => unknown) => selector(mockState));
 
 vi.mock('../../store/hooks', () => ({
   useAppDispatch: () => mockDispatch,
@@ -30,7 +32,15 @@ describe('Results', () => {
   beforeEach(() => {
     mockDispatch.mockReset();
     mockSelector.mockReset();
-    mockSelector.mockImplementation((selector) => selector({ selectedItem: { items: [] } }));
+
+    const mockState: RootState = {
+      selectedItem: {
+        items: [],
+      },
+      pokemonApi: {} as RootState['pokemonApi'],
+    };
+
+    mockSelector.mockImplementation((selector) => selector(mockState));
   });
   it('shows spinner when loading', () => {
     render(<Results results={[]} loading={true} error={null} onSelect={onSelect} />);

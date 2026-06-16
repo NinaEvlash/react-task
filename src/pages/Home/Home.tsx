@@ -26,7 +26,7 @@ export default function Home() {
   const [query, setQuery] = useLocalStorage('pokemonSearchQuery');
   const dispatch = useDispatch();
 
-  const page: number = Number(searchParams.get('page') || 1);
+  const page = Number(searchParams.get('page') ?? 1);
   const limit = 20;
   const offset = (page - 1) * limit;
 
@@ -48,12 +48,12 @@ export default function Home() {
     skip: !normalizedQuery,
   });
 
-  const results = normalizedQuery
+  const results: Pokemon[] = normalizedQuery
     ? searchData
       ? [
           {
             name: searchData.name,
-            description: `Weight: ${searchData.weight}, Height: ${searchData.height}`,
+            description: `Weight: ${String(searchData.weight)}, Height: ${String(searchData.height)}`,
           },
         ]
       : []

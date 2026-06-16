@@ -7,13 +7,18 @@ type ApiError =
     }
   | undefined;
 
+const HTTP_NOT_FOUND = 404;
+const HTTP_SERVER_ERROR = 500;
+
 export function getErrorMessage(error: ApiError): string {
-  if (!error) return '';
+  if (!error) {
+    return '';
+  }
 
   if ('status' in error) {
     const status = error.status;
 
-    if (status === 404 || status === 'PARSING_ERROR') {
+    if (status === HTTP_NOT_FOUND || status === 'PARSING_ERROR') {
       return 'Pokémon not found';
     }
 
@@ -25,7 +30,7 @@ export function getErrorMessage(error: ApiError): string {
       return 'Request timeout. Please try again later.';
     }
 
-    if (typeof status === 'number' && status >= 500) {
+    if (typeof status === 'number' && status >= HTTP_SERVER_ERROR) {
       return 'Server error. Please try again later.';
     }
 
