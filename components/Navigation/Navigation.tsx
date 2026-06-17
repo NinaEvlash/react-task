@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -34,10 +34,26 @@ export default function Navigation() {
         </Link>
       </nav>
 
-      <button
+       <button
         type="button"
         onClick={toggleTheme}
-        className="px-3 py-2 rounded-lg border"
+        className="
+    px-3 py-2
+    rounded-lg
+    border
+    transition-colors
+    cursor-pointer
+
+    bg-white
+    text-gray-800
+    border-gray-300
+    hover:bg-gray-100
+
+    dark:bg-gray-800
+    dark:text-gray-100
+    dark:border-gray-600
+    dark:hover:bg-gray-700
+  "
       >
         {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
       </button>

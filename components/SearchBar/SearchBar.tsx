@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export type SearchBarProps = {
   query: string;
@@ -6,11 +6,7 @@ export type SearchBarProps = {
 };
 
 export default function SearchBar({ query, onSearch }: SearchBarProps) {
-  const [input, setInput] = useState(query || '');
-
-  useEffect(() => {
-    setInput(query);
-  }, [query]);
+  const [input, setInput] = useState(query ?? '');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setInput(event.target.value);
@@ -38,9 +34,28 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
         value={input}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        className="px-4 py-2 w-64 rounded-xl border border-gray-300 
-               focus:outline-none focus:ring-2 focus:ring-blue-500 
-               focus:border-blue-500 transition"
+        className="
+        
+  px-4 py-2
+  w-64
+  rounded-xl
+  border border-gray-300
+
+  bg-white
+  text-gray-900
+  placeholder:text-gray-500
+
+  dark:bg-gray-800
+  dark:text-white
+  dark:border-gray-600
+  dark:placeholder:text-gray-400
+
+  focus:outline-none
+  focus:ring-2
+  focus:ring-blue-500
+  focus:border-blue-500
+  transition
+        "
       />
       <button
         type="button"

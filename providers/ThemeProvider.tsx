@@ -1,43 +1,44 @@
 'use client';
 
-import { type ReactNode, useCallback, useMemo } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
 
 import { ThemeContext } from '../context/ThemeContext';
-import { type Theme } from '../types/theme';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+
+type Theme = 'light' | 'dark';
 
 type Props = {
   children: ReactNode;
 };
 
 export default function ThemeProvider({ children }: Props) {
-  const [theme, setTheme] = useLocalStorage('app-theme', 'light');
+  const [theme, setTheme] = useState<Theme>('light');
 
-  const currentTheme: Theme = theme === 'dark' ? 'dark' : 'light';
+  useEffect(() => {
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(theme);
+  }, [theme]);
 
   const toggleTheme = useCallback(() => {
-    setTheme(currentTheme === 'light' ? 'dark' : 'light');
-  }, [currentTheme, setTheme]);
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  }, []);
 
   const value = useMemo(
     () => ({
-      theme: currentTheme,
+      theme,
       toggleTheme,
     }),
-    [currentTheme, toggleTheme],
+    [theme, toggleTheme],
   );
 
   return (
     <ThemeContext.Provider value={value}>
-      <div
-        className={
-          currentTheme === 'dark'
-            ? 'dark min-h-screen bg-black text-white'
-            : 'min-h-screen bg-white text-black'
-        }
-      >
-        {children}
-      </div>
+      {children}
     </ThemeContext.Provider>
   );
 }
