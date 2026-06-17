@@ -1,6 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useGetPokemonByNameQuery } from '@/store/api';
 import Spinner from '@/components/Spinner/Spinner';
 import type { PokemonDetailsResponse } from '@/types/apiTypes';
@@ -43,14 +44,17 @@ export default function Page() {
   if (!item) {
     return null;
   }
+  console.log(item.sprites.front_default);
 
   return (
     <div className="flex flex-col items-center">
-     <img
-        src={item.sprites.front_default ?? '/placeholder.png'}
-        alt={`Sprite of ${item.name}`}
-        className="w-40 h-40"
-      />
+     <Image
+       src={item.sprites.front_default ?? '/placeholder.png'}
+       alt={item.name}
+       width={160}
+       height={160}
+       priority
+     />
 
       <h2 className="text-2xl font-bold capitalize mb-4">
         {item.name}
