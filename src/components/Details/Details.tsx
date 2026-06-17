@@ -20,8 +20,8 @@ export default function Details() {
   });
 
   const item: PokemonDetailsResponse | undefined = searchData;
-  const loading = name ? searchLoading : false;
-  const error = getErrorMessage(searchError);
+  const loading = searchLoading;
+  const errorMessage: string = getErrorMessage(searchError);
 
   if (loading) {
     {
@@ -32,10 +32,10 @@ export default function Details() {
       );
     }
   }
-  if (error) {
+  if (errorMessage) {
     return (
       <div className="text-center text-red-500 bg-red-50 border border-red-200 rounded-xl p-4">
-        {error}
+        {errorMessage}
       </div>
     );
   }
