@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ReduxProvider } from '../providers/redux-provider';
 import ThemeProvider from '../providers/ThemeProvider';
+import Navigation from '../components/Navigation/Navigation';
 
 export const metadata: Metadata = {
   title: 'Pokemon Search',
@@ -18,6 +19,7 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <ReduxProvider>
+            <Navigation />
             {children}
           </ReduxProvider>
         </ThemeProvider>
