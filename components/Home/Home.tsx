@@ -12,11 +12,7 @@ import SelectedItemsPanel from '../../components/SelectedItemsPanel/SelectedItem
 import { getErrorMessage } from '../../utils/getErrorMessage';
 import { useDispatch } from 'react-redux';
 import { pokemonApi } from '../../store/api';
-
-export type Pokemon = {
-  name: string;
-  description: string;
-};
+import type { Pokemon } from '@/types/apiTypes';
 
 export default function Home() {
   const router = useRouter();

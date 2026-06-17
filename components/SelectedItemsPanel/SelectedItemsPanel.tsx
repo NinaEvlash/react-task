@@ -10,37 +10,29 @@ export default function SelectedItemsPanel() {
     return null;
   }
 
-  const handleDownload = (): void => {
-    const headers: string[] = ['Name', 'Description', 'Details URL'];
+  const handleDownload = async () => {
+  const res = await fetch('/api/export-csv', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ items: selectedItems }),
+  });
 
-    const rows: string[][] = selectedItems.map((item) => [
-      item.name,
-      item.description,
-      `/details/${item.name}`,
-    ]);
+  const blob = await res.blob();
 
-    const csvContent: string = [headers.join(','), ...rows.map((row) => row.join(', '))].join('\n');
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
 
-    const blob: Blob = new Blob([csvContent], {
-      type: 'text/csv;charset=utf-8;',
-    });
+  link.href = url;
+  link.download = `${selectedItems.length}_items.csv`;
 
-    const url: string = URL.createObjectURL(blob);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 
-    const link: HTMLAnchorElement = document.createElement('a');
-
-    link.href = url;
-
-    link.download = `${String(selectedItems.length)}_items.csv`;
-
-    document.body.append(link);
-
-    link.click();
-
-    link.remove();
-
-    URL.revokeObjectURL(url);
-  };
+  window.URL.revokeObjectURL(url);
+};
 
   return (
     <div
