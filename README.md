@@ -1,70 +1,83 @@
 # Pokémon Search App
 
-A React + TypeScript application for searching Pokémon using the PokéAPI.
+A Pokémon search application built with **Next.js (App Router) + TypeScript**, using the PokéAPI.
 
-The project includes:
+The project allows users to search for Pokémon, view details, manage selected items, and demonstrates modern React patterns with Redux Toolkit and RTK Query.
 
-- functional React components
-- API integration
-- localStorage persistence
+## The project includes:
+
+- Pokémon search and filtering
+- Dynamic routing with Next.js App Router
+- Server-side and client-side data fetching (RTK Query)
+- State management with Redux Toolkit
+- Persistent state with localStorage
 - Error Boundary handling
-- unit and integration tests with Vitest + React Testing Library
-- coverage reporting
-- React Router nested routes
-- URL state synchronization
-- custom hooks
-- Redux Toolkit
-- Context API theme switching
-- RTK Query
+- Theme switching (Context API)
+- Unit and integration tests (Vitest + React Testing Library)
+- URL-based state management
+- Responsive UI with Tailwind CSS
 
 ---
 
 ## Technologies
 
+- Next.js (App Router)
 - React
 - TypeScript
-- Vite
-- React Router
 - Redux Toolkit
+- RTK Query
 - Context API
+- Tailwind CSS
 - Vitest
 - React Testing Library
-- Tailwind CSS
 
 ---
 
 ### Prerequisites
 
-1. Clone repo locally: https://github.com/NinaEvlash/react-task.git
-2. Go to folder `folder name`
-3. To install all dependencies use [`npm install`](https://docs.npmjs.com/cli/install)
-4. Run **test scripts** in command line.
-5. You will see the number of skipped, passing and failing tests.
+1. Clone repo locally:
 
----
+```bash
+git clone https://github.com/NinaEvlash/react-task.git
+```
 
-### Scripts
+2. Go to folder:
 
-#### Installation:
+```bash
+cd react-task
+```
+
+3. To install all dependencies:
 
 ```bash
 npm install
 ```
 
-#### Running
+4. Run development server:
 
 ```bash
 npm run dev
 ```
 
-#### Run all tests:
+5. Run all tests:
 
 ```bash
  npm run test
 ```
 
-#### Generate coverage report:
+6. Generate coverage report:
 
 ```bash
  npm run test:coverage
 ```
+
+---
+
+## Changes made:
+
+- React Router was removed
+- Routing is now based on Next.js file system routing
+- Pages moved to app/ directory
+- Navigation replaced with next/link and useRouter
+- Redux Toolkit and RTK Query adapted for Next.js environment
+- API calls remain unchanged (PokéAPI via RTK Query)
