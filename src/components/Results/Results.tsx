@@ -1,26 +1,74 @@
+import { useNavigate, useSearchParams } from 'react-router';
+
 import Spinner from '../Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toggleItem } from '../../features/selectedItem/selectedItemSlice';
+import { useGetPokemonListQuery, useGetPokemonByNameQuery } from '../../store/api';
+import { validateQuery } from '../../utils/validateQuery';
+import { getErrorMessage } from '../../utils/getErrorMessage';
+import type { Pokemon } from '../../types/apiTypes';
 
-type ResultItem = {
-  name: string;
-  description: string;
-};
-
-type ResultsProps = {
-  results: ResultItem[];
-  loading: boolean;
-  error: string | null;
-  onSelect: (name: string) => void;
-};
-
-export default function Results({ results, loading, error, onSelect }: ResultsProps) {
+export default function Results() {
   const selected = useAppSelector((state) => state.selectedItem.items);
   const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const page = Number(searchParams.get('page') ?? '1');
+
+  const query = searchParams.get('search') ?? '';
+
+  const normalizedQuery = validateQuery(query) ? query.trim().toLowerCase() : '';
+
+  const limit = 20;
+  const offset = (page - 1) * limit;
+
+  const {
+    data: listData,
+    isLoading: listLoading,
+    error: listError,
+  } = useGetPokemonListQuery({
+    limit,
+    offset,
+  });
+
+  const {
+    data: searchData,
+    isLoading: searchLoading,
+    error: searchError,
+  } = useGetPokemonByNameQuery(normalizedQuery, {
+    skip: !normalizedQuery,
+  });
+
+  const isSearchMode = Boolean(normalizedQuery);
+
+  const results: Pokemon[] = (() => {
+    if (searchData) {
+      return [
+        {
+          name: searchData.name,
+          description: `Pokemon named ${searchData.name}`,
+        },
+      ];
+    }
+
+    return (
+      listData?.results.map((p) => ({
+        name: p.name,
+        description: `Pokemon named ${p.name}`,
+      })) ?? []
+    );
+  })();
+
+  const loading = isSearchMode ? searchLoading : listLoading;
+
+  const activeError = isSearchMode ? searchError : listError;
+  const errorMessage = getErrorMessage(activeError);
   if (loading) {
     return <Spinner />;
   }
-  if (error) {
+  if (errorMessage) {
     return (
       <div
         className="
@@ -32,13 +80,21 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
         rounded-xl
         p-4"
       >
-        {error}
+        {errorMessage}
       </div>
     );
   }
   if (!results.length) {
     return <p>No results found.</p>;
   }
+
+  const handleSelectPokemon = (name: string): void => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set('page', String(page));
+
+    void navigate(`/details/${name}${params.toString() ? `?${params.toString()}` : ''}`);
+  };
 
   return (
     <div className="space-y-4 flex-1">
@@ -71,7 +127,7 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
 
           <button
             type="button"
-            onClick={() => onSelect(item.name)}
+            onClick={() => handleSelectPokemon(item.name)}
             className="
             cursor-pointer
             inline-flex items-center

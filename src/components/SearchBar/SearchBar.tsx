@@ -1,24 +1,42 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
 
-export type SearchBarProps = {
-  query: string;
-  onSearch: (query: string) => void;
-};
+export default function SearchBar() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  //const navigate = useNavigate();
 
-export default function SearchBar({ query, onSearch }: SearchBarProps) {
-  const [input, setInput] = useState(query || '');
+  const query = searchParams.get('search') ?? '';
+
+  const [input, setInput] = useState(query);
 
   useEffect(() => {
     setInput(query);
   }, [query]);
+
+  const handleSearch = (): void => {
+    const params = new URLSearchParams(searchParams);
+
+    const trimmed = input.trim();
+
+    if (trimmed) {
+      params.set('search', trimmed);
+    } else {
+      params.delete('search');
+    }
+
+    params.set('page', '1');
+
+    setSearchParams(params);
+
+    //void navigate('/');
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setInput(event.target.value);
   };
 
   const handleClick = (): void => {
-    onSearch(input);
-    setInput('');
+    handleSearch();
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
