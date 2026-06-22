@@ -13,7 +13,8 @@
     "page": "Strona"
   },
   "Details": {
-    "detailsButton": "Szczegóły"
+    "detailsButton": "Szczegóły",
+    "closeButton": "Zamknąć"
   },
    "SelectedItems": {
     "items": "Wybrane elementy",

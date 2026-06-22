@@ -13,7 +13,8 @@
     "page": "Page"
   },
   "Details": {
-    "detailsButton": "Details"
+    "detailsButton": "Details",
+    "closeButton": "Close"
   },
   "SelectedItems": {
     "items": "Selected items",

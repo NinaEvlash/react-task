@@ -6,8 +6,11 @@ import { useGetPokemonByNameQuery } from '@/store/api';
 import Spinner from '@/components/Spinner/Spinner';
 import type { PokemonDetailsResponse } from '@/types/apiTypes';
 import { getErrorMessage } from '@/utils/getErrorMessage';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function Page() {
+  const t = useTranslations('Details');
+  const locale = useLocale();
   const params = useParams<{ name: string }>();
   const router = useRouter();
 
@@ -73,66 +76,10 @@ export default function Page() {
         rounded-lg
         hover:bg-gray-200 dark:hover:bg-gray-600
         transition-colors mt-4"
-        onClick={() => router.push('/')}
+        onClick={() => router.push(`/${locale}`)}
       >
-        Close
+        {t('closeButton')}
       </button>
     </div>
   );
 }
-
-/*'use client';
-
-import { useParams } from 'next/navigation';
-import Image from 'next/image';
-import { useGetPokemonByNameQuery } from '@/store/api';
-
-export default function Page() {
-  const params = useParams<{ name: string }>();
-  const name = params?.name;
-
-  const {
-    data: pokemon,
-    isLoading,
-    error,
-  } = useGetPokemonByNameQuery(String(name), {
-    skip: !name,
-  });
-
-  if (isLoading) {
-    return <div className="p-6 text-center">Loading...</div>;
-  }
-
-  if (error) {
-    return (
-      <div className="p-6 text-center text-red-500">
-        Error loading Pokémon
-      </div>
-    );
-  }
-
-  if (!pokemon) {
-    return null;
-  }
-
-  return (
-    <div className="p-6 flex flex-col items-center gap-4">
-      <Image
-        src={pokemon.sprites.front_default ?? '/placeholder.png'}
-        alt={pokemon.name}
-        width={160}
-        height={160}
-    />
-
-      <h1 className="text-2xl font-bold capitalize">
-        {pokemon.name}
-      </h1>
-
-      <p>Height: {pokemon.height}</p>
-      <p>Weight: {pokemon.weight}</p>
-      <p>
-        Types: {pokemon.types.map((t) => t.type.name).join(', ')}
-      </p>
-    </div>
-  );
-}*/

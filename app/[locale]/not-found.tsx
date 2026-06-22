@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function NotFound() {
-  
   const t = useTranslations('NotFound');
+  const locale = useLocale();
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-950 px-4">
@@ -17,7 +17,7 @@ export default function NotFound() {
         </p>
 
         <Link
-          href="/"
+          href={`/${locale}`}
           className="
             inline-flex items-center justify-center
             px-5 py-2.5
