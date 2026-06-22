@@ -1,39 +1,4 @@
-/*import {NextIntlClientProvider} from 'next-intl';
-import {getMessages} from 'next-intl/server';
-import {notFound} from 'next/navigation';
-import {routing, type Locale} from '@/i18n/routing';
-import {ReduxProvider} from '@/providers/redux-provider';
-import ThemeProvider from '@/providers/ThemeProvider';
-import Navigation from '@/components/Navigation/Navigation';
-
-export default async function LocaleLayout({
-  children,
-  params
-}: {
-  children: React.ReactNode;
-  params: Promise<{locale: Locale}>;
-}) {
-  const {locale} = await params;
-
-  if (!routing.locales.includes(locale)) {
-    notFound();
-  }
-
-  const messages = await getMessages();
-
-  return (
-    <ReduxProvider>
-      <NextIntlClientProvider locale={locale} messages={messages}>
-        <ThemeProvider>
-          <Navigation />
-          {children}
-        </ThemeProvider>
-      </NextIntlClientProvider>
-    </ReduxProvider>
-  );
-}*/
 import {NextIntlClientProvider} from 'next-intl';
-//import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
 import { ReduxProvider } from '@/providers/redux-provider';
@@ -57,7 +22,6 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  //const messages = await getMessages();
   const messages = (await import(`@/messages/${locale}.json`)).default;
 
   return (
