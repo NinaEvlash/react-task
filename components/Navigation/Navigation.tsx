@@ -8,7 +8,7 @@ import { useTheme } from '../../hooks/useTheme';
 import type {Locale} from '@/i18n/routing';
 
 export default function Navigation() {
-   const locale = useLocale() as Locale;
+  const locale = useLocale() as Locale;
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
@@ -53,16 +53,28 @@ export default function Navigation() {
           {t('about')}
         </Link>
       </nav>
-
-      <button
+      <div>
+        <button
   type="button"
   onClick={switchLanguage}
   className="
-    px-3 py-2
-    rounded-lg
-    border
-    bg-white dark:bg-gray-800
-  "
+  px-3 py-2
+  mr-5
+  rounded-lg
+  border
+  transition-colors
+  cursor-pointer
+
+  bg-white
+  text-gray-800
+  border-gray-300
+  hover:bg-gray-100
+
+  dark:bg-gray-800
+  dark:text-gray-100
+  dark:border-gray-600
+  dark:hover:bg-gray-700
+"
 >
   {locale === 'en' ? 'pl' : 'en'}
 </button>
@@ -88,8 +100,11 @@ export default function Navigation() {
     dark:hover:bg-gray-700
   "
       >
-        {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+        {theme === 'light' ? '🌙' : '☀️'}
       </button>
+      </div>
+
+      
     </header>
   );
 }

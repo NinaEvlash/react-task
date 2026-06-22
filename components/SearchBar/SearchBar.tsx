@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export type SearchBarProps = {
   query: string;
@@ -6,6 +7,7 @@ export type SearchBarProps = {
 };
 
 export default function SearchBar({ query, onSearch }: SearchBarProps) {
+  const t = useTranslations('Search');
   const [input, setInput] = useState(query ?? '');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -25,12 +27,12 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
   return (
     <section className="flex items-center gap-3 space-y-2 mb-5">
       <label htmlFor="search" className="sr-only">
-        Search Pokémon
+        {t('placeholder')}
       </label>
       <input
         id="search"
         type="text"
-        placeholder="Enter a Pokémon name"
+        placeholder={t('placeholder')}
         value={input}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
@@ -64,7 +66,7 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
                hover:bg-blue-700 active:scale-95 
                transition duration-200 shadow-md"
       >
-        Search
+        {t('button')}
       </button>
     </section>
   );

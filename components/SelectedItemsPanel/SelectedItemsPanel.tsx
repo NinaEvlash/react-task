@@ -1,7 +1,9 @@
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { clearItems } from '../../features/selectedItem/selectedItemSlice';
+import { useTranslations } from 'next-intl';
 
 export default function SelectedItemsPanel() {
+  const t = useTranslations('SelectedItems');
   const dispatch = useAppDispatch();
 
   const selectedItems = useAppSelector((state) => state.selectedItem.items);
@@ -46,7 +48,7 @@ export default function SelectedItemsPanel() {
         z-50
       "
     >
-      <p className="font-medium">Selected items: {selectedItems.length}</p>
+      <p className="font-medium">{t('items')}: {selectedItems.length}</p>
 
       <div className="flex gap-3">
         <button
@@ -56,7 +58,7 @@ export default function SelectedItemsPanel() {
             bg-gray-200 dark:bg-gray-700
           "
         >
-          Clear all
+          {t('clearButton')}
         </button>
 
         <button
@@ -66,7 +68,7 @@ export default function SelectedItemsPanel() {
             bg-blue-500 text-white
           "
         >
-          Download
+          {t('downloadButton')}
         </button>
       </div>
     </div>

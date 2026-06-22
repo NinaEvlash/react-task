@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useGetPokemonListQuery, useGetPokemonByNameQuery } from '../../store/api';
@@ -11,8 +11,6 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { validateQuery } from '../../utils/validateQuery';
 import SelectedItemsPanel from '../../components/SelectedItemsPanel/SelectedItemsPanel';
 import { getErrorMessage } from '../../utils/getErrorMessage';
-import { useDispatch } from 'react-redux';
-import { pokemonApi } from '../../store/api';
 import type { Pokemon } from '@/types/apiTypes';
 
 export default function Home() {
@@ -20,9 +18,7 @@ export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [fatalError, setFatalError] = useState<string | null>(null);
   const [query, setQuery] = useLocalStorage('pokemonSearchQuery');
-  const dispatch = useDispatch();
 
   const page = Number(searchParams.get('page') ?? 1);
   const limit = 20;
@@ -79,16 +75,8 @@ export default function Home() {
     router.push(`/${locale}?page=1`);
   };
 
-  if (fatalError) {
-    throw new Error(fatalError);
-  }
-
   const handleSelectPokemon = (name: string): void => {
     router.push(`/${locale}/pokemon/${name}`);
-  };
-
-  const handleRefresh = (): void => {
-    dispatch(pokemonApi.util.invalidateTags(['PokemonList']));
   };
 
   return (
@@ -109,32 +97,6 @@ export default function Home() {
 
         {!loading && !query && results.length > 0 && <Pagination totalPages={totalPages} />}
 
-        <section className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={handleRefresh}
-            className="
-      px-4 py-2
-      rounded-xl
-      bg-blue-500
-      text-white
-      hover:bg-blue-600
-      dark:bg-blue-600
-      dark:hover:bg-blue-700
-      transition-colors
-    "
-          >
-            Refresh
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setFatalError('Manual test error')}
-            className="cursor-pointer px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
-          >
-            Trigger Error
-          </button>
-        </section>
         <SelectedItemsPanel />
       </div>
     </main>

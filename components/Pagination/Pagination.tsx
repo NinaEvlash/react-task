@@ -2,12 +2,14 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 type PaginationProps = {
   totalPages: number;
 };
 
 export default function Pagination({ totalPages }: PaginationProps) {
+  const t = useTranslations('Pagination');
   const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -42,10 +44,10 @@ export default function Pagination({ totalPages }: PaginationProps) {
         disabled={currentPage === 1}
         onClick={() => changePage(currentPage - 1)}
       >
-        Prev
+        {t('prevButton')}
       </button>
       <span className="flex items-center text-sm font-medium text-gray-600">
-        Page {currentPage}
+        {t('page')} {currentPage}
       </span>
       <button
         type="button"
@@ -62,7 +64,7 @@ export default function Pagination({ totalPages }: PaginationProps) {
         disabled={currentPage >= totalPages}
         onClick={() => changePage(Math.min(currentPage + 1, totalPages))}
       >
-        Next
+        {t('nextButton')}
       </button>
     </section>
   );

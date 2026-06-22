@@ -1,6 +1,10 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function NotFound() {
+  
+  const t = useTranslations('NotFound');
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-950 px-4">
       <article className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-10 text-center max-w-md w-full">
@@ -9,7 +13,7 @@ export default function NotFound() {
         </h1>
 
         <p className="text-gray-600 dark:text-gray-300 text-lg mb-6">
-          Page not found
+          {t('title')}
         </p>
 
         <Link
@@ -25,7 +29,7 @@ export default function NotFound() {
             transition
           "
         >
-          Back to Home
+          {t('button')}
         </Link>
       </article>
     </main>

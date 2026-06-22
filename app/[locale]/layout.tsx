@@ -1,4 +1,5 @@
 import {NextIntlClientProvider} from 'next-intl';
+import {setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
 import { ReduxProvider } from '@/providers/redux-provider';
@@ -21,6 +22,8 @@ export default async function LocaleLayout({
   if (!isLocale(locale)) {
     notFound();
   }
+
+  setRequestLocale(locale);
 
   const messages = (await import(`@/messages/${locale}.json`)).default;
 

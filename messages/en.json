@@ -6,5 +6,28 @@
   "Search": {
     "placeholder": "Enter a Pokémon name",
     "button": "Search"
+  },
+   "Pagination": {
+    "prevButton": "Prev",
+    "nextButton": "Next",
+    "page": "Page"
+  },
+  "Details": {
+    "detailsButton": "Details"
+  },
+  "SelectedItems": {
+    "items": "Selected items",
+    "clearButton": "Clear all",
+    "downloadButton": "Download"
+  },
+  "About": {
+    "title": "About this project",
+    "courseText": "This application was created as part of the React course.",
+    "autorText": "Author: Nina Yeulash",
+    "gitHub": "My GitHub"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "button": "Back to Home"
   }
 }

@@ -6,5 +6,28 @@
   "Search": {
     "placeholder": "Wpisz nazwę Pokémona",
     "button": "Szukaj"
+  },
+  "Pagination": {
+    "prevButton": "Poprz",
+    "nextButton": "Nast",
+    "page": "Strona"
+  },
+  "Details": {
+    "detailsButton": "Szczegóły"
+  },
+   "SelectedItems": {
+    "items": "Wybrane elementy",
+    "clearButton": "Wyczyść wszystko",
+    "downloadButton": "Pobierz"
+  },
+   "About": {
+    "title": "O tym projekcie",
+    "courseText": "Ta aplikacja została stworzona w ramach kursu React",
+    "autorText": "Autor: Nina Yeulash",
+    "gitHub": "Mój GitHub"
+  },
+  "NotFound": {
+    "title": "Nie znaleziono strony",
+    "button": "Powrót do Strona główna"
   }
 }

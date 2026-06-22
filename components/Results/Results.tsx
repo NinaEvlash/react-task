@@ -1,6 +1,7 @@
 import Spinner from '../Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toggleItem } from '../../features/selectedItem/selectedItemSlice';
+import { useTranslations } from 'next-intl';
 
 type ResultItem = {
   name: string;
@@ -15,6 +16,7 @@ type ResultsProps = {
 };
 
 export default function Results({ results, loading, error, onSelect }: ResultsProps) {
+  const t = useTranslations('Details');
   const selected = useAppSelector((state) => state.selectedItem.items);
   const dispatch = useAppDispatch();
   if (loading) {
@@ -84,7 +86,7 @@ export default function Results({ results, loading, error, onSelect }: ResultsPr
             transition-colors
             "
           >
-            Details
+            {t('detailsButton')}
           </button>
         </div>
       ))}

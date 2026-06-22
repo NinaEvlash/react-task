@@ -44,7 +44,6 @@ export default function Page() {
   if (!item) {
     return null;
   }
-  console.log(item.sprites.front_default);
 
   return (
     <div className="flex flex-col items-center">
