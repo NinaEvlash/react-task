@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useLocale } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useGetPokemonListQuery, useGetPokemonByNameQuery } from '../../store/api';
 import SearchBar from '../../components/SearchBar/SearchBar';
@@ -15,6 +16,7 @@ import { pokemonApi } from '../../store/api';
 import type { Pokemon } from '@/types/apiTypes';
 
 export default function Home() {
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -64,17 +66,17 @@ export default function Home() {
 
   const errorMessage = getErrorMessage(activeError);
 
-  useEffect(() => {
-    if (!searchParams.get('page')) {
-      router.replace('/?page=1');
-    }
-  }, [searchParams, router]);
+ useEffect(() => {
+  if (!searchParams.get('page')) {
+    router.replace(`/${locale}?page=1`);
+  }
+}, [searchParams, router, locale]);
 
   const handleSearch = (newQuery: string): void => {
     const trimmedQuery = newQuery.trim();
     setQuery(trimmedQuery);
 
-    router.push('/?page=1');
+    router.push(`/${locale}?page=1`);
   };
 
   if (fatalError) {
@@ -82,7 +84,7 @@ export default function Home() {
   }
 
   const handleSelectPokemon = (name: string): void => {
-    router.push(`/pokemon/${name}`);
+    router.push(`/${locale}/pokemon/${name}`);
   };
 
   const handleRefresh = (): void => {

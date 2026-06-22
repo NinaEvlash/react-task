@@ -1,0 +1,10 @@
+{
+  "Navigation": {
+    "home": "Home",
+    "about": "About"
+  },
+  "Search": {
+    "placeholder": "Enter a Pokémon name",
+    "button": "Search"
+  }
+}

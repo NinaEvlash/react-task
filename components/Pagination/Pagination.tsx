@@ -1,12 +1,14 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useLocale } from 'next-intl';
 
 type PaginationProps = {
   totalPages: number;
 };
 
 export default function Pagination({ totalPages }: PaginationProps) {
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -18,7 +20,7 @@ export default function Pagination({ totalPages }: PaginationProps) {
 
     params.set('page', String(Math.max(1, page)));
 
-    router.replace(`/?${params.toString()}`);
+    router.replace(`/${locale}?${params.toString()}`);
   };
 
   return (

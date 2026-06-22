@@ -1,0 +1,10 @@
+{
+  "Navigation": {
+    "home": "Strona główna",
+    "about": "O projekcie"
+  },
+  "Search": {
+    "placeholder": "Wpisz nazwę Pokémona",
+    "button": "Szukaj"
+  }
+}

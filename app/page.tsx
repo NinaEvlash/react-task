@@ -1,11 +1,6 @@
-import { Suspense } from 'react';
-import Home from '../components/Home/Home';
-import Spinner from '@/components/Spinner/Spinner';
+import {redirect} from 'next/navigation';
+import {routing} from '@/i18n/routing';
 
 export default function Page() {
-  return (
-    <Suspense fallback={<Spinner />}>
-      <Home />
-    </Suspense>
-  );
+  redirect(`/${routing.defaultLocale}`);
 }
