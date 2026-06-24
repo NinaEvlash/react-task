@@ -1,3 +1,8 @@
+export type Pokemon = {
+  name: string;
+  description: string;
+};
+
 export type PokemonType = {
   name: string;
   url?: string;

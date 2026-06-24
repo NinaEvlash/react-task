@@ -1,41 +1,22 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useLocation } from 'react-router';
 
-import { getDataByName } from '../../api/dataApi';
+import { useGetPokemonByNameQuery } from '../../store/api';
 import Spinner from '../Spinner/Spinner';
-import type { PokemonDetailsResponse } from '../../types/apiTypes';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export default function Details() {
-  const params = useParams<{ name?: string }>();
-  const name = params.name ?? '';
-  const [item, setItem] = useState<PokemonDetailsResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
+  const params = useParams<{ name: string }>();
+  const name: string = params.name ?? '';
+  const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!name) {
-      return;
-    }
-    async function fetchData(): Promise<void> {
-      try {
-        setLoading(true);
-        setError(null);
+  const { data, isLoading, error } = useGetPokemonByNameQuery(name, {
+    skip: !name,
+  });
 
-        const data: PokemonDetailsResponse = await getDataByName(name);
+  const errorMessage: string = getErrorMessage(error);
 
-        setItem(data);
-      } catch {
-        setError('Failed to load pokemon');
-      } finally {
-        setLoading(false);
-      }
-    }
-    void fetchData();
-  }, [name]);
-
-  if (loading) {
+  if (isLoading) {
     {
       return (
         <div className="flex justify-center items-center min-h-[200px]">
@@ -44,30 +25,30 @@ export default function Details() {
       );
     }
   }
-  if (error) {
+  if (errorMessage) {
     return (
       <div className="text-center text-red-500 bg-red-50 border border-red-200 rounded-xl p-4">
-        {error}
+        {errorMessage}
       </div>
     );
   }
-  if (!item) {
+  if (!data) {
     return null;
   }
 
   return (
     <div className="flex flex-col items-center">
       <img
-        src={item.sprites.front_default ?? '/placeholder.png'}
-        alt={`Sprite of ${item.name}`}
+        src={data.sprites.front_default ?? '/placeholder.png'}
+        alt={`Sprite of ${data.name}`}
         className="w-40 h-40"
       />
 
-      <h2 className="text-2xl font-bold capitalize mb-4">{item.name}</h2>
+      <h2 className="text-2xl font-bold capitalize mb-4">{data.name}</h2>
 
-      <p>Height: {item.height}</p>
-      <p>Weight: {item.weight}</p>
-      <p>Types: {item.types.map((t) => t.type.name).join(', ')}</p>
+      <p>Height: {data.height}</p>
+      <p>Weight: {data.weight}</p>
+      <p>Types: {data.types.map((t) => t.type.name).join(', ')}</p>
       <button
         type="button"
         className="cursor-pointer inline-flex items-center
@@ -78,7 +59,7 @@ export default function Details() {
     rounded-lg
     hover:bg-gray-200 dark:hover:bg-gray-600
     transition-colors mt-4"
-        onClick={() => void navigate('/')}
+        onClick={() => void navigate(`/${location.search}`)}
       >
         Close
       </button>

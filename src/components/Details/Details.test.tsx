@@ -1,8 +1,30 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import * as dataApi from '../../api/dataApi';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 import Details from './Details';
+import * as api from '../../store/api';
+import { createQueryResult } from '../../__tests__/queryFactories';
+
+vi.mock('../../store/api', async () => {
+  const actual = await vi.importActual('../../store/api');
+
+  return {
+    ...actual,
+    useGetPokemonByNameQuery: vi.fn(),
+  };
+});
+
+const renderWithRouter = (component: React.ReactElement) => {
+  return render(
+    <MemoryRouter initialEntries={['/pokemon/pikachu']}>
+      <Routes>
+        <Route path="/pokemon/:name" element={component} />
+      </Routes>
+    </MemoryRouter>,
+  );
+};
 
 const mockedNavigate = vi.fn();
 
@@ -19,79 +41,88 @@ vi.mock('react-router', async () => {
 });
 
 describe('Details', () => {
-  const renderWithRouter = (component: React.ReactElement) => {
-    return render(
-      <MemoryRouter initialEntries={['/pokemon/pikachu']}>
-        <Routes>
-          <Route path="/pokemon/:name" element={component} />
-        </Routes>
-      </MemoryRouter>,
+  it('shows spinner while loading', () => {
+    vi.mocked(api.useGetPokemonByNameQuery).mockReturnValue(createQueryResult({ isLoading: true }));
+
+    renderWithRouter(<Details />);
+
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
+  });
+
+  it('shows error message', () => {
+    const error404: FetchBaseQueryError = {
+      status: 404,
+      data: 'Not found',
+    };
+
+    vi.mocked(api.useGetPokemonByNameQuery).mockReturnValue(
+      createQueryResult({
+        isError: true,
+        error: error404,
+      }),
     );
-  };
 
-  afterEach(() => {
-    vi.clearAllMocks();
+    renderWithRouter(<Details />);
+
+    expect(screen.getByText(/pokémon not found/i)).toBeInTheDocument();
   });
 
-  test('renders pokemon details', async () => {
-    vi.spyOn(dataApi, 'getDataByName').mockResolvedValue({
-      name: 'pikachu',
-      height: 4,
-      weight: 60,
-      sprites: {
-        front_default: 'pikachu.png',
-      },
-      types: [
-        {
-          type: {
-            name: 'electric',
+  it('renders pokemon details', () => {
+    vi.mocked(api.useGetPokemonByNameQuery).mockReturnValue(
+      createQueryResult({
+        data: {
+          name: 'pikachu',
+          weight: 60,
+          height: 4,
+          sprites: {
+            front_default: 'pikachu.png',
           },
+          types: [
+            {
+              type: {
+                name: 'electric',
+              },
+            },
+          ],
         },
-      ],
-    });
+        isSuccess: true,
+      }),
+    );
 
     renderWithRouter(<Details />);
 
-    expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
-
-    expect(screen.getByText(/Height: 4/i)).toBeInTheDocument();
-
-    expect(screen.getByText(/Weight: 60/i)).toBeInTheDocument();
-
-    expect(screen.getByText(/electric/i)).toBeInTheDocument();
+    expect(screen.getByText('pikachu')).toBeInTheDocument();
+    expect(screen.getByText('Height: 4')).toBeInTheDocument();
+    expect(screen.getByText('Weight: 60')).toBeInTheDocument();
+    expect(screen.getByText('Types: electric')).toBeInTheDocument();
   });
 
-  test('shows error message', async () => {
-    vi.spyOn(dataApi, 'getDataByName').mockRejectedValue(new Error('API error'));
-
-    renderWithRouter(<Details />);
-
-    expect(await screen.findByText(/failed to load pokemon/i)).toBeInTheDocument();
-  });
-
-  test('calls navigate when close button clicked', async () => {
-    vi.spyOn(dataApi, 'getDataByName').mockResolvedValue({
-      name: 'pikachu',
-      height: 4,
-      weight: 60,
-      sprites: {
-        front_default: 'pikachu.png',
-      },
-      types: [
-        {
-          type: {
-            name: 'electric',
+  it('navigates home when close button clicked', async () => {
+    const user = userEvent.setup();
+    vi.mocked(api.useGetPokemonByNameQuery).mockReturnValue(
+      createQueryResult({
+        data: {
+          name: 'pikachu',
+          weight: 60,
+          height: 4,
+          sprites: {
+            front_default: 'pikachu.png',
           },
+          types: [
+            {
+              type: {
+                name: 'electric',
+              },
+            },
+          ],
         },
-      ],
-    });
+        isLoading: false,
+        error: undefined,
+      }),
+    );
 
     renderWithRouter(<Details />);
-    const button = await screen.findByRole('button', {
-      name: /close/i,
-    });
-
-    await userEvent.click(button);
+    await user.click(screen.getByRole('button', { name: /close/i }));
 
     expect(mockedNavigate).toHaveBeenCalledWith('/');
   });

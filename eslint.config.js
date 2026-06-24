@@ -117,7 +117,7 @@ export default defineConfig([
       quotes: ['error', 'single', { avoidEscape: true }],
       semi: ['error', 'always'],
       curly: ['error', 'all'],
-      indent: ['error', 2, { SwitchCase: 1 }],
+      indent: 'off',
       'comma-dangle': ['error', 'always-multiline'],
       'object-curly-spacing': ['error', 'always'],
       'brace-style': [

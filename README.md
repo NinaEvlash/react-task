@@ -15,6 +15,7 @@ The project includes:
 - custom hooks
 - Redux Toolkit
 - Context API theme switching
+- RTK Query
 
 ---
 

@@ -6,7 +6,7 @@ import Results from './Results';
 
 const mockDispatch = vi.fn();
 
-const mockState = {
+const mockState: RootState = {
   selectedItem: {
     items: [
       {
@@ -15,9 +15,11 @@ const mockState = {
       },
     ],
   },
+
+  pokemonApi: {} as RootState['pokemonApi'],
 };
 
-const mockSelector = vi.fn((selector: (state: typeof mockState) => unknown) => selector(mockState));
+const mockSelector = vi.fn((selector: (state: RootState) => unknown) => selector(mockState));
 
 vi.mock('../../store/hooks', () => ({
   useAppDispatch: () => mockDispatch,
@@ -30,16 +32,24 @@ describe('Results', () => {
   beforeEach(() => {
     mockDispatch.mockReset();
     mockSelector.mockReset();
-    mockSelector.mockImplementation((selector) => selector({ selectedItem: { items: [] } }));
+
+    const mockState: RootState = {
+      selectedItem: {
+        items: [],
+      },
+      pokemonApi: {} as RootState['pokemonApi'],
+    };
+
+    mockSelector.mockImplementation((selector) => selector(mockState));
   });
   it('shows spinner when loading', () => {
-    render(<Results results={[]} loading={true} error={null} onSelect={onSelect} />);
+    render(<Results results={[]} loading={true} error={null} />);
 
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
   it('renders error message', () => {
-    render(<Results results={[]} loading={false} error="Pokémon not found" onSelect={onSelect} />);
+    render(<Results results={[]} loading={false} error="Pokémon not found" />);
 
     expect(screen.getByText('Pokémon not found')).toBeInTheDocument();
   });
@@ -56,7 +66,7 @@ describe('Results', () => {
       },
     ];
 
-    render(<Results results={mockData} loading={false} error={null} onSelect={onSelect} />);
+    render(<Results results={mockData} loading={false} error={null} />);
 
     expect(screen.getByText('pikachu')).toBeInTheDocument();
     expect(screen.getByText('charmander')).toBeInTheDocument();
@@ -70,47 +80,33 @@ describe('Results', () => {
       { name: '', description: 'no name' },
     ];
 
-    render(<Results results={mockData} loading={false} error={null} onSelect={onSelect} />);
+    render(<Results results={mockData} loading={false} error={null} />);
 
     expect(screen.getByText('pikachu')).toBeInTheDocument();
     expect(screen.queryByText('no name')).toBeInTheDocument();
   });
 
   it('displays error message when api call fails', () => {
-    render(
-      <Results results={[]} loading={false} error="Something went wrong" onSelect={onSelect} />,
-    );
+    render(<Results results={[]} loading={false} error="Something went wrong" />);
 
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
   });
 
   it('shows 404 not found error message', () => {
-    render(<Results results={[]} loading={false} error="Pokémon not found" onSelect={onSelect} />);
+    render(<Results results={[]} loading={false} error="Pokémon not found" />);
 
     expect(screen.getByText('Pokémon not found')).toBeInTheDocument();
   });
 
   it('shows server error message for 5xx errors', () => {
-    render(
-      <Results
-        results={[]}
-        loading={false}
-        error="Server error. Please try again later."
-        onSelect={onSelect}
-      />,
-    );
+    render(<Results results={[]} loading={false} error="Server error. Please try again later." />);
 
     expect(screen.getByText('Server error. Please try again later.')).toBeInTheDocument();
   });
 
   it('shows network error message', () => {
     render(
-      <Results
-        results={[]}
-        loading={false}
-        error="Network error. Please check your connection."
-        onSelect={onSelect}
-      />,
+      <Results results={[]} loading={false} error="Network error. Please check your connection." />,
     );
 
     expect(screen.getByText('Network error. Please check your connection.')).toBeInTheDocument();
@@ -126,7 +122,7 @@ describe('Results', () => {
       },
     ];
 
-    render(<Results results={mockData} loading={false} error={null} onSelect={onSelect} />);
+    render(<Results results={mockData} loading={false} error={null} />);
 
     const button = screen.getByRole('button', { name: /details/i });
 
@@ -148,7 +144,6 @@ describe('Results', () => {
         ]}
         loading={false}
         error={null}
-        onSelect={onSelect}
       />,
     );
 
