@@ -4,7 +4,7 @@ import SearchBar from './SearchBar';
 
 describe('SearchBar', () => {
   it('renders search input and button', () => {
-    render(<SearchBar query="" onSearch={vi.fn()} />);
+    render(<SearchBar />);
 
     expect(screen.getByPlaceholderText('Enter a Pokémon name')).toBeInTheDocument();
 
@@ -12,13 +12,13 @@ describe('SearchBar', () => {
   });
 
   it('renders saved query in input', () => {
-    render(<SearchBar query="pikachu" onSearch={vi.fn()} />);
+    render(<SearchBar />);
 
     expect(screen.getByDisplayValue('pikachu')).toBeInTheDocument();
   });
 
   it('updates input value when user types', async () => {
-    render(<SearchBar query="" onSearch={vi.fn()} />);
+    render(<SearchBar />);
 
     const input = screen.getByPlaceholderText('Enter a Pokémon name');
 
@@ -30,7 +30,7 @@ describe('SearchBar', () => {
   it('calls onSearch with correct value when button is clicked', async () => {
     const onSearchMock = vi.fn();
 
-    render(<SearchBar query="" onSearch={onSearchMock} />);
+    render(<SearchBar />);
 
     const input = screen.getByPlaceholderText('Enter a Pokémon name');
 
@@ -48,7 +48,7 @@ describe('SearchBar', () => {
   it('calls onSearch when Enter key is pressed', async () => {
     const onSearchMock = vi.fn();
 
-    render(<SearchBar query="" onSearch={onSearchMock} />);
+    render(<SearchBar />);
 
     const input = screen.getByPlaceholderText('Enter a Pokémon name');
 
@@ -58,11 +58,11 @@ describe('SearchBar', () => {
   });
 
   it('updates input when query prop changes', () => {
-    const { rerender } = render(<SearchBar query="pikachu" onSearch={vi.fn()} />);
+    const { rerender } = render(<SearchBar />);
 
     expect(screen.getByDisplayValue('pikachu')).toBeInTheDocument();
 
-    rerender(<SearchBar query="charizard" onSearch={vi.fn()} />);
+    rerender(<SearchBar />);
 
     expect(screen.getByDisplayValue('charizard')).toBeInTheDocument();
   });
