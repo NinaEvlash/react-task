@@ -2,7 +2,6 @@ import { useNavigate, useParams, useLocation } from 'react-router';
 
 import { useGetPokemonByNameQuery } from '../../store/api';
 import Spinner from '../Spinner/Spinner';
-import type { PokemonDetailsResponse } from '../../types/apiTypes';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export default function Details() {
@@ -11,19 +10,13 @@ export default function Details() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const {
-    data: searchData,
-    isLoading: searchLoading,
-    error: searchError,
-  } = useGetPokemonByNameQuery(name, {
+  const { data, isLoading, error } = useGetPokemonByNameQuery(name, {
     skip: !name,
   });
 
-  const item: PokemonDetailsResponse | undefined = searchData;
-  const loading = searchLoading;
-  const errorMessage: string = getErrorMessage(searchError);
+  const errorMessage: string = getErrorMessage(error);
 
-  if (loading) {
+  if (isLoading) {
     {
       return (
         <div className="flex justify-center items-center min-h-[200px]">
@@ -39,23 +32,23 @@ export default function Details() {
       </div>
     );
   }
-  if (!item) {
+  if (!data) {
     return null;
   }
 
   return (
     <div className="flex flex-col items-center">
       <img
-        src={item.sprites.front_default ?? '/placeholder.png'}
-        alt={`Sprite of ${item.name}`}
+        src={data.sprites.front_default ?? '/placeholder.png'}
+        alt={`Sprite of ${data.name}`}
         className="w-40 h-40"
       />
 
-      <h2 className="text-2xl font-bold capitalize mb-4">{item.name}</h2>
+      <h2 className="text-2xl font-bold capitalize mb-4">{data.name}</h2>
 
-      <p>Height: {item.height}</p>
-      <p>Weight: {item.weight}</p>
-      <p>Types: {item.types.map((t) => t.type.name).join(', ')}</p>
+      <p>Height: {data.height}</p>
+      <p>Weight: {data.weight}</p>
+      <p>Types: {data.types.map((t) => t.type.name).join(', ')}</p>
       <button
         type="button"
         className="cursor-pointer inline-flex items-center
