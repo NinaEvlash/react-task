@@ -3,12 +3,15 @@ import { useNavigate, useSearchParams } from 'react-router';
 import Spinner from '../Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toggleItem } from '../../features/selectedItem/selectedItemSlice';
-import { useGetPokemonListQuery, useGetPokemonByNameQuery } from '../../store/api';
-import { validateQuery } from '../../utils/validateQuery';
-import { getErrorMessage } from '../../utils/getErrorMessage';
 import type { Pokemon } from '../../types/apiTypes';
 
-export default function Results() {
+type ResultsProps = {
+  results: Pokemon[];
+  loading: boolean;
+  error: string | null;
+};
+
+export default function Results({ results, loading, error }: ResultsProps) {
   const selected = useAppSelector((state) => state.selectedItem.items);
   const dispatch = useAppDispatch();
 
@@ -16,59 +19,10 @@ export default function Results() {
   const [searchParams] = useSearchParams();
 
   const page = Number(searchParams.get('page') ?? '1');
-
-  const query = searchParams.get('search') ?? '';
-
-  const normalizedQuery = validateQuery(query) ? query.trim().toLowerCase() : '';
-
-  const limit = 20;
-  const offset = (page - 1) * limit;
-
-  const {
-    data: listData,
-    isLoading: listLoading,
-    error: listError,
-  } = useGetPokemonListQuery({
-    limit,
-    offset,
-  });
-
-  const {
-    data: searchData,
-    isLoading: searchLoading,
-    error: searchError,
-  } = useGetPokemonByNameQuery(normalizedQuery, {
-    skip: !normalizedQuery,
-  });
-
-  const isSearchMode = Boolean(normalizedQuery);
-
-  const results: Pokemon[] = (() => {
-    if (searchData) {
-      return [
-        {
-          name: searchData.name,
-          description: `Pokemon named ${searchData.name}`,
-        },
-      ];
-    }
-
-    return (
-      listData?.results.map((p) => ({
-        name: p.name,
-        description: `Pokemon named ${p.name}`,
-      })) ?? []
-    );
-  })();
-
-  const loading = isSearchMode ? searchLoading : listLoading;
-
-  const activeError = isSearchMode ? searchError : listError;
-  const errorMessage = getErrorMessage(activeError);
   if (loading) {
     return <Spinner />;
   }
-  if (errorMessage) {
+  if (error) {
     return (
       <div
         className="
@@ -80,7 +34,7 @@ export default function Results() {
         rounded-xl
         p-4"
       >
-        {errorMessage}
+        {error}
       </div>
     );
   }
@@ -102,10 +56,13 @@ export default function Results() {
         <div
           key={item.name}
           className="
-          p-4 rounded-xl shadow-sm border border-gray-200 
-          bg-white dark:bg-gray-800 
-          border-gray-200 dark:border-gray-700 
-          hover:shadow-md transition"
+            p-4 rounded-xl shadow-sm
+            border border-gray-200 
+            bg-white dark:bg-gray-800 
+            border-gray-200 
+            dark:border-gray-700 
+            hover:shadow-md transition
+          "
         >
           <input
             type="checkbox"
@@ -119,25 +76,26 @@ export default function Results() {
               )
             }
           />
-          <strong className="block text-lg font-semibold text-gray-800 dark:text-gray-100">
+
+          <strong className="mb-2 block text-lg font-semibold text-gray-800 dark:text-gray-100">
             {item.name}
           </strong>
 
-          <p className=" mb-4 border-gray-200 dark:border-gray-700">{item.description}</p>
+          <p className="mb-2">{item.description}</p>
 
           <button
             type="button"
             onClick={() => handleSelectPokemon(item.name)}
             className="
-            cursor-pointer
-            inline-flex items-center
-            px-3 py-1.5
-            text-sm font-medium
-            text-gray-700
-            bg-gray-100
-            rounded-lg
-            hover:bg-gray-200
-            transition-colors
+              cursor-pointer
+              inline-flex items-center
+              px-3 py-1.5
+              text-sm font-medium
+              text-gray-700
+              bg-gray-100
+              rounded-lg
+              hover:bg-gray-200
+              transition-colors
             "
           >
             Details

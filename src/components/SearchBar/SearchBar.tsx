@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router';
 
 export default function SearchBar() {
   const [searchParams, setSearchParams] = useSearchParams();
-  //const navigate = useNavigate();
 
   const query = searchParams.get('search') ?? '';
 
@@ -27,8 +26,6 @@ export default function SearchBar() {
     params.set('page', '1');
 
     setSearchParams(params);
-
-    //void navigate('/');
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {

@@ -1,38 +1,23 @@
 import { useState } from 'react';
-import { Outlet, useParams, useSearchParams } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import Results from '../../components/Results/Results';
 import Pagination from '../../components/Pagination/Pagination';
 import SelectedItemsPanel from '../../components/SelectedItemsPanel/SelectedItemsPanel';
-import { useGetPokemonListQuery } from '../../store/api';
+import { usePokemonSearch } from '../../hooks/usePokemonSearch';
 
 export default function Home() {
+  const { results, loading, errorMessage, isSearchMode, totalPages, handleRefresh } =
+    usePokemonSearch();
+
   const params = useParams<{ name?: string }>();
   const selectedPokemon = params.name ?? null;
 
   const [fatalError, setFatalError] = useState<string | null>(null);
 
-  const [searchParams] = useSearchParams();
-
-  const page = Number(searchParams.get('page') ?? '1');
-  const limit = 20;
-  const offset = (page - 1) * limit;
-
-  const { data: listData, refetch } = useGetPokemonListQuery({
-    limit,
-    offset,
-  });
-
-  const isSearchMode = Boolean(searchParams.get('search'));
-  const totalPages = Math.ceil((listData?.count ?? 0) / limit);
-
   if (fatalError) {
     throw new Error(fatalError);
   }
-
-  const handleRefresh = (): void => {
-    void refetch();
-  };
 
   return (
     <main className="min-h-screen bg-gray-100 p-6 pb-24 flex flex-col items-center dark:bg-gray-950">
@@ -41,7 +26,7 @@ export default function Home() {
 
         <section className="flex items-start gap-6 mt-6">
           <div className="w-full">
-            <Results />
+            <Results results={results} loading={loading} error={errorMessage} />
           </div>
 
           {selectedPokemon && (
@@ -51,7 +36,7 @@ export default function Home() {
           )}
         </section>
 
-        {!isSearchMode && <Pagination totalPages={totalPages} />}
+        {!loading && !isSearchMode && !errorMessage && <Pagination totalPages={totalPages} />}
 
         <section className="flex justify-between items-center">
           <button

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useLocation } from 'react-router';
 
 import { useGetPokemonByNameQuery } from '../../store/api';
 import Spinner from '../Spinner/Spinner';
@@ -8,7 +8,7 @@ import { getErrorMessage } from '../../utils/getErrorMessage';
 export default function Details() {
   const params = useParams<{ name: string }>();
   const name: string = params.name ?? '';
-
+  const location = useLocation();
   const navigate = useNavigate();
 
   const {
@@ -66,7 +66,7 @@ export default function Details() {
     rounded-lg
     hover:bg-gray-200 dark:hover:bg-gray-600
     transition-colors mt-4"
-        onClick={() => void navigate('/')}
+        onClick={() => void navigate(`/${location.search}`)}
       >
         Close
       </button>
