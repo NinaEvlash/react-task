@@ -1,70 +1,61 @@
+'use client';
+
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
-export type SearchBarProps = {
-  query: string;
-  onSearch: (query: string) => void;
-};
-
-export default function SearchBar({ query, onSearch }: SearchBarProps) {
+export default function SearchBar() {
   const t = useTranslations('Search');
-  const [input, setInput] = useState(query ?? '');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setInput(event.target.value);
-  };
+  const query = searchParams.get('search') ?? '';
 
-  const handleClick = (): void => {
-    onSearch(input);
-    setInput('');
-  };
+  const [input, setInput] = useState(query);
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (event.key === 'Enter') {
-      handleClick();
-    }
-  };
+  const handleSearch = () => {
+  const params = new URLSearchParams(searchParams.toString());
+
+  const trimmed = input.trim();
+
+  if (trimmed) {
+    params.set('search', trimmed);
+  } else {
+    params.delete('search');
+  }
+
+  params.delete('selected');
+  params.set('page', '1');
+
+  router.push(`${pathname}?${params.toString()}`);
+};
   return (
-    <section className="flex items-center gap-3 space-y-2 mb-5">
+     <section className="flex items-center gap-3 mb-5">
       <label htmlFor="search" className="sr-only">
         {t('placeholder')}
       </label>
+
       <input
         id="search"
         type="text"
         placeholder={t('placeholder')}
         value={input}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        className="
-        
-  px-4 py-2
-  w-64
-  rounded-xl
-  border border-gray-300
-
-  bg-white
-  text-gray-900
-  placeholder:text-gray-500
-
-  dark:bg-gray-800
-  dark:text-white
-  dark:border-gray-600
-  dark:placeholder:text-gray-400
-
-  focus:outline-none
-  focus:ring-2
-  focus:ring-blue-500
-  focus:border-blue-500
-  transition
-        "
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleSearch();
+          }
+        }}
+        className="px-4 py-2 w-64 rounded-xl border border-gray-300
+                   focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
+
       <button
         type="button"
-        onClick={handleClick}
-        className="cursor-pointer px-4 py-2 rounded-xl bg-blue-600 text-white 
-               hover:bg-blue-700 active:scale-95 
-               transition duration-200 shadow-md"
+        onClick={handleSearch}
+        className="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700"
       >
         {t('button')}
       </button>

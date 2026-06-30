@@ -1,3 +1,5 @@
+'use client'
+
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { clearItems } from '../../features/selectedItem/selectedItemSlice';
 import { useTranslations } from 'next-intl';
