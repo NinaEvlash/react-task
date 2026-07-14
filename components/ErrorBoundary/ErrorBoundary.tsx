@@ -48,7 +48,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
              text-center
              space-y-4"
           >
-            <h2 className="text-2xl font-semibold text-red-600">Something went wrong</h2>
+            <h2 className="text-2xl font-semibold text-red-600">
+              Something went wrong
+            </h2>
 
             <p className="text-gray-600 text-sm">
               An unexpected error occurred. You can try again.

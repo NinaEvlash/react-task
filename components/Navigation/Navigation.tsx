@@ -1,14 +1,20 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import { useTheme } from '../../hooks/useTheme';
-import type {Locale} from '@/i18n/routing';
+import type { Locale } from '@/i18n/routing';
+
+function isLocale(value: string): value is Locale {
+  return value === 'en' || value === 'pl';
+}
 
 export default function Navigation() {
-  const locale = useLocale() as Locale;
+  const currentLocale = useLocale();
+
+  const locale = isLocale(currentLocale) ? currentLocale : 'en';
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
@@ -21,12 +27,7 @@ export default function Navigation() {
     const cleanPath = pathname.replace(/^\/(en|pl)/, '');
 
     router.replace(`/${newLocale}${cleanPath}`);
-
-   console.log({
-  locale,
-  pathname
-});
-};
+  };
 
   return (
     <header className="bg-white shadow-sm flex items-center justify-between px-6 py-4 dark:bg-gray-900">
@@ -55,9 +56,9 @@ export default function Navigation() {
       </nav>
       <div>
         <button
-  type="button"
-  onClick={switchLanguage}
-  className="
+          type="button"
+          onClick={switchLanguage}
+          className="
   px-3 py-2
   mr-5
   rounded-lg
@@ -75,14 +76,14 @@ export default function Navigation() {
   dark:border-gray-600
   dark:hover:bg-gray-700
 "
->
-  {locale === 'en' ? 'pl' : 'en'}
-</button>
+        >
+          {locale === 'en' ? 'pl' : 'en'}
+        </button>
 
-       <button
-        type="button"
-        onClick={toggleTheme}
-        className="
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="
     px-3 py-2
     rounded-lg
     border
@@ -99,12 +100,10 @@ export default function Navigation() {
     dark:border-gray-600
     dark:hover:bg-gray-700
   "
-      >
-        {theme === 'light' ? '🌙' : '☀️'}
-      </button>
+        >
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
       </div>
-
-      
     </header>
   );
 }

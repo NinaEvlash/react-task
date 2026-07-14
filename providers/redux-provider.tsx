@@ -7,12 +7,6 @@ type ReduxProviderProps = {
   children: React.ReactNode;
 };
 
-export function ReduxProvider({
-  children,
-}: ReduxProviderProps) {
-  return (
-    <Provider store={store}>
-      {children}
-    </Provider>
-  );
+export function ReduxProvider({ children }: ReduxProviderProps) {
+  return <Provider store={store}>{children}</Provider>;
 }

@@ -1,31 +1,32 @@
-import {NextIntlClientProvider} from 'next-intl';
-import {setRequestLocale} from 'next-intl/server';
-import {notFound} from 'next/navigation';
-import {routing} from '@/i18n/routing';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { getMessages, setRequestLocale } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+
+import { routing } from '@/i18n/routing';
+import Navigation from '@/components/Navigation/Navigation';
 import { ReduxProvider } from '@/providers/redux-provider';
 import ThemeProvider from '@/providers/ThemeProvider';
-import Navigation from '@/components/Navigation/Navigation';
 
-function isLocale(value: string): value is (typeof routing.locales)[number] {
-  return routing.locales.includes(value as (typeof routing.locales)[number]);
-}
+type LocaleLayoutProps = {
+  children: React.ReactNode;
+  params: Promise<{
+    locale: string;
+  }>;
+};
 
 export default async function LocaleLayout({
   children,
-  params
-}: {
-  children: React.ReactNode;
-  params: { locale: string } | Promise<{ locale: string }>;
-}) {
-  const { locale } = (await params) as { locale: string };
+  params,
+}: LocaleLayoutProps) {
+  const { locale } = await params;
 
-  if (!isLocale(locale)) {
+  if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
 
   setRequestLocale(locale);
 
-  const messages = (await import(`@/messages/${locale}.json`)).default;
+  const messages = await getMessages();
 
   return (
     <ReduxProvider>

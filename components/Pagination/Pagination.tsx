@@ -15,7 +15,9 @@ export default function Pagination({ totalPages }: PaginationProps) {
   const searchParams = useSearchParams();
 
   const rawPage = Number(searchParams.get('page'));
-  const currentPage = Number.isNaN(rawPage) ? 1 : Math.min(Math.max(rawPage, 1), totalPages);
+  const currentPage = Number.isNaN(rawPage)
+    ? 1
+    : Math.min(Math.max(rawPage, 1), totalPages);
 
   const changePage = (page: number): void => {
     const params = new URLSearchParams(searchParams.toString());

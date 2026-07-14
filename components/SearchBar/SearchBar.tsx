@@ -16,23 +16,23 @@ export default function SearchBar() {
   const [input, setInput] = useState(query);
 
   const handleSearch = () => {
-  const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams.toString());
 
-  const trimmed = input.trim();
+    const trimmed = input.trim();
 
-  if (trimmed) {
-    params.set('search', trimmed);
-  } else {
-    params.delete('search');
-  }
+    if (trimmed) {
+      params.set('search', trimmed);
+    } else {
+      params.delete('search');
+    }
 
-  params.delete('selected');
-  params.set('page', '1');
+    params.delete('selected');
+    params.set('page', '1');
 
-  router.push(`${pathname}?${params.toString()}`);
-};
+    router.push(`${pathname}?${params.toString()}`);
+  };
   return (
-     <section className="flex items-center gap-3 mb-5">
+    <section className="flex items-center gap-3 mb-5">
       <label htmlFor="search" className="sr-only">
         {t('placeholder')}
       </label>

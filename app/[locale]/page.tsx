@@ -16,7 +16,7 @@ type Props = {
 };
 
 export default async function Home({ searchParams }: Props) {
-  const params = await searchParams;
+  const params = searchParams;
   const page = Number(params?.page ?? 1);
   const query = params?.search ?? '';
   const selected = params?.selected;
@@ -28,31 +28,30 @@ export default async function Home({ searchParams }: Props) {
 
   let results = [];
   let totalPages = 1;
-  
+
   if (isSearchMode) {
-  const pokemon = await getDataByName(query);
+    const pokemon = await getDataByName(query);
 
-  results = [
-    {
-      name: pokemon.name,
-      description: `Pokemon named ${pokemon.name}`,
-    },
-  ];
-} else {
-  const list = await getDataList(limit, offset);
+    results = [
+      {
+        name: pokemon.name,
+        description: `Pokemon named ${pokemon.name}`,
+      },
+    ];
+  } else {
+    const list = await getDataList(limit, offset);
 
-  results = list.results.map((p) => ({
-    name: p.name,
-    description: `Pokemon named ${p.name}`,
-  }));
+    results = list.results.map((p) => ({
+      name: p.name,
+      description: `Pokemon named ${p.name}`,
+    }));
 
-  totalPages = Math.ceil(list.count / limit);
-}
+    totalPages = Math.ceil(list.count / limit);
+  }
 
   return (
     <main className="min-h-screen bg-gray-100 p-6 flex flex-col items-center dark:bg-gray-950">
       <div className="w-full max-w-2xl space-y-6">
-
         <SearchBar />
 
         <section className="flex items-start gap-6 mt-6">
@@ -69,12 +68,9 @@ export default async function Home({ searchParams }: Props) {
           )}
         </section>
 
-        {!isSearchMode && (
-          <Pagination totalPages={totalPages} />
-        )}
+        {!isSearchMode && <Pagination totalPages={totalPages} />}
 
         <SelectedItemsPanel />
-
       </div>
     </main>
   );

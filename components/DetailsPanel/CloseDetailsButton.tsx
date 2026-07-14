@@ -18,9 +18,7 @@ export default function CloseDetailsButton() {
     params.delete('selected');
 
     const queryString = params.toString();
-    const url = queryString
-      ? `${pathname}?${queryString}`
-      : `/${locale}`;
+    const url = queryString ? `${pathname}?${queryString}` : `/${locale}`;
 
     router.push(url);
   };

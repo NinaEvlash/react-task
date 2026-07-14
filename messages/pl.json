@@ -16,12 +16,12 @@
     "detailsButton": "Szczegóły",
     "closeButton": "Zamknąć"
   },
-   "SelectedItems": {
+  "SelectedItems": {
     "items": "Wybrane elementy",
     "clearButton": "Wyczyść wszystko",
     "downloadButton": "Pobierz"
   },
-   "About": {
+  "About": {
     "title": "O tym projekcie",
     "courseText": "Ta aplikacja została stworzona w ramach kursu React",
     "autorText": "Autor: Nina Yeulash",

@@ -13,10 +13,7 @@ export default function Results({ results }: ResultsProps) {
   return (
     <div className="space-y-4 flex-1">
       {results.map((item) => (
-        <ResultsItem
-          key={item.name}
-          item={item}
-        />
+        <ResultsItem key={item.name} item={item} />
       ))}
     </div>
   );

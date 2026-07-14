@@ -1,18 +1,192 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import js from '@eslint/js';
+import { defineConfig } from 'eslint/config';
+import nextTs from 'eslint-config-next/typescript';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
+import eslintPluginUnicorn from 'eslint-plugin-unicorn';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
-const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
+export default defineConfig([
+  js.configs.recommended,
+  tseslint.configs.strictTypeChecked,
+  tseslint.configs.stylisticTypeChecked,
+  nextVitals,
+  nextTs,
+  reactHooks.configs.flat.recommended,
+  eslintPluginUnicorn.configs.recommended,
+  eslintPluginPrettier,
+
+  {
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.es2021,
+        ...globals.node,
+      },
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+        ecmaFeatures: {
+          globalReturn: false,
+          jsx: true,
+        },
+      },
+    },
+    settings: {
+      react: { version: 'detect' },
+    },
+    plugins: {},
+    linterOptions: {
+      noInlineConfig: true,
+    },
+    rules: {
+      // 🔴 Mandatory
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/explicit-member-accessibility': [
+        'error',
+        { accessibility: 'explicit', overrides: { constructors: 'off' } },
+      ],
+      '@typescript-eslint/no-unsafe-argument': 'error',
+      '@typescript-eslint/no-unsafe-member-access': 'error',
+      '@typescript-eslint/no-unsafe-return': 'error',
+      '@typescript-eslint/no-unsafe-call': 'error',
+      '@typescript-eslint/no-confusing-void-expression': [
+        'error',
+        { ignoreArrowShorthand: true },
+      ],
+
+      'react-hooks/exhaustive-deps': 'warn',
+
+      // 🟡 Good practices
+      'no-console': ['warn', { allow: ['info', 'error'] }],
+      'no-magic-numbers': [
+        'error',
+        { ignore: [0, 1, 2, -1, 10, 100, 1000, 1000000] },
+      ],
+      'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
+      'max-lines-per-function': [
+        'warn',
+        { max: 60, skipBlankLines: true, skipComments: true },
+      ],
+
+      '@typescript-eslint/consistent-type-assertions': [
+        'error',
+        { assertionStyle: 'never' },
+      ],
+      '@typescript-eslint/consistent-type-definitions': ['warn', 'type'],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          disallowTypeAnnotations: false,
+        },
+      ],
+      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+      '@typescript-eslint/prefer-optional-chain': 'error',
+      '@typescript-eslint/no-unnecessary-condition': 'error',
+      '@typescript-eslint/no-inferrable-types': 'error',
+
+      'unicorn/prefer-node-protocol': 'error',
+      'unicorn/prefer-top-level-await': 'error',
+
+      // 🎨 Styles
+      quotes: ['error', 'single', { avoidEscape: true }],
+      semi: ['error', 'always'],
+      curly: ['error', 'all'],
+      indent: ['error', 2, { SwitchCase: 1 }],
+      'comma-dangle': ['error', 'always-multiline'],
+      'object-curly-spacing': ['error', 'always'],
+      'brace-style': [
+        'error',
+        '1tbs',
+        {
+          allowSingleLine: false,
+        },
+      ],
+      'arrow-parens': ['error', 'always'],
+      'max-len': ['warn', { code: 120, ignoreComments: true }],
+
+      // 🔧 Switched off
+      'no-undef': 'off',
+      'no-restricted-exports': 'off',
+      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
+
+      'unicorn/no-array-reduce': 'off',
+      'unicorn/no-array-for-each': 'off',
+      'unicorn/no-null': 'off',
+      'unicorn/no-useless-undefined': 'off',
+      'unicorn/filename-case': 'off',
+      'unicorn/number-literal-case': 'off',
+      'unicorn/prefer-query-selector': 'off',
+      'unicorn/prevent-abbreviations': 'off',
+      'unicorn/explicit-length-check': 'off',
+    },
+  },
+  {
+    files: ['**/*.tsx'],
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      'max-lines-per-function': [
+        'warn',
+        { max: 80, skipBlankLines: true, skipComments: true },
+      ],
+    },
+  },
+  {
+    files: ['src/proxy.ts'],
+    rules: {
+      'unicorn/prefer-string-raw': 'off',
+    },
+  },
+  {
+    files: ['**/*.test.ts', '**/*.test.tsx'],
+    rules: {
+      'max-lines-per-function': 'off',
+      '@typescript-eslint/consistent-type-assertions': 'off',
+    },
+  },
+  {
+    files: [
+      'src/app/**/page.tsx',
+      'src/app/**/layout.tsx',
+      'src/app/**/loading.tsx',
+      'src/app/**/error.tsx',
+      'src/app/**/not-found.tsx',
+      'src/app/global-error.tsx',
+    ],
+
+    rules: {
+      'import-x/no-default-export': 'off',
+    },
+  },
+  {
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/*.d.ts',
+      '*.config.js',
+      '.next/**',
+      'out/**',
+      'coverage/**',
+      '*.config.mjs',
+      '*.config.ts',
+      'src/types/database.types.ts',
+    ],
+  },
 ]);
-
-export default eslintConfig;

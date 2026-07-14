@@ -1,8 +1,10 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-export default async function About(
-  { params }: { params: Promise<{ locale: string }> }
-) {
+export default async function About({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
 
   setRequestLocale(locale);
@@ -19,9 +21,14 @@ export default async function About(
             {t('courseText')}
           </p>
 
-          <p className="text-gray-700 dark:text-gray-300 font-medium">{t('autorText')}</p>
+          <p className="text-gray-700 dark:text-gray-300 font-medium">
+            {t('autorText')}
+          </p>
 
-          <nav aria-label="External links" className="flex flex-col gap-3 items-center pt-4">
+          <nav
+            aria-label="External links"
+            className="flex flex-col gap-3 items-center pt-4"
+          >
             <a
               href="https://github.com/ninaevlash"
               target="_blank"

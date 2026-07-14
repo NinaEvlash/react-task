@@ -4,5 +4,5 @@ export type Locale = (typeof locales)[number];
 
 export const routing = {
   locales,
-  defaultLocale: 'en'
+  defaultLocale: 'en',
 } as const;

@@ -37,7 +37,9 @@ function isPokemonTypeInfo(value: unknown): value is PokemonTypeInfo {
   return isString(type.name) && (type.url === undefined || isString(type.url));
 }
 
-export function isPokemonDetailsResponse(value: unknown): value is PokemonDetailsResponse {
+export function isPokemonDetailsResponse(
+  value: unknown,
+): value is PokemonDetailsResponse {
   if (!isObject(value)) {
     return false;
   }
@@ -52,7 +54,9 @@ export function isPokemonDetailsResponse(value: unknown): value is PokemonDetail
     return false;
   }
 
-  return isString(value.name) && isNumber(value.weight) && isNumber(value.height);
+  return (
+    isString(value.name) && isNumber(value.weight) && isNumber(value.height)
+  );
 }
 
 function isPokemonListResult(value: unknown): value is PokemonType {
@@ -60,10 +64,14 @@ function isPokemonListResult(value: unknown): value is PokemonType {
     return false;
   }
 
-  return isString(value.name) && (value.url === undefined || isString(value.url));
+  return (
+    isString(value.name) && (value.url === undefined || isString(value.url))
+  );
 }
 
-export function isPokemonListResponse(value: unknown): value is PokemonListResponse {
+export function isPokemonListResponse(
+  value: unknown,
+): value is PokemonListResponse {
   if (!isObject(value)) {
     return false;
   }
@@ -76,6 +84,8 @@ export function isPokemonListResponse(value: unknown): value is PokemonListRespo
   return (
     isNumber(value.count) &&
     (value.next === undefined || value.next === null || isString(value.next)) &&
-    (value.previous === undefined || value.previous === null || isString(value.previous))
+    (value.previous === undefined ||
+      value.previous === null ||
+      isString(value.previous))
   );
 }

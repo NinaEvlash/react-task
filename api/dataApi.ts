@@ -1,9 +1,16 @@
 import { isPokemonDetailsResponse, isPokemonListResponse } from './dataGuards';
 import { HTTP_NOT_FOUND, HTTP_SERVER_ERROR } from './dataGuards';
-import type { PokemonDetailsResponse, PokemonListResponse } from '../types/apiTypes';
+import type {
+  PokemonDetailsResponse,
+  PokemonListResponse,
+} from '../types/apiTypes';
 
-export async function getDataByName(name: string): Promise<PokemonDetailsResponse> {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(name)}`);
+export async function getDataByName(
+  name: string,
+): Promise<PokemonDetailsResponse> {
+  const response = await fetch(
+    `https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(name)}`,
+  );
 
   if (!response.ok) {
     if (response.status === HTTP_NOT_FOUND) {
@@ -26,7 +33,10 @@ export async function getDataByName(name: string): Promise<PokemonDetailsRespons
   return data;
 }
 
-export async function getDataList(limit: number, offset: number): Promise<PokemonListResponse> {
+export async function getDataList(
+  limit: number,
+  offset: number,
+): Promise<PokemonListResponse> {
   const response = await fetch(
     `https://pokeapi.co/api/v2/pokemon?limit=${String(limit)}&offset=${String(offset)}`,
   );

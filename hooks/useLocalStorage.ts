@@ -1,31 +1,26 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
 
-export function useLocalStorage<T extends string>(
+export function useLocalStorage(
   key: string,
-  initialValue?: T,
-): [T, (value: React.SetStateAction<T>) => void] {
-  const defaultValue = (initialValue ?? ('' as unknown as T)) as T;
-
-  const [value, setValue] = useState<T>(() => {
-    if (typeof window === 'undefined') {
-      return defaultValue;
-    }
-
+  initialValue = '',
+): [string, React.Dispatch<React.SetStateAction<string>>] {
+  const [value, setValue] = useState<string>(() => {
     try {
-      const stored = localStorage.getItem(key);
+      const storedValue = globalThis.localStorage.getItem(key);
 
-      return (stored as T) ?? defaultValue;
+      return storedValue ?? initialValue;
     } catch (error) {
       console.error('Error accessing localStorage:', error);
-      return defaultValue;
+
+      return initialValue;
     }
   });
 
   useEffect(() => {
     try {
-      localStorage.setItem(key, value);
+      globalThis.localStorage.setItem(key, value);
     } catch (error) {
       console.error('Error saving to localStorage:', error);
     }

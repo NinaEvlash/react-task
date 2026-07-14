@@ -19,9 +19,7 @@ export default function ResultsItem({ item }: Props) {
 
   const dispatch = useAppDispatch();
 
-  const selectedItems = useAppSelector(
-    (state) => state.selectedItem.items,
-  );
+  const selectedItems = useAppSelector((state) => state.selectedItem.items);
 
   const isSelected = selectedItems.some(
     (selectedItem) => selectedItem.name === item.name,
@@ -62,9 +60,7 @@ export default function ResultsItem({ item }: Props) {
           }
         />
 
-        <strong className="text-lg font-semibold">
-          {item.name}
-        </strong>
+        <strong className="text-lg font-semibold">{item.name}</strong>
       </div>
 
       <p className="mb-4">{item.description}</p>

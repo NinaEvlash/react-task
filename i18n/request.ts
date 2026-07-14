@@ -1,16 +1,25 @@
-import {getRequestConfig} from 'next-intl/server';
-import {routing, type Locale} from './routing';
+import { hasLocale } from 'next-intl';
+import { getRequestConfig } from 'next-intl/server';
 
-export default getRequestConfig(async ({requestLocale}) => {
-  const locale = await requestLocale;
+import { routing, type Locale } from './routing';
 
-  const currentLocale: Locale =
-    locale && routing.locales.includes(locale as Locale)
-      ? (locale as Locale)
-      : routing.defaultLocale;
+import enMessages from '../messages/en.json';
+import plMessages from '../messages/pl.json';
+
+const messages: Record<Locale, typeof enMessages> = {
+  en: enMessages,
+  pl: plMessages,
+};
+
+export default getRequestConfig(async ({ requestLocale }) => {
+  const requested = await requestLocale;
+
+  const locale = hasLocale(routing.locales, requested)
+    ? requested
+    : routing.defaultLocale;
 
   return {
-    locale: currentLocale,
-    messages: (await import(`../messages/${currentLocale}.json`)).default
+    locale,
+    messages: messages[locale],
   };
 });

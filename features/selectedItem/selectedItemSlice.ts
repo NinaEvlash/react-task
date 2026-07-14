@@ -18,10 +18,14 @@ const selectedItemSlice = createSlice({
   initialState,
   reducers: {
     toggleItem(state, action: PayloadAction<SelectedItem>) {
-      const exists = state.items.some((item) => item.name === action.payload.name);
+      const exists = state.items.some(
+        (item) => item.name === action.payload.name,
+      );
 
       if (exists) {
-        state.items = state.items.filter((item) => item.name !== action.payload.name);
+        state.items = state.items.filter(
+          (item) => item.name !== action.payload.name,
+        );
       } else {
         state.items.push(action.payload);
       }

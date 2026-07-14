@@ -7,7 +7,7 @@
     "placeholder": "Enter a Pokémon name",
     "button": "Search"
   },
-   "Pagination": {
+  "Pagination": {
     "prevButton": "Prev",
     "nextButton": "Next",
     "page": "Page"

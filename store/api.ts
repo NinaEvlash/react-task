@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import type { PokemonDetailsResponse, PokemonListResponse } from '../types/apiTypes';
+import type {
+  PokemonDetailsResponse,
+  PokemonListResponse,
+} from '../types/apiTypes';
 
 const CACHE_TTL = 300;
 
@@ -11,8 +14,12 @@ export const pokemonApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
   tagTypes: ['Pokemon', 'PokemonList'],
   endpoints: (builder) => ({
-    getPokemonList: builder.query<PokemonListResponse, { limit: number; offset: number }>({
-      query: ({ limit, offset }) => `pokemon?limit=${String(limit)}&offset=${String(offset)}`,
+    getPokemonList: builder.query<
+      PokemonListResponse,
+      { limit: number; offset: number }
+    >({
+      query: ({ limit, offset }) =>
+        `pokemon?limit=${String(limit)}&offset=${String(offset)}`,
 
       keepUnusedDataFor: cacheTTL,
 

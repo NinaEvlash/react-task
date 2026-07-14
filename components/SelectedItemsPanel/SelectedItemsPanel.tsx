@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { clearItems } from '../../features/selectedItem/selectedItemSlice';
@@ -15,28 +15,28 @@ export default function SelectedItemsPanel() {
   }
 
   const handleDownload = async () => {
-  const res = await fetch('/api/export-csv', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ items: selectedItems }),
-  });
+    const res = await fetch('/api/export-csv', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ items: selectedItems }),
+    });
 
-  const blob = await res.blob();
+    const blob = await res.blob();
 
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
+    const url = globalThis.URL.createObjectURL(blob);
+    const link = document.createElement('a');
 
-  link.href = url;
-  link.download = `${selectedItems.length}_items.csv`;
+    link.href = url;
+    link.download = String(selectedItems.length) + '_items.csv';
 
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
+    document.body.append(link);
+    link.click();
+    link.remove();
 
-  window.URL.revokeObjectURL(url);
-};
+    globalThis.URL.revokeObjectURL(url);
+  };
 
   return (
     <div
@@ -50,7 +50,9 @@ export default function SelectedItemsPanel() {
         z-50
       "
     >
-      <p className="font-medium">{t('items')}: {selectedItems.length}</p>
+      <p className="font-medium">
+        {t('items')}: {selectedItems.length}
+      </p>
 
       <div className="flex gap-3">
         <button
@@ -64,7 +66,10 @@ export default function SelectedItemsPanel() {
         </button>
 
         <button
-          onClick={handleDownload}
+          onClick={() => {
+            void handleDownload();
+          }}
+
           className="
             px-4 py-2 rounded-lg
             bg-blue-500 text-white
