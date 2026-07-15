@@ -33,6 +33,17 @@ export const HookForm = ({ onClose }: Props) => {
   } = useForm<FormValues>({
     resolver: yupResolver(formSchema),
     mode: 'onChange',
+    defaultValues: {
+      name: '',
+      email: '',
+      age: 0,
+      gender: 'male',
+      terms: false,
+      image: undefined,
+      password: '',
+      confirmPassword: '',
+      country: '',
+    },
   });
 
   useEffect(() => {
