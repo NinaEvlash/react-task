@@ -29,6 +29,10 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
   }, [isOpen]);
 
   useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
@@ -40,7 +44,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
     return () => {
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [onClose]);
+  }, [isOpen, onClose]);
 
   if (!isOpen) {
     return null;
@@ -54,8 +58,14 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
 
   return createPortal(
     <div className="overlay" onClick={onClose}>
-      <div ref={modalRef} className="modal" onClick={(event) => event.stopPropagation()}>
-        <button className="close-button" onClick={onClose}>
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        className="modal"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button className="close-button" aria-label="Close modal" onClick={onClose}>
           X
         </button>
 
