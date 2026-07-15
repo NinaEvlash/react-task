@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import './Autocomplete.css';
 
+const TIME_IN_SETTIMOUT = 150;
+
 type Props = {
   countries: string[];
   value: string;
@@ -21,13 +23,13 @@ export const CountryAutocomplete = ({ countries, value, onChange }: Props) => {
         className="input"
         value={value}
         autoComplete="off"
-        onChange={(e) => {
-          onChange(e.target.value);
+        onChange={(event) => {
+          onChange(event.target.value);
           setShowSuggestions(true);
         }}
         onFocus={() => setShowSuggestions(true)}
         onBlur={() => {
-          setTimeout(() => setShowSuggestions(false), 150);
+          setTimeout(() => setShowSuggestions(false), TIME_IN_SETTIMOUT);
         }}
       />
 

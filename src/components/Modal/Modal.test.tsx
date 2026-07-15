@@ -17,7 +17,7 @@ describe('Modal', () => {
   beforeEach(() => {
     const modalRoot = document.createElement('div');
     modalRoot.setAttribute('id', 'modal-root');
-    document.body.appendChild(modalRoot);
+    document.body.append(modalRoot);
   });
 
   afterEach(() => {
@@ -87,7 +87,9 @@ describe('Modal', () => {
 
     expect(overlay).not.toBeNull();
 
-    if (!overlay) return;
+    if (!overlay) {
+      return;
+    }
 
     fireEvent.click(overlay);
 

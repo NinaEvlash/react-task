@@ -4,7 +4,7 @@ import { Modal } from './components/Modal/Modal';
 import './App.css';
 import { UncontrolledForm } from './components/Forms/UncontrolledForm';
 import { HookForm } from './components/Forms/HookForm';
-import { RootState } from './store/store';
+import type { RootState } from './store/store';
 import { Card } from './components/Card/Card';
 
 function App() {

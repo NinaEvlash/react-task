@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import './Card.css';
 
+const TIMER_TIME = 3000;
+
 type CardProps = {
   type: 'uncontrolled' | 'rhf';
   name: string;
@@ -19,7 +21,7 @@ export const Card = ({ type, name, email, age, gender, terms, image, country }: 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsHighlighted(false);
-    }, 3000);
+    }, TIMER_TIME);
 
     return () => clearTimeout(timer);
   }, []);

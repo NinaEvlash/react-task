@@ -6,7 +6,15 @@ const countries = ['Poland', 'Portugal', 'Germany', 'France'];
 
 describe('CountryAutocomplete', () => {
   test('renders input with value', () => {
-    render(<CountryAutocomplete countries={countries} value="Pol" onChange={() => {}} />);
+    render(
+      <CountryAutocomplete
+        countries={countries}
+        value="Pol"
+        onChange={() => {
+          //specifically for verification purposes
+        }}
+      />,
+    );
 
     const input = screen.getByRole('textbox');
 
@@ -17,7 +25,15 @@ describe('CountryAutocomplete', () => {
   test('shows filtered suggestions on focus', async () => {
     const user = userEvent.setup();
 
-    render(<CountryAutocomplete countries={countries} value="" onChange={() => {}} />);
+    render(
+      <CountryAutocomplete
+        countries={countries}
+        value=""
+        onChange={() => {
+          //specifically for verification purposes
+        }}
+      />,
+    );
 
     const input = screen.getByRole('textbox');
 

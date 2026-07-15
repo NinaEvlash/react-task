@@ -13,9 +13,15 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
   const previousFocus = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      return;
+    }
 
-    previousFocus.current = document.activeElement as HTMLElement;
+    const activeElement = document.activeElement;
+
+    if (activeElement instanceof HTMLElement) {
+      previousFocus.current = activeElement;
+    }
 
     return () => {
       previousFocus.current?.focus();
@@ -36,7 +42,15 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
     };
   }, [onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
+
+  const modalRoot = document.getElementById('modal-root');
+
+  if (!modalRoot) {
+    return null;
+  }
 
   return createPortal(
     <div className="overlay" onClick={onClose}>
@@ -48,6 +62,6 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
         {children}
       </div>
     </div>,
-    document.getElementById('modal-root') as HTMLElement,
+    modalRoot,
   );
 };

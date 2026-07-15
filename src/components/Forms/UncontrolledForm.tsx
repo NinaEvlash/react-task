@@ -1,104 +1,153 @@
 import { useState, useRef, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import type { SyntheticEvent } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ValidationError } from 'yup';
+
 import { addSubmission } from '../../store/formsSlice';
 import type { Submission } from '../../store/formsSlice';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import type { RootState } from '../../store/store';
+
 import './Form.css';
+
 import { fileToBase64 } from '../../utils/fileToBase64';
-import { CountryAutocomplete } from '../Autocomplete/Autocomplete';
 import { formSchema } from '../../validation/formSchema';
+import { getPasswordStrength } from '../../utils/getPasswordStrength';
+
+import { UncontrolledFields } from './UncontrolledFields';
 
 type Props = {
   onClose: () => void;
 };
 
+type FormValues = {
+  name: string;
+  email: string;
+  age: number;
+  gender: 'male' | 'female' | 'other';
+  terms: boolean;
+  password: string;
+  confirmPassword: string;
+  country: string;
+  image: File;
+};
+
+const getStringValue = (value: FormDataEntryValue | null): string => {
+  return typeof value === 'string' ? value : '';
+};
+
 export const UncontrolledForm = ({ onClose }: Props) => {
   const dispatch = useDispatch();
-  const firstInputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    firstInputRef.current?.focus();
-  }, []);
 
+  const firstInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [fileName, setFileName] = useState('');
   const [password, setPassword] = useState('');
+  const [country, setCountry] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const hasUppercase = /[A-Z]/.test(password);
-  const hasLowercase = /[a-z]/.test(password);
-  const hasNumber = /\d/.test(password);
-  const hasSpecial = /[^A-Za-z0-9]/.test(password);
-
-  const [country, setCountry] = useState('');
   const countryList = useSelector((state: RootState) => state.countries.countries);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const passwordStrength = getPasswordStrength(password);
 
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
+  useEffect(() => {
+    firstInputRef.current?.focus();
+  }, []);
 
-    const values = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      age: Number(formData.get('age')),
-      gender: formData.get('gender'),
+  const getFormValues = (formData: FormData): FormValues => {
+    const image = formData.get('image');
+    const gender = formData.get('gender');
+
+    return {
+      name: getStringValue(formData.get('name')),
+      email: getStringValue(formData.get('email')),
+      age: Number(formData.get('age') ?? 0),
+      gender: gender === 'male' || gender === 'female' || gender === 'other' ? gender : 'other',
       terms: formData.get('terms') !== null,
       password,
-      confirmPassword: formData.get('confirmPassword'),
+      confirmPassword: getStringValue(formData.get('confirmPassword')),
       country,
-      image: formData.get('image'),
+      image: image instanceof File ? image : new File([], ''),
     };
+  };
 
+  const validateForm = async (values: FormValues) => {
     try {
-      await formSchema.validate(values, { abortEarly: false });
+      await formSchema.validate(values, {
+        abortEarly: false,
+      });
+
       setErrors({});
+
+      return true;
     } catch (error) {
       if (error instanceof ValidationError) {
         const validationErrors: Record<string, string> = {};
 
-        error.inner.forEach((err) => {
-          if (err.path && !validationErrors[err.path]) {
-            validationErrors[err.path] = err.message;
+        error.inner.forEach((validationError) => {
+          if (validationError.path && !validationErrors[validationError.path]) {
+            validationErrors[validationError.path] = validationError.message;
           }
         });
 
         setErrors(validationErrors);
-        return;
       }
+
+      return false;
     }
+  };
 
-    const file = formData.get('image');
-
-    if (!(file instanceof File)) {
-      setErrors((prev) => ({
-        ...prev,
-        image: 'Image is required',
-      }));
-      return;
-    }
-
-    const imageBase64 = await fileToBase64(file);
+  const saveSubmission = async (values: FormValues) => {
+    const imageBase64 = await fileToBase64(values.image);
 
     const data: Submission = {
       id: crypto.randomUUID(),
       type: 'uncontrolled',
-      name: values.name as string,
-      email: values.email as string,
-      age: Number(values.age),
-      gender: values.gender as 'male' | 'female' | 'other',
-      terms: values.terms as boolean,
+      name: values.name,
+      email: values.email,
+      age: values.age,
+      gender: values.gender,
+      terms: values.terms,
       image: imageBase64,
-      password,
-      confirmPassword: values.confirmPassword as string,
-      country,
+      password: values.password,
+      confirmPassword: values.confirmPassword,
+      country: values.country,
     };
 
     dispatch(addSubmission(data));
+  };
 
-    formRef.current?.reset();
+  const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formElement = event.currentTarget;
+
+    if (!(formElement instanceof HTMLFormElement)) {
+      return;
+    }
+
+    const formData = new FormData(formElement);
+    const values = getFormValues(formData);
+
+    const isValid = await validateForm(values);
+
+    if (!isValid) {
+      return;
+    }
+
+    if (!(values.image instanceof File) || values.image.size === 0) {
+      setErrors((previous) => ({
+        ...previous,
+        image: 'Image is required',
+      }));
+
+      return;
+    }
+
+    await saveSubmission(values);
+
+    formElement.reset();
+
     setFileName('');
     setPassword('');
     setCountry('');
@@ -106,115 +155,22 @@ export const UncontrolledForm = ({ onClose }: Props) => {
     onClose();
   };
 
+  const handleFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
+    void handleSubmit(event);
+  };
+
   return (
-    <form ref={formRef} className="form" onSubmit={handleSubmit}>
-      <div className="form-section">
-        <div className="form-field">
-          <label htmlFor="name" className="label">
-            Name
-          </label>
-          <input id="name" className="input" name="name" ref={firstInputRef} />
-          <p className="error">{errors.name}</p>
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="email" className="label">
-            Email
-          </label>
-          <input id="email" className="input" name="email" />
-          <p className="error">{errors.email}</p>
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="age" className="label">
-            Age
-          </label>
-          <input id="age" className="input" name="age" type="number" />
-          <p className="error">{errors.age}</p>
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="gender" className="label">
-            Gender
-          </label>
-          <select id="gender" className="input" name="gender">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-          <p className="error">{errors.gender}</p>
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="terms" className="label">
-            <input id="terms" type="checkbox" name="terms" />I agree to the terms and conditions
-          </label>
-          <p className="error">{errors.terms}</p>
-        </div>
-
-        <div className="form-field">
-          <div className="file-row">
-            <label htmlFor="image" className="file-label">
-              Upload photo
-            </label>
-            <input
-              id="image"
-              name="image"
-              type="file"
-              accept=".png,.jpg,.jpeg"
-              className="file-input"
-              onChange={(e) => setFileName(e.target.files?.[0]?.name ?? '')}
-            />
-
-            <p className="selected-file">{fileName || 'No file selected'}</p>
-          </div>
-          <p className="error">{errors.image}</p>
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="password" className="label">
-            Password
-          </label>
-
-          <input
-            id="password"
-            name="password"
-            type="password"
-            className="input"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <ul className="password-strength">
-            <li className={hasUppercase ? 'valid' : 'invalid'}>Uppercase letter</li>
-
-            <li className={hasLowercase ? 'valid' : 'invalid'}>Lowercase letter</li>
-
-            <li className={hasNumber ? 'valid' : 'invalid'}>Number</li>
-
-            <li className={hasSpecial ? 'valid' : 'invalid'}>Special character</li>
-          </ul>
-          <p className="error">{errors.password}</p>
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="confirmPassword" className="label">
-            Confirm password
-          </label>
-
-          <input id="confirmPassword" name="confirmPassword" type="password" className="input" />
-          <p className="error">{errors.confirmPassword}</p>
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="country" className="label">
-            Country
-          </label>
-          <CountryAutocomplete countries={countryList} value={country} onChange={setCountry} />
-
-          <input type="hidden" name="country" value={country} />
-          <p className="error">{errors.country}</p>
-        </div>
-      </div>
+    <form ref={formRef} className="form" onSubmit={handleFormSubmit}>
+      <UncontrolledFields
+        errors={errors}
+        fileName={fileName}
+        passwordStrength={passwordStrength}
+        countryList={countryList}
+        country={country}
+        onCountryChange={setCountry}
+        onPasswordChange={setPassword}
+        onFileChange={setFileName}
+      />
 
       <button className="button" type="submit">
         Submit
