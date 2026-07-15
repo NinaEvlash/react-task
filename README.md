@@ -20,7 +20,7 @@ The project was created as part of a learning assignment focused on modern React
 - TypeScript
 - Vite
 - React Hook Form
-- Zod
+- Yup
 - Redux Toolkit
 - Vitest
 - React Testing Library

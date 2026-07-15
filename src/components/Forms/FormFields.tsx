@@ -157,6 +157,7 @@ export const FormFields = ({
         <Controller
           name="country"
           control={control}
+          defaultValue=""
           render={({ field }) => (
             <CountryAutocomplete
               countries={countryList}
