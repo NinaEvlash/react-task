@@ -16,34 +16,6 @@ const renderWithRouter = (component: React.ReactElement) => {
 };
 
 describe('App', () => {
-  it.skip('adds card after form submit', async () => {
-    const user = userEvent.setup();
-
-    renderWithRouter(<App />);
-
-    await user.click(screen.getByRole('button', { name: /uncontrolled form/i }));
-
-    expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
-
-    await user.type(screen.getByLabelText(/name/i), 'John');
-    await user.type(screen.getByLabelText(/email/i), 'john@test.com');
-    await user.type(screen.getByLabelText(/age/i), '25');
-    await user.click(screen.getByLabelText(/terms/i));
-    await user.type(screen.getByLabelText(/^password$/i), 'Test123!');
-    await user.type(screen.getByLabelText(/confirm password/i), 'Test123!');
-    await user.selectOptions(screen.getByLabelText(/gender/i), 'male');
-    await user.type(screen.getByLabelText(/country/i), 'Poland');
-    const file = new File(['img'], 'test.png', { type: 'image/png' });
-    const input = screen.getByLabelText(/upload photo/i);
-    await user.upload(input, file);
-    await user.click(screen.getByRole('button', { name: /submit/i }));
-
-    await waitFor(() => {
-      expect(screen.getByText('John')).toBeInTheDocument();
-    });
-    expect(screen.getByText('john@test.com')).toBeInTheDocument();
-  });
-
   it('adds card from RHF form', async () => {
     const user = userEvent.setup();
 
